@@ -353,6 +353,7 @@
     "metas": { "google": { "orcamentoMensal": 7500, "metaLeadsMensal": 52 }, "meta": { "orcamento": 3000, "metaLeads": 80 } },
     "expadAccountId": "68f464c11b8c8f66ff8c4de4", "expadApiKey": "9e5ee8a84e0b892c007d515aa115f5a1bb8331609c3e351dc013ee980035c673",
     "metaSemAcesso": true,
+    "pinterest": true, "pinterestAdAccountId": "",
     "senha": "levaoficina123"
   },
   "autoville": {
