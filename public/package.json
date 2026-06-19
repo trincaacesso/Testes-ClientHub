@@ -1,0 +1,14 @@
+{
+  "name": "clienthub",
+  "version": "1.0.0",
+  "description": "ClientHub — sistema multi-cliente de dashboards de performance (Acesso Marketing)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "author": "Acesso Marketing",
+  "license": "UNLICENSED"
+}

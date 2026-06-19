@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>URBA — Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#f5f5f3;color:#1a1a18;font-size:14px}
+.app{display:grid;grid-template-columns:218px 1fr;min-height:100vh}
+/* sidebar */
+.sidebar{background:#fff;box-shadow:1px 0 0 #ebeae5;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+.sidebar-logo{padding:18px 16px 14px;border-bottom:1px solid #e8e7e2}
+.sidebar-logo svg{width:78px;height:auto;display:block}
+.sidebar-back{display:flex;align-items:center;gap:6px;padding:11px 14px;font-size:12px;color:#5f5e5a;text-decoration:none;border-bottom:1px solid #e8e7e2;transition:background .12s}
+.sidebar-back:hover{background:#f5f5f3;color:#1a1a18}
+.sidebar-section{padding:14px 14px 5px;font-size:10px;font-weight:600;color:#b4b2a9;letter-spacing:.06em;text-transform:uppercase}
+.emp-item{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:8px 10px;cursor:pointer;border-radius:8px;margin:1px 8px;font-size:13px;color:#5f5e5a;transition:.12s}
+.emp-item:hover{background:#f5f5f3;color:#1a1a18}
+.emp-item.active{background:#e2f4ee;color:#055f46;font-weight:500;box-shadow:inset 0 0 0 1px #cdebdf}
+.sidebar-footer{margin-top:auto;padding:12px 16px;border-top:1px solid #e8e7e2;font-size:11px;color:#888780}
+/* main */
+.main{display:flex;flex-direction:column;min-height:100vh}
+.topbar{background:#fff;box-shadow:0 1px 0 #ebeae5;padding:0 22px;min-height:56px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.topbar-title{font-size:16px;font-weight:600;letter-spacing:-.01em}
+.topbar-sub{font-size:12px;color:#888780}
+.topbar-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.dot{width:7px;height:7px;border-radius:50%;background:#009C73}
+.dot.loading{background:#ba7517}
+.sync-txt{font-size:11px;color:#888780}
+.periods{display:inline-flex;background:#f5f5f3;border:1px solid #e8e7e2;border-radius:8px;padding:3px;gap:2px}
+.periods button{font-size:12px;padding:5px 10px;border:0;background:none;color:#5f5e5a;cursor:pointer;border-radius:6px;font-family:inherit;font-weight:500}
+.periods button.active{background:#009C73;color:#fff}
+.btn{font-size:12px;padding:7px 12px;border:1px solid #e8e7e2;border-radius:8px;background:#fff;color:#444441;cursor:pointer;display:inline-flex;align-items:center;gap:5px;text-decoration:none;font-family:inherit}
+.btn:hover{background:#f5f5f3}
+.btn-primary{background:#009C73;color:#fff;border-color:#009C73}
+.btn-primary:hover{background:#007a59}
+.content{padding:22px 24px;max-width:1280px;width:100%}
+.tab-row{display:flex;gap:4px;margin-bottom:18px;border-bottom:1px solid #e8e7e2}
+.tab{font-size:13px;padding:8px 14px;cursor:pointer;border:0;background:none;color:#888780;border-bottom:2px solid transparent;margin-bottom:-1px;font-family:inherit}
+.tab:hover{color:#1a1a18}
+.tab.active{color:#1a1a18;font-weight:600;border-bottom-color:#009C73}
+/* cards */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:16px}
+.kpi{background:#fff;border:1px solid #e8e7e2;border-radius:10px;padding:13px 15px}
+.kpi-lbl{font-size:11px;color:#888780;margin-bottom:4px}
+.kpi-val{font-size:23px;font-weight:600;line-height:1.1}
+.kpi-sub{font-size:11px;color:#888780;margin-top:3px}
+.kpi.ok .kpi-val{color:#007a59}.kpi.warn .kpi-val{color:#854f0b}.kpi.bad .kpi-val{color:#993c1d}
+.bars{background:#fff;border:1px solid #e8e7e2;border-radius:10px;padding:15px 16px;margin-bottom:16px}
+.bars-title{font-size:12px;font-weight:600;color:#1a1a18;margin-bottom:12px}
+.bar-row{margin-bottom:12px}.bar-row:last-child{margin-bottom:0}
+.bar-info{display:flex;justify-content:space-between;font-size:12px;color:#5f5e5a;margin-bottom:5px}
+.bar-info b{color:#1a1a18}
+.bar-track{background:#e8e7e2;border-radius:3px;height:7px;overflow:hidden}
+.bar-fill{height:100%;border-radius:3px;transition:width .4s}
+.chart-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.chart-card{background:#fff;border:1px solid #e8e7e2;border-radius:10px;padding:13px 15px}
+.chart-card-lbl{font-size:11px;color:#888780;margin-bottom:8px}
+.plat-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}
+.plat-card{background:#fff;border:1px solid #e8e7e2;border-radius:10px;padding:15px 16px}
+.plat-head{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding-bottom:9px;border-bottom:1px solid #e8e7e2}
+.plat-tag{font-size:11px;font-weight:600;padding:3px 9px;border-radius:5px}
+.tag-g{background:#e2f4ee;color:#067a5b}.tag-f{background:#e6f1fb;color:#185fa5}
+.plat-row{display:flex;justify-content:space-between;font-size:12.5px;padding:5px 0;border-bottom:1px solid #f1efe8;color:#5f5e5a}
+.plat-row:last-child{border:none}.plat-row span:last-child{color:#1a1a18;font-weight:500}
+.tbl-wrap{background:#fff;border:1px solid #e8e7e2;border-radius:10px;overflow:hidden;margin-bottom:16px}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+thead th{text-align:right;padding:9px 12px;color:#888780;font-weight:500;font-size:11px;text-transform:uppercase;border-bottom:1px solid #e8e7e2;background:#faf9f6}
+thead th:first-child{text-align:left}
+tbody td{text-align:right;padding:8px 12px;border-bottom:1px solid #f1efe8}
+tbody td:first-child{text-align:left;font-weight:500}
+tbody tr:last-child td{border-bottom:0}
+.cr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(188px,1fr));gap:12px}
+.cr-card{background:#fff;border:1px solid #e8e7e2;border-radius:10px;overflow:hidden;display:flex;flex-direction:column}
+.cr-img{width:100%;aspect-ratio:1/1;object-fit:cover;background:#f1efe8;display:block}
+.cr-body{padding:9px 11px 11px;display:flex;flex-direction:column;gap:7px}
+.cr-camp{font-size:10.5px;color:#888780;line-height:1.3;height:27px;overflow:hidden;font-weight:500}
+.cr-metrics{display:grid;grid-template-columns:1fr 1fr;gap:6px 8px}
+.cr-m{display:flex;flex-direction:column}.cr-m b{font-size:14px;font-weight:600;line-height:1.1}.cr-m span{color:#888780;font-size:10px;margin-top:1px}
+.cr-tag{font-size:9px;font-weight:600;padding:2px 7px;border-radius:4px;align-self:flex-start;background:#efeee9;color:#888780}
+.cr-tag.on{background:#e2f4ee;color:#067a5b}
+.crt-src{display:inline-flex;background:#f5f5f3;border:1px solid #e8e7e2;border-radius:8px;padding:3px;gap:2px;margin-bottom:14px}
+.crt-src button{font-size:12px;padding:5px 12px;border:0;background:none;color:#5f5e5a;cursor:pointer;border-radius:6px;font-family:inherit;font-weight:500}
+.crt-src button.active{background:#009C73;color:#fff}
+.empty{text-align:center;padding:40px 20px;color:#888780;font-size:13px}
+@media(max-width:860px){.app{grid-template-columns:1fr}.sidebar{position:static;height:auto;flex-direction:row;flex-wrap:wrap;overflow:visible}.kpi-grid,.chart-row,.plat-grid{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg viewBox="0 0 695.7 152.4" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Urba">
+        <linearGradient id="urbaGrad" gradientUnits="userSpaceOnUse" x1="81.15" y1="120.32" x2="169.29" y2="32.18"><stop offset="0" stop-color="#F68B28"/><stop offset="1" stop-color="#FDB913"/></linearGradient>
+        <path fill="url(#urbaGrad)" d="M114.7,3.9l-42,36.7c-3.5,3-5.5,7.4-5.5,12v47.2c0,8.8,7.2,16,16,16h83.9c8.8,0,16-7.2,16-16V52.7c0-4.6-2-9-5.5-12l-42-36.7c-3-2.6-6.8-3.9-10.5-3.9C121.5,0,117.7,1.3,114.7,3.9"/>
+        <path fill="#009C73" d="M287.6,152.4c-40.4,0-67.2-25-67.2-61v-74c0-2,1.6-3.6,3.6-3.6h30.4c2,0,3.6,1.6,3.6,3.6v70.2c0,21.5,11.5,34,29.6,34s29.6-12.5,29.6-34V17.4c0-2,1.6-3.6,3.6-3.6h30.4c2,0,3.6,1.6,3.6,3.6v74C354.8,127.4,328,152.4,287.6,152.4z M440.4,42.2c0-2.2-1.9-3.8-4-3.6c-10.9,1.1-22.8,6.8-30.2,16.6h-0.4V44.1c0-2-1.6-3.6-3.6-3.6h-28c-2,0-3.6,1.6-3.6,3.6v102.6c0,2,1.6,3.6,3.6,3.6h28c2,0,3.6-1.6,3.6-3.6V101c0-14.4,9.8-24.9,26.5-24.9c1.2,0,3.2,0,5.4,0.1c1.6,0.1,2.9-1.2,2.9-2.8V42.2z M520.5,38.4c-12.3,0-23.1,4.6-31.1,13.7h-0.5V10.4c0-2-1.6-3.6-3.6-3.6h-28c-2,0-3.6,1.6-3.6,3.6v136.3c0,2,1.6,3.6,3.6,3.6h26.1c2,0,3.6-1.6,3.6-3.6v-8.2h0.5c7.2,9.2,17.8,13.9,31.4,13.9c30.1,0,51.7-22.9,51.7-56.9C570.6,62,548.9,38.4,520.5,38.4z M511.6,121.5c-13.8,0-24.2-10.2-24.2-25.9c0-15.1,10.1-26.1,24.1-26.1c13.4,0,23.6,10.4,23.6,26.1C535.1,111.1,525.3,121.5,511.6,121.5z M692.1,40.5l-28,0c-2,0-3.6,1.6-3.6,3.6v8h-0.4c-7.8-9.1-18.4-13.7-30.3-13.7c-28.4,0-50.1,23.6-50.1,57.1c0,34,21.5,56.9,51.7,56.9c13.2,0,23.5-4.7,30.5-13.9h0.4v8.2c0,2,1.6,3.6,3.6,3.6h26.1c2,0,3.6-1.6,3.6-3.6V44.1C695.7,42.1,694.1,40.5,692.1,40.5z M615.2,95.6c0-15.7,10.2-26.1,23.6-26.1c13.2,0,23.1,11,23.1,26.1c0,15.7-10.4,25.9-23.2,25.9C625,121.5,615.2,111.1,615.2,95.6z M124.7,150.3c14.2,0,25.7-11.5,25.7-25.7V69c0-7.4-3.2-14.5-8.8-19.4L92.2,6.3c-9.7-8.4-24.2-8.4-33.9,0L8.8,49.6C3.2,54.5,0,61.5,0,69v55.6c0,14.2,11.5,25.7,25.7,25.7H124.7"/>
+      </svg>
+    </div>
+    <a class="sidebar-back" href="/">← Todos os clientes</a>
+    <div class="sidebar-section">Empreendimentos</div>
+    <div id="empList"></div>
+    <div class="sidebar-footer" id="footer">—</div>
+  </aside>
+
+  <div class="main">
+    <header class="topbar">
+      <div>
+        <div class="topbar-title" id="empTitle">Carregando…</div>
+        <div class="topbar-sub" id="empSub">Urba</div>
+      </div>
+      <div class="topbar-right">
+        <div class="periods" id="periods">
+          <button data-d="7">7d</button>
+          <button data-d="15">15d</button>
+          <button data-d="31" class="active">30d</button>
+          <button data-d="mes">Este mês</button>
+        </div>
+        <span class="dot loading" id="dot"></span><span class="sync-txt" id="sync">carregando…</span>
+        <button class="btn" onclick="loadAll(true)">↺ Atualizar</button>
+        <a class="btn btn-primary" href="/logout">Sair</a>
+      </div>
+    </header>
+
+    <div class="content">
+      <div class="tab-row">
+        <button class="tab active" data-tab="resumo">Resumo</button>
+        <button class="tab" data-tab="plataformas">Plataformas</button>
+        <button class="tab" data-tab="criativos">Criativos</button>
+        <button class="tab" data-tab="diario">Diário</button>
+      </div>
+      <div id="view-resumo"></div>
+      <div id="view-plataformas" style="display:none"></div>
+      <div id="view-criativos" style="display:none"></div>
+      <div id="view-diario" style="display:none"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const CLI = window.CLIENTE || {id:'urba',nome:'Urba',empreendimentos:[]};
+const EMPS = CLI.empreendimentos || [];
+let selEmp = EMPS.length ? EMPS[0].id : '';
+let periodDays = 31, periodMes = false;
+let activeTab = 'resumo';
+let GOOGLE = null, META = null, EXPAD = null, charts = {};
+let metaCrt = null, metaCrtLoading = false;   // criativos do Meta por janela (segue o filtro de data)
+let googleCrt = null, googleCrtLoading = false; // criativos do Google (PMax) por janela
+let crtSrc = 'meta';   // fonte da aba Criativos: 'meta' | 'google'
+
+// dias do período atual (mês → dia do mês; senão periodDays)
+function periodDaysNum(){ return periodMes ? new Date().getDate() : periodDays; }
+// re-busca SÓ os criativos do Meta para a janela selecionada (não mexe no GOOGLE/META do resumo)
+async function loadMetaCreatives(){
+  const emp = selEmp?('&emp='+encodeURIComponent(selEmp)):'';
+  metaCrtLoading = true;
+  try{
+    const r=await fetch('/api/meta?cli='+CLI.id+emp+'&days='+periodDaysNum(),{cache:'no-store'});
+    const j=await r.json();
+    metaCrt = (r.ok && j && Array.isArray(j.criativos)) ? j : null;
+  }catch(e){ metaCrt=null; }
+  metaCrtLoading=false;
+}
+// re-busca SÓ os criativos do Google (imagens do PMax) para a janela selecionada
+async function loadGoogleCreatives(){
+  const emp = selEmp?('&emp='+encodeURIComponent(selEmp)):'';
+  googleCrtLoading = true;
+  try{
+    const r=await fetch('/api/google?cli='+CLI.id+emp+'&days='+periodDaysNum(),{cache:'no-store'});
+    const j=await r.json();
+    googleCrt = (r.ok && j && Array.isArray(j.criativos)) ? j : null;
+  }catch(e){ googleCrt=null; }
+  googleCrtLoading=false;
+}
+// fonte efetiva (sem Meta → força Google) e carrega a janela atual da fonte ativa
+function effectiveCrtSrc(){ const e=EMPS.find(x=>x.id===selEmp)||{}; return e.hasMeta===false ? 'google' : crtSrc; }
+async function loadCrtForPeriod(){
+  if(effectiveCrtSrc()==='google'){ if(!googleCrt) await loadGoogleCreatives(); }
+  else { if(!metaCrt) await loadMetaCreatives(); }
+}
+
+async function loadExpad(){
+  const {from,to}=periodRange();
+  const emp = selEmp?('&emp='+encodeURIComponent(selEmp)):'';
+  try{
+    const r=await fetch('/api/expad-sales?cli='+CLI.id+emp+'&from='+from+'&to='+to,{cache:'no-store'});
+    const j=await r.json();
+    EXPAD = (r.ok && j && j.sales) ? j.sales : null;   // sem config/sem dados → some a seção
+  }catch(e){ EXPAD=null; }
+}
+
+const BRL = v => 'R$ ' + (+v||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const BRL0 = v => 'R$ ' + (+v||0).toLocaleString('pt-BR',{maximumFractionDigits:0});
+const NUM = v => (+v||0).toLocaleString('pt-BR');
+const PCT = (a,b) => b>0 ? Math.round(a/b*100) : 0;
+const ymd = d => d.toISOString().slice(0,10);
+function periodRange(){
+  const to = ymd(new Date());
+  if(periodMes){ const d=new Date(); return {from:d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-01', to}; }
+  const d=new Date(); d.setDate(d.getDate()-(periodDays-1)); return {from:ymd(d), to};
+}
+function sliceDias(dias, from, to){
+  const f=(dias||[]).filter(x=>x.data>=from && x.data<=to);
+  return f.reduce((a,x)=>({custo:a.custo+(+x.custo||0),conv:a.conv+(+x.conv||0),cliques:a.cliques+(+x.cliques||0),impr:a.impr+(+x.impr||0)}),{custo:0,conv:0,cliques:0,impr:0});
+}
+function empMetas(){
+  const e = EMPS.find(x=>x.id===selEmp) || {};
+  const g = (e.metas&&e.metas.google) || (CLI.metas&&CLI.metas.google) || {orcamentoMensal:0,metaLeadsMensal:0};
+  const m = (e.metas&&e.metas.meta) || (CLI.metas&&CLI.metas.meta) || {orcamento:0,metaLeads:0};
+  return {g,m};
+}
+
+// ---- sidebar ----
+function renderSidebar(){
+  document.getElementById('empList').innerHTML = EMPS.map(e=>
+    '<div class="emp-item'+(e.id===selEmp?' active':'')+'" data-emp="'+e.id+'">'+e.nome+'</div>').join('')
+    || '<div class="emp-item">—</div>';
+  document.getElementById('footer').textContent = EMPS.length+' empreendimentos · Urba';
+  document.getElementById('empList').onclick = ev=>{
+    const it=ev.target.closest('.emp-item'); if(!it||!it.dataset.emp) return;
+    selEmp=it.dataset.emp; renderSidebar(); loadAll();
+  };
+  const e=EMPS.find(x=>x.id===selEmp);
+  document.getElementById('empTitle').textContent = e?e.nome:(CLI.nome||'Urba');
+}
+
+// ---- carga ----
+async function loadAll(manual){
+  document.getElementById('dot').className='dot loading';
+  document.getElementById('sync').textContent='carregando…';
+  const emp = selEmp?('&emp='+encodeURIComponent(selEmp)):'';
+  try{
+    const [g,m] = await Promise.all([
+      fetch('/api/google?cli='+CLI.id+emp,{cache:'no-store'}).then(r=>r.ok?r.json():r.json().then(j=>Promise.reject(j.error||('HTTP '+r.status)))).catch(e=>({_err:String(e.error||e)})),
+      fetch('/api/meta?cli='+CLI.id+emp,{cache:'no-store'}).then(r=>r.ok?r.json():r.json().then(j=>Promise.reject(j.error||('HTTP '+r.status)))).catch(e=>({_err:String(e.error||e)}))
+    ]);
+    GOOGLE = g && !g._err ? g : null; META = m && !m._err ? m : null;
+    metaCrt = null; googleCrt = null;   // troca de empreendimento → recarrega criativos por janela quando precisar
+    await loadExpad();
+    document.getElementById('dot').className='dot';
+    document.getElementById('sync').textContent='ao vivo';
+  }catch(e){ document.getElementById('sync').textContent='erro'; }
+  render();
+}
+function render(){
+  if(activeTab==='resumo') renderResumo();
+  else if(activeTab==='plataformas') renderPlataformas();
+  else if(activeTab==='criativos') renderCriativos();
+  else if(activeTab==='diario') renderDiario();
+}
+
+// dados do período (google + meta)
+function periodData(){
+  const {from,to}=periodRange();
+  const gtot = GOOGLE ? sliceDias(GOOGLE.dias, from, to) : {custo:0,conv:0,cliques:0,impr:0};
+  const mtot = META ? sliceDias(META.dias, from, to) : {custo:0,conv:0,cliques:0,impr:0};
+  return {from,to,gtot,mtot};
+}
+
+function renderResumo(){
+  const {from,to,gtot,mtot}=periodData();
+  const {g:mg,m:mm}=empMetas();
+  const invG=gtot.custo, invM=mtot.custo, inv=invG+invM;
+  const ldG=gtot.conv, ldM=mtot.conv, ld=ldG+ldM;
+  const cpl = ld>0?inv/ld:0;
+  const orc = (mg.orcamentoMensal||0)+(mm.orcamento||0);
+  const metaLd = (mg.metaLeadsMensal||0)+(mm.metaLeads||0);
+  const kcls = (v,goal,low)=> goal<=0?'':(low? (v<=goal?'ok':'bad') : (v>=goal?'ok':'warn'));
+  const html =
+    '<div class="kpi-grid">'+
+      '<div class="kpi"><div class="kpi-lbl">Investimento</div><div class="kpi-val">'+BRL0(inv)+'</div><div class="kpi-sub">'+(orc?(PCT(inv,orc)+'% do orçado · '+BRL0(orc)):'sem orçamento')+'</div></div>'+
+      '<div class="kpi '+kcls(ld,metaLd,false)+'"><div class="kpi-lbl">Leads de mídia</div><div class="kpi-val">'+NUM(ld)+'</div><div class="kpi-sub">Google '+NUM(ldG)+' + Meta '+NUM(ldM)+'</div></div>'+
+      '<div class="kpi"><div class="kpi-lbl">CPL médio (mídia)</div><div class="kpi-val">'+BRL(cpl)+'</div><div class="kpi-sub">investimento ÷ leads</div></div>'+
+      '<div class="kpi"><div class="kpi-lbl">Cliques</div><div class="kpi-val">'+NUM(gtot.cliques+mtot.cliques)+'</div><div class="kpi-sub">'+NUM(gtot.impr+mtot.impr)+' impressões</div></div>'+
+    '</div>'+
+    (EXPAD ? ('<div class="bars" style="border-left:3px solid #009C73">'+
+      '<div class="bars-title">CRM · Expad — leads do funil <span style="font-weight:400;color:#888780;font-size:11px">· fonte CRM, separado da mídia acima</span></div>'+
+      '<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">'+
+        '<div><div class="kpi-lbl">Novos leads</div><div class="kpi-val" style="font-size:23px">'+NUM(EXPAD.novos)+'</div><div class="kpi-sub">entraram no CRM</div></div>'+
+        '<div><div class="kpi-lbl">Qualificados</div><div class="kpi-val" style="font-size:23px;color:#007a59">'+NUM(EXPAD.qualificados)+'</div><div class="kpi-sub">em andamento</div></div>'+
+        '<div><div class="kpi-lbl">Ganhos</div><div class="kpi-val" style="font-size:23px">'+NUM(EXPAD.ganhos)+'</div><div class="kpi-sub">negócios ganhos</div></div>'+
+      '</div></div>') : '')+
+    '<div class="bars"><div class="bars-title">Progresso vs meta mensal</div>'+
+      barRow('Google — leads', ldG, mg.metaLeadsMensal, '#009C73')+
+      barRow('Meta Ads — leads', ldM, mm.metaLeads, '#534ab7')+
+      barRow('Verba Google', invG, mg.orcamentoMensal, '#F68B28', true)+
+      barRow('Verba Meta Ads', invM, mm.orcamento, '#7f77dd', true)+
+    '</div>'+
+    '<div class="chart-row">'+
+      '<div class="chart-card"><div class="chart-card-lbl">Leads por dia</div><div style="position:relative;height:170px"><canvas id="chLeads"></canvas></div></div>'+
+      '<div class="chart-card"><div class="chart-card-lbl">Leads por plataforma</div><div style="position:relative;height:170px"><canvas id="chDonut"></canvas></div></div>'+
+    '</div>'+
+    '<div class="kpi-sub" style="margin-top:4px">Período: '+brDate(from)+' a '+brDate(to)+(GOOGLE?'':' · ⚠ Google indisponível')+(META?'':' · ⚠ Meta indisponível')+'</div>';
+  document.getElementById('view-resumo').innerHTML = html;
+  drawResumoCharts(from,to);
+}
+function barRow(label, val, goal, color, money){
+  const p = goal>0 ? Math.min(Math.round(val/goal*100),100) : 0;
+  const fmt = money?BRL0:NUM;
+  return '<div class="bar-row"><div class="bar-info"><span>'+label+'</span><span><b>'+fmt(val)+'</b> / '+(goal>0?fmt(goal):'—')+(goal>0?(' ('+PCT(val,goal)+'%)'):'')+'</span></div>'+
+    '<div class="bar-track"><div class="bar-fill" style="width:'+p+'%;background:'+color+'"></div></div></div>';
+}
+function drawResumoCharts(from,to){
+  Object.values(charts).forEach(c=>c&&c.destroy()); charts={};
+  // série diária combinada
+  const map={};
+  (GOOGLE?GOOGLE.dias:[]).concat(META?META.dias:[]).forEach(x=>{ if(x.data>=from&&x.data<=to){ map[x.data]=(map[x.data]||0)+(+x.conv||0); }});
+  const labels=Object.keys(map).sort(); const vals=labels.map(k=>map[k]);
+  const {gtot,mtot}=periodData();
+  charts.l=new Chart(document.getElementById('chLeads'),{type:'line',data:{labels:labels.map(brDate),datasets:[{data:vals,borderColor:'#009C73',backgroundColor:'rgba(0,156,115,.12)',fill:true,tension:.3,pointRadius:0,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{grid:{color:'#f1efe8'},ticks:{font:{size:10}}},x:{grid:{display:false},ticks:{font:{size:9},maxTicksLimit:8}}}}});
+  charts.d=new Chart(document.getElementById('chDonut'),{type:'doughnut',data:{labels:['Google','Meta Ads'],datasets:[{data:[gtot.conv,mtot.conv],backgroundColor:['#009C73','#534ab7'],hoverOffset:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11},boxWidth:10}}}}});
+}
+
+function renderPlataformas(){
+  const {gtot,mtot}=periodData(); const {g:mg,m:mm}=empMetas();
+  const platCard=(tag,cls,t,orc,metaLd)=>{
+    const cpl=t.conv>0?t.custo/t.conv:0, ctr=t.impr>0?t.cliques/t.impr*100:0;
+    return '<div class="plat-card"><div class="plat-head"><span class="plat-tag '+cls+'">'+tag+'</span></div>'+
+      row('Investimento',BRL(t.custo))+row('Orçamento mensal',orc?BRL0(orc):'—')+row('% do orçamento',orc?(PCT(t.custo,orc)+'%'):'—')+
+      row('Leads',NUM(t.conv))+row('Meta de leads',metaLd?NUM(metaLd):'—')+row('% da meta',metaLd?(PCT(t.conv,metaLd)+'%'):'—')+
+      row('CPL realizado',BRL(cpl))+row('Cliques',NUM(t.cliques))+row('CTR',ctr.toFixed(2)+'%')+'</div>';
+  };
+  function row(l,v){return '<div class="plat-row"><span>'+l+'</span><span>'+v+'</span></div>';}
+  document.getElementById('view-plataformas').innerHTML='<div class="plat-grid">'+
+    platCard('Google',  'tag-g', gtot, mg.orcamentoMensal, mg.metaLeadsMensal)+
+    platCard('Meta Ads','tag-f', mtot, mm.orcamento, mm.metaLeads)+'</div>';
+}
+
+function renderCriativos(){
+  const wrap=document.getElementById('view-criativos');
+  const e=EMPS.find(x=>x.id===selEmp)||{};
+  const hasMeta = e.hasMeta!==false;
+  const src = hasMeta ? crtSrc : 'google';   // sem Meta → só Google
+  const toggle = '<div class="crt-src">'+
+    (hasMeta?'<button class="crt-sbtn'+(src==='meta'?' active':'')+'" data-src="meta">📘 Meta</button>':'')+
+    '<button class="crt-sbtn'+(src==='google'?' active':'')+'" data-src="google">🔍 Google</button></div>';
+  wrap.innerHTML = toggle + (src==='google' ? googleCrtGrid() : metaCrtGrid());
+}
+function metaCrtGrid(){
+  if(metaCrtLoading) return '<div class="empty">Atualizando criativos…</div>';
+  const d = metaCrt || META;
+  if(!d || !d.criativos || !d.criativos.length) return '<div class="empty">Sem criativos de Meta neste empreendimento.</div>';
+  const list=d.criativos.slice().sort((a,b)=>(+b.spend||0)-(+a.spend||0));
+  return '<div class="cr-grid">'+list.map(c=>
+    '<div class="cr-card">'+(c.img?'<img class="cr-img" src="'+c.img+'" referrerpolicy="no-referrer" onerror="this.style.display=\'none\'">':'<div class="cr-img"></div>')+
+    '<div class="cr-body"><span class="cr-tag '+(c.status==='ACTIVE'?'on':'')+'">'+(c.status==='ACTIVE'?'Ativo':'Pausado')+'</span>'+
+    '<div class="cr-camp">'+(c.nome||'—')+'</div>'+
+    '<div class="cr-metrics"><div class="cr-m"><b>'+BRL0(c.spend)+'</b><span>investido</span></div><div class="cr-m"><b>'+NUM(c.leads)+'</b><span>leads</span></div>'+
+    '<div class="cr-m"><b>'+(c.leads?BRL0(c.cpl):'—')+'</b><span>CPL</span></div><div class="cr-m"><b>'+(c.ctr||0).toFixed(1)+'%</b><span>CTR</span></div></div></div></div>').join('')+'</div>';
+}
+function googleCrtGrid(){
+  if(googleCrtLoading) return '<div class="empty">Atualizando criativos…</div>';
+  const d = googleCrt || GOOGLE;
+  if(!d || !d.criativos || !d.criativos.length) return '<div class="empty">Sem criativos de imagem do Google (a Rede de Pesquisa usa só texto; imagens vêm do Performance Max).</div>';
+  const perfMap={BEST:['Melhor','#1F9D56'],GOOD:['Boa','#1F6FE5'],LOW:['Baixa','#DC4632'],LEARNING:['Aprendendo','#8a5a00'],PENDING:['Pendente','#888780'],UNKNOWN:['—','#888780']};
+  const list=d.criativos.slice();
+  return '<div class="cr-grid">'+list.map(c=>{
+    const pf=perfMap[c.perf]||['',''], s=c.stats;
+    const tag = pf[0]?('<span class="cr-tag" style="background:'+pf[1]+'22;color:'+pf[1]+'">'+pf[0]+'</span>'):'<span class="cr-tag">PMax</span>';
+    const metrics = s ?
+      ('<div class="cr-m"><b>'+BRL0(s.custo)+'</b><span>investido</span></div><div class="cr-m"><b>'+NUM(s.conv)+'</b><span>conversões</span></div>'+
+       '<div class="cr-m"><b>'+(s.conv?BRL0(s.cpa):'—')+'</b><span>custo/conv</span></div><div class="cr-m"><b>'+(s.ctr||0)+'%</b><span>CTR</span></div>')
+      : '<div class="cr-m"><b>—</b><span>sem métricas</span></div>';
+    return '<div class="cr-card">'+(c.img?'<img class="cr-img" src="'+c.img+'" referrerpolicy="no-referrer" onerror="this.style.display=\'none\'">':'<div class="cr-img"></div>')+
+      '<div class="cr-body">'+tag+'<div class="cr-camp">'+(c.grupo||c.tipo||'Imagem PMax')+'</div>'+
+      '<div class="cr-metrics">'+metrics+'</div></div></div>';
+  }).join('')+'</div>';
+}
+
+function renderDiario(){
+  const {from,to}=periodRange();
+  const map={};
+  (GOOGLE?GOOGLE.dias:[]).forEach(x=>{ if(x.data>=from&&x.data<=to){ const o=map[x.data]||(map[x.data]={gC:0,gL:0,mC:0,mL:0}); o.gC+=+x.custo||0; o.gL+=+x.conv||0; }});
+  (META?META.dias:[]).forEach(x=>{ if(x.data>=from&&x.data<=to){ const o=map[x.data]||(map[x.data]={gC:0,gL:0,mC:0,mL:0}); o.mC+=+x.custo||0; o.mL+=+x.conv||0; }});
+  const days=Object.keys(map).sort();
+  if(!days.length){ document.getElementById('view-diario').innerHTML='<div class="empty">Sem dados no período.</div>'; return; }
+  const rows=days.map(d=>{const o=map[d];const inv=o.gC+o.mC,ld=o.gL+o.mL,cpl=ld?inv/ld:0;
+    return '<tr><td>'+brDate(d)+'</td><td>'+BRL0(o.gC)+'</td><td>'+NUM(o.gL)+'</td><td>'+BRL0(o.mC)+'</td><td>'+NUM(o.mL)+'</td><td>'+BRL(cpl)+'</td></tr>';}).join('');
+  document.getElementById('view-diario').innerHTML='<div class="tbl-wrap"><table><thead><tr><th>Dia</th><th>Verba Google</th><th>Leads G</th><th>Verba Meta</th><th>Leads M</th><th>CPL total</th></tr></thead><tbody>'+rows+'</tbody></table></div>';
+}
+
+const brDate = s => s ? s.slice(8,10)+'/'+s.slice(5,7) : '';
+
+// ---- abas / período ----
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active')); b.classList.add('active');
+  activeTab=b.dataset.tab;
+  ['resumo','plataformas','criativos','diario'].forEach(v=>document.getElementById('view-'+v).style.display=v===activeTab?'':'none');
+  if(activeTab==='criativos'){ render(); loadCrtForPeriod().then(render); return; }  // carrega criativos da janela atual (fonte ativa)
+  render();
+});
+document.getElementById('periods').onclick=e=>{
+  const b=e.target.closest('button'); if(!b)return;
+  document.querySelectorAll('#periods button').forEach(x=>x.classList.remove('active')); b.classList.add('active');
+  if(b.dataset.d==='mes'){ periodMes=true; } else { periodMes=false; periodDays=+b.dataset.d; }
+  metaCrt=null; googleCrt=null;   // período mudou → criativos precisam re-buscar
+  loadExpad().then(render);       // Expad é filtrado no servidor pelo período
+  if(activeTab==='criativos'){ loadCrtForPeriod().then(render); }
+  render();
+};
+// troca de fonte (Meta | Google) na aba Criativos
+document.getElementById('view-criativos').addEventListener('click',ev=>{
+  const b=ev.target.closest('.crt-sbtn'); if(!b)return;
+  crtSrc=b.dataset.src; render(); loadCrtForPeriod().then(render);
+});
+
+renderSidebar();
+loadAll();
+</script>
+</body>
+</html>

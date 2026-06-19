@@ -1,0 +1,141 @@
+/* =====================================================
+   BASE · Reset + fundo com blobs coloridos (essencial pro glass)
+   ===================================================== */
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text);
+  background: var(--bg-base);
+  min-height: 100vh;
+  position: relative;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color var(--transition);
+}
+
+/* ======================================================
+   BLOBS COLORIDOS NO FUNDO (criam o vidro de verdade)
+   Sem isso, blur não tem o que desfocar = sem efeito visual
+   ====================================================== */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: var(--bg-blob-opacity);
+  pointer-events: none;
+  z-index: 0;
+  animation: blobFloat 20s ease-in-out infinite;
+}
+
+body::before {
+  top: -200px;
+  left: -150px;
+  width: 600px;
+  height: 600px;
+  background: var(--bg-blob-1);
+  animation-delay: 0s;
+}
+
+body::after {
+  bottom: -250px;
+  right: -200px;
+  width: 700px;
+  height: 700px;
+  background: var(--bg-blob-2);
+  animation-delay: -10s;
+}
+
+/* Terceiro blob via .app */
+.app::before {
+  content: "";
+  position: fixed;
+  top: 35%;
+  left: 50%;
+  width: 500px;
+  height: 500px;
+  border-radius: 50%;
+  background: var(--bg-blob-3);
+  filter: blur(120px);
+  opacity: calc(var(--bg-blob-opacity) * 0.65);
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 0;
+  animation: blobFloat 25s ease-in-out -5s infinite;
+}
+
+@keyframes blobFloat {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33%      { transform: translate(60px, -40px) scale(1.08); }
+  66%      { transform: translate(-50px, 50px) scale(0.95); }
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+
+.app {
+  position: relative;
+  z-index: 1;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 18px 24px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.tabular-nums { font-variant-numeric: tabular-nums; }
+.text-muted   { color: var(--muted); }
+
+::-webkit-scrollbar       { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(127, 127, 127, 0.3);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(127, 127, 127, 0.5); }
+
+::selection {
+  background: var(--primary-glow);
+  color: var(--text);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes pulseRing {
+  0%   { box-shadow: 0 0 0 0 currentColor; }
+  100% { box-shadow: 0 0 0 8px transparent; }
+}
+
+@media (max-width: 768px) {
+  .app { padding: 14px 16px 24px; gap: 14px; }
+  body::before, body::after, .app::before {
+    width: 400px; height: 400px;
+    filter: blur(80px);
+  }
+}
+
+@supports not (backdrop-filter: blur(20px)) {
+  body::before, body::after, .app::before {
+    opacity: calc(var(--bg-blob-opacity) * 0.5);
+  }
+}

@@ -1,0 +1,14 @@
+﻿node_modules/
+*.log
+.DS_Store
+.claude/
+
+# Segredos — NUNCA commitar tokens do Meta / Google / CRM
+.env
+.env.*
+*.token
+meta-token*
+secrets*.json
+client-secrets.json
+client-secrets.local.json
+passwords.json

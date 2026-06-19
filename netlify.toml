@@ -1,0 +1,14 @@
+# Deploy alternativo no Netlify (hospedagem estática da pasta /public)
+[build]
+  publish = "public"
+  command = ""
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Cache-Control = "public, max-age=300"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200

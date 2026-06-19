@@ -1,0 +1,739 @@
+{
+  "all-pe": {
+    "nome": "All Pé",
+    "sub": "Clínicas de Podologia · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "2182542786",
+    "metaAccount": "act_1658989684627909",
+    "ga4PropertyName": "ALL Pe site novo",
+    "metas": {
+      "google": { "orcamentoMensal": 8600, "metaLeadsMensal": 470 },
+      "meta":   { "orcamento": 1400, "metaLeads": 53 }
+    },
+    "metaCustomLeadIds": ["718354561197781", "1523150865353460", "571533288479812"],
+    "senha": "allpe123"
+  },
+  "clinica-demo": {
+    "nome": "Clínica Demo",
+    "sub": "Saúde · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "0000000001",
+    "metaAccount": "",
+    "metas": {
+      "google": { "orcamentoMensal": 5000, "metaLeadsMensal": 250 },
+      "meta":   { "orcamento": 2000, "metaLeads": 80 }
+    },
+    "senha": "demo123"
+  },
+  "petshop-demo": {
+    "nome": "PetShop Demo",
+    "sub": "Varejo · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "0000000002",
+    "metaAccount": "",
+    "metas": {
+      "google": { "orcamentoMensal": 3000, "metaLeadsMensal": 150 },
+      "meta":   { "orcamento": 1000, "metaLeads": 40 }
+    },
+    "senha": "demo123"
+  },
+  "centro-oft": {
+    "nome": "Centro Oftalmológico",
+    "sub": "Saúde · BRL",
+    "logo": "/assets/logo.svg",
+    "template": "centro-oft",
+    "ga4Property": "373589324",
+    "metaAccount": "act_174947285286938",
+    "sheets": { "id": "", "aba": "Diário + Performance", "range": "A1:Z200" },
+    "expad": { "accountId": "", "clientId": "" },
+    "meta": { "account": "" },
+    "metas": {
+      "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 },
+      "meta":   { "orcamento": 0, "metaLeads": 0 }
+    },
+    "senha": "centrooft123"
+  },
+  "imede-cursos": {
+    "nome": "IMEDE Cursos",
+    "sub": "Educação · Google Ads · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "6870078319",
+    "metaAccount": "act_2605913222973870",
+    "expadAccountId": "68f464c21b8c8f66ff8c55ce", "expadApiKey": "2236f3a1239cc878f296794b450d4a4218339e67a96478b001b404c0c9e8578c",
+    "metas": {
+      "google": { "orcamentoMensal": 4500, "metaLeadsMensal": 70 },
+      "meta":   { "orcamento": 7000, "metaLeads": 200 }
+    },
+    "senha": "imede123"
+  },
+  "imede-exames": {
+    "nome": "IMEDE Exames",
+    "sub": "Saúde · Google Ads · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "7294891246",
+    "metaAccount": "act_193656634042211",
+    "expadAccountId": "68f464c11b8c8f66ff8c4d63", "expadApiKey": "52560eb5c97a6d8ef5ee6ce32d6b4a25cef00e74de97f143ac928ba1b0d49a6d",
+    "metas": {
+      "google": { "orcamentoMensal": 4200, "metaLeadsMensal": 800 },
+      "meta":   { "orcamento": 0, "metaLeads": 0 }
+    },
+    "senha": "imede123"
+  },
+  "maximune": {
+    "nome": "MaxImune",
+    "sub": "Saúde · Google Ads · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "3689255398",
+    "metaAccount": "act_1771485009853104",
+    "metas": {
+      "google": { "orcamentoMensal": 6600, "metaLeadsMensal": 629 },
+      "meta":   { "orcamento": 3100, "metaLeads": 310 }
+    },
+    "expadAccountId": "68f464c11b8c8f66ff8c4ed0", "expadApiKey": "7fd4fceb5c6dbc5f3e09b4eb62378f4ed3056aa157dfe2b638170a37766093b5",
+    "ga4Property": "407689019",
+    "senha": "maximune123"
+  },
+  "mereo": {
+    "nome": "MEREO",
+    "sub": "Saúde · Google Ads · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "9640643863",
+    "metaAccount": "act_838451328239718",
+    "metas": {
+      "google": { "orcamentoMensal": 25900, "metaLeadsMensal": 200 },
+      "meta":   { "orcamento": 8500, "metaLeads": 0 }
+    },
+    "expadAccountId": "68f464c11b8c8f66ff8c4e31", "expadApiKey": "dd4259941d671ac617892ffffa9ad1b9eea67554d70edef2006387b9cd8b8784",
+    "ga4Property": "285794022",
+    "senha": "mereo123"
+  },
+  "montbros": {
+    "nome": "Montbros",
+    "sub": "Imobiliário · Google Ads · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "5505700468",
+    "metaAccount": "act_766910984631000",
+    "metas": {
+      "google": { "orcamentoMensal": 3500, "metaLeadsMensal": 129 },
+      "meta":   { "orcamento": 11000, "metaLeads": 407 }
+    },
+    "metaLeadsFormOnly": true,
+    "senha": "montbros123"
+  },
+  "onsystem": {
+    "nome": "OnSystem",
+    "sub": "Rastreamento · Google Ads · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "6636567805",
+    "metaAccount": "act_1161473168472747",
+    "metas": {
+      "google": { "orcamentoMensal": 15900, "metaLeadsMensal": 588 },
+      "meta":   { "orcamento": 0, "metaLeads": 0 }
+    },
+    "expadAccountId": "68f464c21b8c8f66ff8c5916", "expadApiKey": "d839b31d293ff390140261511707af7c2d67bec761bbb149342e9d6d5f7d6507",
+    "ga4Property": "493934605",
+    "senha": "onsystem123"
+  },
+  "auto-truck": {
+    "nome": "Auto Truck",
+    "sub": "Proteção Veicular · Google Ads · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "7252560733",
+    "metaAccount": "act_189255178981061",
+    "metas": {
+      "google": { "orcamentoMensal": 40000, "metaLeadsMensal": 0 },
+      "meta":   { "orcamento": 5000, "metaLeads": 0 }
+    },
+    "senha": "autotruck123"
+  },
+  "felicio-rocho": {
+    "nome": "Felício Rocho",
+    "sub": "Saúde · Google Ads · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "8598430176",
+    "metaAccount": "act_323767327034516",
+    "metas": {
+      "google": { "orcamentoMensal": 5000, "metaLeadsMensal": 330 },
+      "meta":   { "orcamento": 4000, "metaLeads": 180 }
+    },
+    "senha": "feliciorocho123"
+  },
+  "noventa-ti": {
+    "nome": "Noventa TI",
+    "sub": "Tecnologia · Google Ads · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "7889226211",
+    "metaAccount": "",
+    "metas": {
+      "google": { "orcamentoMensal": 6000, "metaLeadsMensal": 100 },
+      "meta":   { "orcamento": 1200, "metaLeads": 45 }
+    },
+    "expadAccountId": "68f464c21b8c8f66ff8c5626", "expadApiKey": "0cc85b42c24302517bef277876f32498a49b01fbc7e370701b7e3fa61dca50c1",
+    "senha": "noventati123"
+  },
+  "carvisa": {
+    "nome": "Carvisa",
+    "sub": "Proteção Veicular · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "3097909746",
+    "metaAccount": "act_1148850896358037",
+    "metas": {
+      "google": { "orcamentoMensal": 1000, "metaLeadsMensal": 10 },
+      "meta":   { "orcamento": 15000, "metaLeads": 800 }
+    },
+    "expadAccountId": "68f464c11b8c8f66ff8c4e57", "expadApiKey": "37093af12128aaa1886ebf1c533758142c1d064d6a6fdacb1be0970f1c6ceda3",
+    "ga4Property": "446183226",
+    "senha": "carvisa123"
+  },
+  "acl": {
+    "nome": "ACL",
+    "sub": "Imobiliário · Google Ads · BRL",
+    "logo": "/assets/logo.svg",
+    "empreendimentos": [
+      { "id": "tatuape", "nome": "LUV Tatuapé", "googleCustomerId": "1611155519", "metaAccount": "act_946730315189384", "ga4Property": "527701850" },
+      { "id": "jabaquara", "nome": "LUV Jabaquara", "googleCustomerId": "8534105382", "metaAccount": "act_1104604424176458" }
+    ],
+    "googleCustomerId": "1611155519",
+    "metaAccount": "",
+    "ga4Property": "435800111",
+    "metas": {
+      "google": { "orcamentoMensal": 20000, "metaLeadsMensal": 35 },
+      "meta":   { "orcamento": 50000, "metaLeads": 400 }
+    },
+    "expadAccountId": "69c56d8ce9aa7f36a2239285", "expadApiKey": "72a4a7f359073545c9d80e9b9f976ae5ed1731e9ef8cd8bcfe6aeede5672b560",
+    "senha": "acl123"
+  },
+  "concreto": {
+    "nome": "Concreto",
+    "sub": "Imobiliário · multi-empreendimentos · BRL",
+    "logo": "/assets/logo.svg",
+    "empreendimentos": [
+      { "id": "central-park", "nome": "Central Park", "googleCustomerId": "5247200927", "metaAccount": "act_2043077996208187", "ga4Property": "464701725", "expadAccountId": "6944194623683b13dd06aee9", "expadApiKey": "cc307d44f8ad0987ce817b4b1974eef68f320f822ab6e9c436de846eb74fda47", "metas": { "google": { "orcamentoMensal": 1314.14, "metaLeadsMensal": 37 }, "meta": { "orcamento": 793.89, "metaLeads": 90 } } },
+      { "id": "ritmo-itaim", "nome": "Ritmo Itaim", "googleCustomerId": "8912851896", "metaAccount": "act_528188932234065", "ga4Property": "464677695", "expadAccountId": "6944195723683b13dd06aeea", "expadApiKey": "c8eefe525740e724faed02d0330837fe4944ef4cf1cc1e98749b8a1115104233", "metas": { "google": { "orcamentoMensal": 1981.71, "metaLeadsMensal": 215 }, "meta": { "orcamento": 2431.75, "metaLeads": 28 } } },
+      { "id": "ventura-towers", "nome": "Ventura Towers", "googleCustomerId": "7245526609", "metaAccount": "act_736919441734655", "ga4Property": "464683645", "expadAccountId": "6944193623683b13dd06aee8", "expadApiKey": "19a8e9b7a9083c6aac8fcc16d09854758daf80b2269d6c8eab0d4555e2e74fa7", "metas": { "meta": { "orcamento": 814.09, "metaLeads": 100 } } },
+      { "id": "anima-sion", "nome": "Ânima Sion", "googleCustomerId": "6191071047", "metaAccount": "act_925625309298892", "ga4Property": "464619226", "expadAccountId": "6944191823683b13dd06aee7", "expadApiKey": "2512b90dcf34ed1fcdc6180adfad9b601adf6cb8d496c676868fc36bf99e22ed", "metas": { "google": { "orcamentoMensal": 1881.40, "metaLeadsMensal": 379 }, "meta": { "orcamento": 3372.57, "metaLeads": 49 } } },
+      { "id": "ruah", "nome": "Ruah", "googleCustomerId": "8737826376", "metaAccount": "act_389045607181416", "ga4Property": "464684254", "expadAccountId": "6942a03f23683b13dd06aedc", "expadApiKey": "24ae3e6d08a2bfd365bb729a987ed95a8f8d68582579d689e816b11682e7076c", "metas": { "google": { "orcamentoMensal": 1670.93, "metaLeadsMensal": 10 }, "meta": { "orcamento": 2306.23, "metaLeads": 37 } } }
+    ],
+    "googleCustomerId": "5247200927",
+    "metaAccount": "act_2043077996208187",
+    "metas": {
+      "google": { "orcamentoMensal": 7674.40, "metaLeadsMensal": 0 },
+      "meta":   { "orcamento": 957.79, "metaLeads": 0 }
+    },
+    "senha": "concreto123"
+  },
+  "ana-rosa": {
+    "nome": "Ana Rosa",
+    "sub": "Grupo Ana Rosa · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "9462021399",
+    "metaAccount": "",
+    "metas": { "google": { "orcamentoMensal": 16500, "metaLeadsMensal": 2000 }, "meta": { "orcamento": 2000, "metaLeads": 150 } },
+    "expadAccountId": "68f464c11b8c8f66ff8c51a8", "expadApiKey": "0199d1e05a2106e6954379093bd66abff30bdc500be3b1a4b856af27a6a302e4",
+    "metaSemAcesso": true,
+    "senha": "anarosa123"
+  },
+  "atex": {
+    "nome": "Atex",
+    "sub": "Atex · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "8717186954",
+    "metaAccount": "",
+    "metas": { "google": { "orcamentoMensal": 8500, "metaLeadsMensal": 150 }, "meta": { "orcamento": 7000, "metaLeads": 150 } },
+    "expadAccountId": "68f464c11b8c8f66ff8c4ea2", "expadApiKey": "f5090446c3b48f8e95b1617c55e21c0ec65ba9d97e5a5df1ffa5460bd873303b",
+    "metaSemAcesso": true,
+    "senha": "atex123"
+  },
+  "brazon": {
+    "nome": "Brazon",
+    "sub": "Brazon · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "5769539692",
+    "metaAccount": "act_1253448808685988",
+    "metas": { "google": { "orcamentoMensal": 15000, "metaLeadsMensal": 800 }, "meta": { "orcamento": 8500, "metaLeads": 2000 } },
+    "expadAccounts": [
+      { "accountId": "68f464c21b8c8f66ff8c5619", "apiKey": "4d0d1301b1895cb69f29f61d8e83fa6982d617668e1bac845e1d327f584c56f9" },
+      { "accountId": "68f464c11b8c8f66ff8c4f19", "apiKey": "7a8e8c100b7544cdb346e063537b79b82d29d0acb8fb123cc778605b9ea49994" }
+    ],
+    "senha": "brazon123"
+  },
+  "clinica-ea": {
+    "nome": "Clínica EA",
+    "sub": "Saúde · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "",
+    "metaAccount": "",
+    "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+    "metaSemAcesso": true,
+    "senha": "clinicaea123"
+  },
+  "gominha": {
+    "nome": "Gominha",
+    "sub": "Gominha Pneus · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "7674721243",
+    "metaAccount": "act_6971491206243285",
+    "metas": { "google": { "orcamentoMensal": 12000, "metaLeadsMensal": 1000 }, "meta": { "orcamento": 3000, "metaLeads": 250 } },
+    "expadAccountId": "68f464c21b8c8f66ff8c5588", "expadApiKey": "464b0518417f42dfe105003c0f2b4ac2a80051b8dd6ef10cf73d8309bdb9327e",
+    "senha": "gominha123"
+  },
+  "puc-tom": {
+    "nome": "PUC/Tom",
+    "sub": "PUC Minas · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "8586927389",
+    "metaAccount": "act_1405823256403026",
+    "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 6162 }, "meta": { "orcamento": 0, "metaLeads": 1000 } },
+    "expadAccountId": "68f464c21b8c8f66ff8c555a", "expadApiKey": "06ba26225947cdb6db78a08fb3f5f04cc2895d14d1b341a3276a2c42054b165b",
+    "senha": "puctom123"
+  },
+  "morada": {
+    "nome": "Morada",
+    "sub": "Morada · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "3471092631",
+    "metaAccount": "",
+    "metas": { "google": { "orcamentoMensal": 2000, "metaLeadsMensal": 0 }, "meta": { "orcamento": 2000, "metaLeads": 0 } },
+    "expadAccountId": "68f464c11b8c8f66ff8c518b", "expadApiKey": "130138395112d6cf6abe3ce3dcd3f3c36fe742b2c5d3eac758e2d02d95ec8710",
+    "metaSemAcesso": true,
+    "senha": "morada123"
+  },
+  "mv-prec": {
+    "nome": "MV Prec",
+    "sub": "MV Prec · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "9077443044",
+    "metaAccount": "",
+    "metas": { "google": { "orcamentoMensal": 7000, "metaLeadsMensal": 124 }, "meta": { "orcamento": 3824, "metaLeads": 166 } },
+    "expadAccountId": "68f464c11b8c8f66ff8c4d56", "expadApiKey": "ee7f626337ca9e60649ce6e42d27d2fb5126d2544b721e71ae5803a155f0060d",
+    "metaSemAcesso": true,
+    "senha": "mvprec123"
+  },
+  "innove": {
+    "nome": "Innove",
+    "sub": "Proteção Veicular · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "9163400113",
+    "metaAccount": "",
+    "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+    "expadAccountId": "69df8c0f17c68e8c4b005af4", "expadApiKey": "81b1bc8ccd5386cdeefbda68f7e0314cc3bb45a008d07496210c055f410d01da",
+    "metaSemAcesso": true,
+    "senha": "innove123"
+  },
+  "auto-proteja": {
+    "nome": "Auto Proteja",
+    "sub": "Proteção Veicular · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "6169307093",
+    "metaAccount": "",
+    "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 140 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+    "expadAccountId": "69dd2d0ff41e27cb3bc0d92f", "expadApiKey": "44a04f6936b57d57d8a7a7dc9a24519231bdc2bf2dec4cb6bd265f585f312206",
+    "senha": "autoproteja123"
+  },
+  "anima-engenharia": {
+    "nome": "Ânima Engenharia",
+    "sub": "Imobiliário · multi-empreendimentos · BRL",
+    "logo": "/assets/logo.svg",
+    "empreendimentos": [
+      { "id": "institucional", "nome": "Institucional", "googleCustomerId": "7319075543", "metaAccount": "", "expadAccountId": "6a15a60c7663a3f966fd05cb", "expadApiKey": "bb92f86752b93334a7a7a9dd78cf03ca978deb402deca858e88f2691e24881ae" },
+      { "id": "major-residence", "nome": "Major Residence", "googleCustomerId": "3504976521", "metaAccount": "", "expadAccountId": "6a06232883a81e58554a6e5c", "expadApiKey": "9408bc1e1325c4090c165c355fbabd0063ccf915aae87ae450260369872c65f5" },
+      { "id": "minas-novas", "nome": "Minas Novas", "googleCustomerId": "6839848439", "metaAccount": "", "expadAccountId": "6a0f56940425dfeb0c97e96a", "expadApiKey": "f5bf474a64676768deb5bd413fa76b2d9d648f070777390767a2f64a7131fc16" }
+    ],
+    "googleCustomerId": "7319075543",
+    "metaAccount": "",
+    "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+    "senha": "animaeng123"
+  },
+  "leva-oficina": {
+    "nome": "Leva Oficina",
+    "sub": "Oficina · herdado · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "3537162280",
+    "metaAccount": "",
+    "metas": { "google": { "orcamentoMensal": 7500, "metaLeadsMensal": 52 }, "meta": { "orcamento": 3000, "metaLeads": 80 } },
+    "expadAccountId": "68f464c11b8c8f66ff8c4de4", "expadApiKey": "9e5ee8a84e0b892c007d515aa115f5a1bb8331609c3e351dc013ee980035c673",
+    "metaSemAcesso": true,
+    "senha": "levaoficina123"
+  },
+  "autoville": {
+    "nome": "Autoville",
+    "sub": "Seminovos · herdado · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "4139830396",
+    "metaAccount": "",
+    "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+    "senha": "autoville123"
+  },
+  "clubcar": {
+    "nome": "ClubCar",
+    "sub": "Automotivo · herdado · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "1941169007",
+    "metaAccount": "",
+    "metas": { "google": { "orcamentoMensal": 50000, "metaLeadsMensal": 1500 }, "meta": { "orcamento": 3000, "metaLeads": 330 } },
+    "expadAccountId": "68f464c11b8c8f66ff8c51f4", "expadApiKey": "1c862c1ea84e550ed205d01c78c995b039a4dbe9ea5c3b49559c4cc00caf129d",
+    "metaSemAcesso": true,
+    "senha": "clubcar123"
+  },
+  "ms-geradores": {
+    "nome": "MS Geradores",
+    "sub": "Geradores · herdado · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "2106904993",
+    "metaAccount": "act_955753389721603",
+    "expadAccountId": "68f464c11b8c8f66ff8c4dac", "expadApiKey": "fe3c572ee48b697e1bc36a739d1f78cfe007f3371d9768c0ac7a6076b03a236b",
+    "metas": { "google": { "orcamentoMensal": 11000, "metaLeadsMensal": 140 }, "meta": { "orcamento": 3000, "metaLeads": 140 } },
+    "senha": "msgeradores123"
+  },
+  "cac-engenharia": {
+    "nome": "CAC Engenharia",
+    "sub": "Imobiliário · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "9320007470",
+    "metaAccount": "act_839512279985868",
+    "metas": { "google": { "orcamentoMensal": 4000, "metaLeadsMensal": 0 }, "meta": { "orcamento": 9500, "metaLeads": 0 } },
+    "ga4Property": "398894172",
+    "senha": "cacengenharia123"
+  },
+  "novo-enredo": {
+    "nome": "Novo Enredo Condomínio",
+    "sub": "Imobiliário · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "8665731384",
+    "metaAccount": "act_232297259714420",
+    "metas": { "google": { "orcamentoMensal": 3000, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+    "expadAccountId": "69a5c905e3761c0663a4bd53", "expadApiKey": "5e7a8cced159f2b7034e31d48350fff76ac14d978387c03a0362af86c53d877a",
+    "ga4Property": "468704731",
+    "senha": "novoenredo123"
+  },
+  "ecogranito": {
+    "nome": "Ecogranito",
+    "sub": "Granitos · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "6058855946",
+    "metaAccount": "act_10154557035604206",
+    "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+    "expadAccountId": "68f464c11b8c8f66ff8c4f02", "expadApiKey": "7aea59dbd428f512176edb1186f23dbb4ecdcc332c74b64845ea973546b65584",
+    "ga4Property": "388315123",
+    "senha": "ecogranito123"
+  },
+  "estacao-ensino": {
+    "nome": "Estação Ensino",
+    "sub": "Educação · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "2767483679",
+    "metaAccount": "act_418680633558397",
+    "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+    "expadAccountId": "68f464c11b8c8f66ff8c4ea4", "expadApiKey": "fc24517dd5acd0071632a4d65b8603028e934d79a6265cfdc11ecd849b20e038",
+    "ga4Property": "355013039",
+    "senha": "estacaoensino123"
+  },
+  "cercas-ramacrisna": {
+    "nome": "Cercas Ramacrisna",
+    "sub": "Cercas · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "7338669537",
+    "metaAccount": "act_1593222194454587",
+    "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+    "expadAccountId": "68f464c21b8c8f66ff8c5629", "expadApiKey": "b26475e3e0662e837db6030a8eacaefbc9732fe6fec4184700753b2b7c72c201",
+    "ga4Property": "331764992",
+    "senha": "cercasramacrisna123"
+  },
+  "belgo-cercas": {
+    "nome": "Belgo Cercas",
+    "sub": "Cercas · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "1285845672",
+    "metaAccount": "act_509723902079679",
+    "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+    "expadAccountId": "68f464c11b8c8f66ff8c4e2a", "expadApiKey": "002441b4690a60294526f7f8ac2c2d22d2fd3a6f637c377c34d0da20eaa5c8af",
+    "ga4Property": "428669647",
+    "senha": "belgocercas123"
+  },
+  "expell": {
+    "nome": "Expell",
+    "sub": "Dedetização · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "6038658910",
+    "metaAccount": "act_655920400220181",
+    "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+    "expadAccountId": "68f464c21b8c8f66ff8c5921", "expadApiKey": "04556292e05f40e30573a78cf337a598d7ab08344777900fff0da41b8efb687e",
+    "ga4Property": "462866257",
+    "senha": "expell123"
+  },
+  "orguel": {
+    "nome": "Orguel",
+    "sub": "Locação de equipamentos · BRL",
+    "logo": "/assets/logo.svg",
+    "template": "orguel",
+    "googleCustomerId": "5704392818",
+    "metaAccount": "act_2073523653108860",
+    "metas": { "google": { "orcamentoMensal": 34000, "metaLeadsMensal": 0 }, "meta": { "orcamento": 4000, "metaLeads": 0 } },
+    "expadAccountId": "68f464c21b8c8f66ff8c56c0", "expadApiKey": "607d5665e097c3aa7fb72cd67707fd09b206ced810cfab0515e98130bb598dd8",
+    "ga4Property": "280284199",
+    "senha": "orguel123"
+  },
+  "mecan": {
+    "nome": "Mecan",
+    "sub": "Industrial · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "8862678131",
+    "metaAccount": "act_478570728631132",
+    "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+    "expadAccountId": "68f464c11b8c8f66ff8c4e9b", "expadApiKey": "9a59328009edf13b6e829a50b19aeb66961614666031f7dfc13cdae3fd567548",
+    "ga4Property": "263249866",
+    "senha": "mecan123"
+  },
+  "cotemig-colegio": {
+    "nome": "Cotemig Colégio",
+    "sub": "Educação · Colégio · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "5726968972",
+    "metaAccount": "act_725882184549241",
+    "tiktokAdvertiserId": "7039121894964084738",
+    "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+    "expadAccountId": "68f464c11b8c8f66ff8c5178", "expadApiKey": "3e6c4f996ec8594cf2180c2724b695c7c94d71e61c7003cd8d66a6b9836fa605",
+    "ga4Property": "401342115",
+    "senha": "cotemigcolegio123"
+  },
+  "cotemig-faculdade": {
+    "nome": "Cotemig Faculdade",
+    "sub": "Educação · Faculdade · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "9825351637",
+    "metaAccount": "act_528466867885179",
+    "tiktokAdvertiserId": "7156675428080467970",
+    "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+    "expadAccountId": "68f464c21b8c8f66ff8c55b9", "expadApiKey": "e57319c6fc4b7c6ca1e5e8fcf1efeccc667662383c3cb27765f5903d7604b967",
+    "ga4Property": "319804300",
+    "senha": "cotemigfaculdade123"
+  },
+  "metropax": {
+    "nome": "Metropax",
+    "sub": "Funerária · multi-empreendimentos · BRL",
+    "logo": "/assets/logo.svg",
+    "empreendimentos": [
+      { "id": "funeraria", "nome": "Funerária", "googleCustomerId": "7070779749", "metaAccount": "act_2679042102428926", "expadAccountId": "697b6366c92055d0133d75bb", "expadApiKey": "ad6776a5fee194bf4017828588e398989e43e7877fab4f57cb0d8726bf168b18" },
+      { "id": "planos", "nome": "Planos Funerários", "googleCustomerId": "5698993066", "metaAccount": "act_1815316318625057", "expadAccountId": "697b558ec92055d0133d75b9", "expadApiKey": "dcef570ead21d57fe538deec90c25f5794bc8347b0a0be27435bfd422cb4c804" },
+      { "id": "metropet", "nome": "Metropet", "googleCustomerId": "7855192337", "metaAccount": "act_1541618400170271", "expadAccountId": "697b6331c92055d0133d75ba", "expadApiKey": "ee12cec4f0d80b8c12904fe523a188ff2e1c822d560297f80acea9893467e166" }
+    ],
+    "googleCustomerId": "7070779749",
+    "metaAccount": "act_2679042102428926",
+    "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+    "senha": "metropax123"
+  },
+  "cmc-modular": {
+    "nome": "CMC Modular",
+    "sub": "Construção modular · Lafaete · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "2771790944",
+    "metaAccount": "",
+    "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+    "expadAccountId": "69d7fbbbf41e27cb3bc0d925", "expadApiKey": "fd6ed644c204553fb0c0c62c2e5d0fb70af33dd04a7e82e41834d45010dd426e",
+    "ga4Property": "532479413",
+    "metaSemAcesso": true,
+    "senha": "cmcmodular123"
+  },
+  "foper": {
+    "nome": "Foper",
+    "sub": "Locação · Lafaete · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "5907108421",
+    "metaAccount": "",
+    "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+    "expadAccountId": "69d7fbfdf41e27cb3bc0d926", "expadApiKey": "13300efa139c7789c4106ea8d8e84b5987f1ee4d7318fcb39ca7074c3b8201bc",
+    "ga4Property": "534371748",
+    "metaSemAcesso": true,
+    "senha": "foper123"
+  },
+  "urba": {
+    "nome": "Urba",
+    "sub": "Loteamentos · multi-empreendimentos · BRL",
+    "logo": "/assets/logo.svg",
+    "template": "urba",
+    "empreendimentos": [
+      { "id": "smart-uberaba", "nome": "Smart Uberaba", "googleCustomerId": "5167605042", "metaAccount": "act_1990806852313506", "expadAccountId": "69c2bee0e9aa7f36a2239267", "expadApiKey": "7b723cfdb5ed48b55a563d30d16e053aded7eb724e41045ff09ba93c5a3b632c", "metas": { "google": { "orcamentoMensal": 20000, "metaLeadsMensal": 600 }, "meta": { "orcamento": 20000, "metaLeads": 600 } } },
+      { "id": "parque-vitoria", "nome": "Parque Vitória", "googleCustomerId": "5813672268", "metaAccount": "act_1674233029411547", "metaCampaignFilter": "parque vitoria", "expadAccountId": "68f464c21b8c8f66ff8c5575", "expadApiKey": "4580e2309bb3f31b50e6d114ab7dac262294bbef2e573aacfd7b524ce3adf162", "metas": { "google": { "orcamentoMensal": 14250, "metaLeadsMensal": 570 }, "meta": { "orcamento": 9500, "metaLeads": 380 } } },
+      { "id": "estilo-uberaba", "nome": "Estilo Uberaba", "googleCustomerId": "8419845847", "metaAccount": "act_1674233029411547", "metaCampaignFilter": { "all": ["estilo", "uberaba"], "not": ["prudente", "campos"] }, "expadAccountId": "68f464c11b8c8f66ff8c4e51", "expadApiKey": "b4921d57d33f7edebad6ebf8b751439c7c64d678846c4c2e3678a5f850c68787", "metas": { "google": { "orcamentoMensal": 10800, "metaLeadsMensal": 300 }, "meta": { "orcamento": 7200, "metaLeads": 200 } } },
+      { "id": "bem-viver", "nome": "Bem Viver Prudente", "googleCustomerId": "3220701382", "metaAccount": "act_1707853016418621", "expadAccountId": "68f464c11b8c8f66ff8c4dc0", "expadApiKey": "5f413221b67dc17f1a3e58be3a41c74df30bdbaef1ce4dfccd3e12b54e227531", "metas": { "google": { "orcamentoMensal": 10800, "metaLeadsMensal": 390 }, "meta": { "orcamento": 7200, "metaLeads": 260 } } },
+      { "id": "smart-reserva", "nome": "Smart Urba Reserva", "googleCustomerId": "8109915384", "metaAccount": "act_1802498014483130", "metas": { "google": { "orcamentoMensal": 10800, "metaLeadsMensal": 480 }, "meta": { "orcamento": 7200, "metaLeads": 320 } } },
+      { "id": "esmeraldas", "nome": "Esmeraldas", "googleCustomerId": "7147741542", "metaAccount": "act_1674233029411547", "metaCampaignFilter": "esmeraldas", "metas": { "google": { "orcamentoMensal": 7000, "metaLeadsMensal": 300 }, "meta": { "orcamento": 7000, "metaLeads": 300 } } },
+      { "id": "monte-mor", "nome": "Reserva Monte Mor", "googleCustomerId": "2642124641", "metaAccount": "act_1749309365584809", "metas": { "google": { "orcamentoMensal": 6600, "metaLeadsMensal": 275 }, "meta": { "orcamento": 5400, "metaLeads": 225 } } },
+      { "id": "dunlop", "nome": "Smart Urba Dunlop", "googleCustomerId": "1944241244", "metaAccount": "act_1674233029411547", "metaCampaignFilter": "dunlop", "expadAccountId": "68f464c11b8c8f66ff8c4f41", "expadApiKey": "07913ce5bfe07229a925d02329a999031e758fcadd27ed141cd24da2ecb00db9", "metas": { "google": { "orcamentoMensal": 6000, "metaLeadsMensal": 275 }, "meta": { "orcamento": 6000, "metaLeads": 275 } } },
+      { "id": "alto-sao-fernando", "nome": "Alto São Fernando", "googleCustomerId": "6218923693", "metaAccount": "act_1674233029411547", "metaCampaignFilter": "sao fernando", "expadAccountId": "68f464c11b8c8f66ff8c5220", "expadApiKey": "7a7f22fefd130e76e3463ee77f36684a5fc5cdc38b303ef217bcbbaa64046616", "metas": { "google": { "orcamentoMensal": 6000, "metaLeadsMensal": 250 }, "meta": { "orcamento": 6000, "metaLeads": 250 } } },
+      { "id": "su-ribeirao", "nome": "Smart Urba Ribeirão", "googleCustomerId": "6247673846", "metaAccount": "act_1674233029411547", "metaCampaignFilter": "smart urba ribeirao", "expadAccountId": "68f464c21b8c8f66ff8c5596", "expadApiKey": "db17d9ceb3ce2d1590de8d576901bf19dbdc3b9da0b471f4888028e57a853728", "metas": { "google": { "orcamentoMensal": 4800, "metaLeadsMensal": 240 }, "meta": { "orcamento": 3200, "metaLeads": 160 } } },
+      { "id": "elvira", "nome": "Residencial Elvira", "googleCustomerId": "3466845533", "metaAccount": "act_1674233029411547", "metaCampaignFilter": "elvira", "expadAccountId": "68f464c11b8c8f66ff8c4e79", "expadApiKey": "354aaac15f6f69bd52272fc0674f5079d4fb65873810d93b5bd4b52cb8e5ba55", "metas": { "google": { "orcamentoMensal": 4800, "metaLeadsMensal": 140 }, "meta": { "orcamento": 7200, "metaLeads": 210 } } },
+      { "id": "jd-sao-roque", "nome": "Jardim São Roque", "googleCustomerId": "3698834380", "metaAccount": "act_1674233029411547", "metaCampaignFilter": "sao roque", "expadAccountId": "68f464c11b8c8f66ff8c4d71", "expadApiKey": "b7bb851a62851b78063714fc87c9c8d0654330750b209ad047d5da3661d6ca6c", "metas": { "google": { "orcamentoMensal": 3000, "metaLeadsMensal": 100 }, "meta": { "orcamento": 3000, "metaLeads": 100 } } }
+    ],
+    "googleCustomerId": "5167605042",
+    "metaAccount": "act_1990806852313506",
+    "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+    "senha": "urba123"
+  },
+  "colegio-logosofico": {
+    "nome": "Colégio Logosófico",
+    "sub": "Educação · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "1977316684",
+    "metaAccount": "",
+    "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+    "metaSemAcesso": true,
+    "senha": "logosofico123"
+  },
+  "aco-mix": {
+    "nome": "Aço Mix",
+    "sub": "Indústria · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "2263753765",
+    "metaAccount": "act_2450828138442023",
+    "metas": { "google": { "orcamentoMensal": 10000, "metaLeadsMensal": 841 }, "meta": { "orcamento": 5000, "metaLeads": 1412 } },
+    "expadAccountId": "68f464c11b8c8f66ff8c4e5d", "expadApiKey": "2976130680f66414161e3bf362c8f53f71539770389ae872e7890449fac206a4",
+    "senha": "acomix123"
+  },
+  "mater-dei-betim-contagem": {
+    "nome": "Mater Dei HIC / Betim Contagem",
+    "sub": "Saúde · Google Ads · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "4573884752",
+    "metaAccount": "act_829684453803423",
+    "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+    "senha": "materdeibetim123"
+  },
+  "mater-dei-nova-lima": {
+    "nome": "Mater Dei Nova Lima",
+    "sub": "Saúde · Google Ads · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "5487472621",
+    "metaAccount": "act_881044570884012",
+    "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+    "senha": "materdeinovalima123"
+  },
+  "mater-dei-vacinas": {
+    "nome": "Mater Dei Vacinas",
+    "sub": "Saúde · Google Ads · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "1716903241",
+    "metaAccount": "act_544940608257715",
+    "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+    "senha": "materdeivacinas123"
+  },
+  "mater-dei-reproducao": {
+    "nome": "Mater Dei Reprodução Humana",
+    "sub": "Saúde · Google Ads · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "3816823797",
+    "metaAccount": "act_1387004301894604",
+    "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+    "senha": "materdeireproducao123"
+  },
+  "meu-mater-dei": {
+    "nome": "Meu Mater Dei",
+    "sub": "Saúde · Google Ads · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "7598840862",
+    "metaAccount": "act_917626496378555",
+    "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+    "senha": "meumaterdei123"
+  },
+  "mater-dei-goiania": {
+    "nome": "Mater Dei Goiânia",
+    "sub": "Saúde · Google Ads · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "1927087107",
+    "metaAccount": "act_1209724343500726",
+    "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+    "senha": "materdeigoiania123"
+  },
+  "dr-exame-venda-nova": {
+    "nome": "DR Exame Venda Nova",
+    "sub": "Saúde · Google Ads · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "1686767045",
+    "metaAccount": "",
+    "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+    "metaSemAcesso": true,
+    "senha": "drexamevendanova123"
+  },
+  "dr-exame-betim": {
+    "nome": "DR Exame Betim",
+    "sub": "Saúde · Google Ads · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "8066624243",
+    "metaAccount": "",
+    "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+    "metaSemAcesso": true,
+    "senha": "drexamebetim123"
+  },
+  "carena": {
+    "nome": "Carena",
+    "sub": "Google Ads · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "6554312523",
+    "metaAccount": "act_553280009857450",
+    "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+    "senha": "carena123"
+  },
+  "hontec": {
+    "nome": "Hontec",
+    "sub": "multi-unidades · Google Ads · BRL",
+    "logo": "/assets/logo.svg",
+    "empreendimentos": [
+      { "id": "barao", "nome": "Hontec Barão", "googleCustomerId": "3572615269", "metaAccount": "" },
+      { "id": "jacui", "nome": "Hontec Jacuí", "googleCustomerId": "8766044670", "metaAccount": "" }
+    ],
+    "googleCustomerId": "3572615269",
+    "metaAccount": "",
+    "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+    "senha": "hontec123"
+  },
+  "italoc": {
+    "nome": "Italoc",
+    "sub": "Locações · Google Ads · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "6906985552",
+    "metaAccount": "",
+    "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+    "metaSemAcesso": true,
+    "senha": "italoc123"
+  },
+  "mg-recila": {
+    "nome": "MG Recila",
+    "sub": "Google Ads · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "7891058007",
+    "metaAccount": "",
+    "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+    "metaSemAcesso": true,
+    "senha": "mgrecila123"
+  },
+  "nerano": {
+    "nome": "Nerano",
+    "sub": "Google Ads · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "2695833137",
+    "metaAccount": "",
+    "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+    "metaSemAcesso": true,
+    "senha": "nerano123"
+  },
+  "so-multas-salgado-filho": {
+    "nome": "Só Multas Salgado Filho",
+    "sub": "Google Ads · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "4660621380",
+    "metaAccount": "",
+    "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+    "metaSemAcesso": true,
+    "senha": "somultassalgado123"
+  },
+  "talin-auto-vidros": {
+    "nome": "Talín Auto Vidros",
+    "sub": "Auto Vidros · Google Ads · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "3522792695",
+    "metaAccount": "",
+    "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+    "metaSemAcesso": true,
+    "senha": "talinautovidros123"
+  }
+}

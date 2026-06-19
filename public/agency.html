@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projetos · Acesso Marketing</title>
+<style>
+/* ── Design system Acesso: azul elétrico, neutros profundos, hairlines ── */
+@font-face{font-family:'Neurial Grotesk';src:url('/assets/fonts/NeurialGrotesk-Bold.otf') format('opentype');font-weight:700 800;font-display:swap}
+@font-face{font-family:'Neurial Grotesk';src:url('/assets/fonts/NeurialGrotesk-Medium.otf') format('opentype');font-weight:500 600;font-display:swap}
+@font-face{font-family:'TWK Everett';src:url('/assets/fonts/TWKEverett-Regular.otf') format('opentype');font-weight:400;font-display:swap}
+@font-face{font-family:'TWK Everett';src:url('/assets/fonts/TWKEverett-Medium.otf') format('opentype');font-weight:500 700;font-display:swap}
+:root{--blue:#0047FF;--blue-hot:#3361FF;--ink:#0A0E1C;--text:#F4F5F8;--muted:#99A3BF;
+  --hair:rgba(244,245,248,.08);--hair-2:rgba(244,245,248,.16);--surface:linear-gradient(140deg,rgba(26,33,56,.72),rgba(19,26,45,.55))}
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;background:var(--ink);color:var(--text);font-family:'TWK Everett',system-ui,sans-serif;letter-spacing:-.005em;-webkit-font-smoothing:antialiased;position:relative;overflow-x:hidden}
+body::before,body::after{content:'';position:fixed;border-radius:50%;filter:blur(110px);opacity:.3;z-index:0;pointer-events:none}
+body::before{width:520px;height:520px;background:var(--blue);top:-130px;left:-90px}
+body::after{width:460px;height:460px;background:#3341E3;bottom:-150px;right:-100px}
+.wrap{position:relative;z-index:1;max-width:1100px;margin:0 auto;padding:20px}
+.header{background:linear-gradient(120deg,#0047FF,#3341E3,#0036C7);border-radius:20px;padding:24px 28px;min-height:92px;
+  display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;position:relative;overflow:hidden;
+  box-shadow:0 14px 38px rgba(0,54,199,.35)}
+.header::before{content:'';position:absolute;top:-60px;right:-40px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.22),transparent 70%)}
+.header>*{position:relative;z-index:1}
+.brand{display:flex;align-items:center;gap:16px}
+.brand img{height:34px;display:block}
+.brand .tag{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.75)}
+.logout{padding:9px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.10);color:#fff;font-size:13px;font-weight:500;text-decoration:none;transition:.15s}
+.logout:hover{background:rgba(255,255,255,.2)}
+.bar{display:flex;gap:12px;align-items:center;margin:20px 0 18px;flex-wrap:wrap}
+.bar input{flex:1;min-width:220px;padding:14px 18px;border-radius:14px;border:1px solid var(--hair-2);background:#0F1424;color:var(--text);font-size:14px;font-family:inherit;transition:border-color .15s,box-shadow .15s}
+.bar input::placeholder{color:rgba(244,245,248,.32)}
+.bar input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,71,255,.22)}
+.count{color:var(--muted);font-size:13px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:16px}
+.cli{display:block;text-decoration:none;color:inherit;padding:20px;border-radius:20px;
+  background:var(--surface);backdrop-filter:blur(20px) saturate(160%);
+  border:1px solid var(--hair);box-shadow:0 8px 26px rgba(5,7,23,.4);transition:.18s}
+.cli:hover{transform:translateY(-3px);border-color:var(--blue)}
+.cli .av{width:44px;height:44px;border-radius:13px;background:linear-gradient(135deg,#0047FF,#0036C7);display:flex;align-items:center;justify-content:center;font-family:'Neurial Grotesk';font-weight:700;font-size:17px;color:#fff;margin-bottom:12px;overflow:hidden}
+.cli .av.img{background:#fff}
+.cli .av.img img{width:100%;height:100%;object-fit:contain;padding:4px;box-sizing:border-box}
+.cli .av.img span{display:none}
+.cli .nm{font-family:'Neurial Grotesk';font-weight:700;font-size:16px;letter-spacing:-.015em}
+.cli .sb{color:var(--muted);font-size:12px;margin-top:2px;font-family:'TWK Everett'}
+.cli .go{margin-top:14px;color:#6D84FF;font-size:13px;font-weight:500}
+.cli .chs{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.ch{font-size:11px;font-weight:500;padding:3px 10px;border-radius:999px;border:1px solid var(--hair-2)}
+.ch.g{color:#8AA8FF;background:rgba(0,71,255,.16)}
+.ch.m{color:#b794ff;background:rgba(139,92,246,.16)}
+.ch.e{color:#7be0a3;background:rgba(31,157,86,.16)}
+.ch.o{color:var(--muted)}
+.empty{color:var(--muted);font-size:14px;padding:30px 4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <div class="brand">
+      <img src="/assets/logo-acesso-white.png" alt="Acesso Marketing" onerror="this.style.display='none'">
+      <span class="tag">Painel de controle · selecione um projeto</span>
+    </div>
+    <a class="logout" href="/logout">Sair</a>
+  </div>
+  <div class="bar">
+    <input id="busca" placeholder="🔎 Buscar cliente…" autofocus>
+    <span class="count" id="count"></span>
+  </div>
+  <div class="grid" id="grid"></div>
+</div>
+<script>
+let CLIENTES=[];
+const initials = n => n.split(/\s+/).slice(0,2).map(w=>w[0]||'').join('').toUpperCase();
+function render(f=''){
+  const grid=document.getElementById('grid');
+  const list=CLIENTES.filter(c=>c.nome.toLowerCase().includes(f.toLowerCase())||c.id.includes(f.toLowerCase()));
+  document.getElementById('count').textContent=list.length+' de '+CLIENTES.length+' clientes';
+  grid.innerHTML = list.length ? list.map(c=>{
+    const ch=[];
+    if(c.google) ch.push('<span class="ch g">Google</span>');
+    if(c.meta)   ch.push('<span class="ch m">Meta</span>');
+    if(c.expad)  ch.push('<span class="ch e">Expad</span>');
+    const hasLogo = c.logo && c.logo !== '/assets/logo.svg';
+    return `<a class="cli" href="/projeto/${c.id}">
+      <div class="av${hasLogo?' img':''}">${hasLogo?`<img src="${c.logo}" alt="" loading="lazy" onerror="this.parentElement.classList.remove('img');this.remove()">`:''}<span>${initials(c.nome)}</span></div>
+      <div class="nm">${c.nome}${c.emps?` <span class="sb">· ${c.emps} empreend.</span>`:''}</div>
+      <div class="sb">${c.sub||''}</div>
+      <div class="chs">${ch.join('')||'<span class="ch o">sem canais</span>'}</div>
+      <div class="go">Abrir projeto →</div>
+    </a>`;
+  }).join('') : '<div class="empty">Nenhum cliente encontrado.</div>';
+}
+fetch('/api/clients').then(r=>r.json()).then(d=>{
+  CLIENTES=Array.isArray(d)?d.sort((a,b)=>a.nome.localeCompare(b.nome)):[];
+  render();
+}).catch(()=>{document.getElementById('grid').innerHTML='<div class="empty">Erro ao carregar clientes.</div>';});
+document.getElementById('busca').addEventListener('input',e=>render(e.target.value));
+</script>
+</body>
+</html>

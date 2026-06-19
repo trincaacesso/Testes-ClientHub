@@ -1,0 +1,5 @@
+{
+  "_comment": "Usuários internos (admin/analista). Senha pode ser sobrescrita por env USER_PASS_<USUARIO> no Render (recomendado). Clientes ficam em clients.json (cargo 'cliente').",
+  "admin": { "nome": "Administrador", "role": "admin", "senha": "admin123" },
+  "analista": { "nome": "Analista", "role": "analista", "senha": "analista123" }
+}

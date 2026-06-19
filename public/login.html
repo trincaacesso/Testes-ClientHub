@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Entrar · ClientHub</title>
+<style>
+/* ── Design system Acesso (Alma Bytes): azul elétrico, neutros profundos, hairlines ── */
+@font-face{font-family:'Neurial Grotesk';src:url('/assets/fonts/NeurialGrotesk-Bold.otf') format('opentype');font-weight:700;font-display:swap}
+@font-face{font-family:'Neurial Grotesk';src:url('/assets/fonts/NeurialGrotesk-Medium.otf') format('opentype');font-weight:500;font-display:swap}
+@font-face{font-family:'TWK Everett';src:url('/assets/fonts/TWKEverett-Regular.otf') format('opentype');font-weight:400;font-display:swap}
+@font-face{font-family:'TWK Everett';src:url('/assets/fonts/TWKEverett-Medium.otf') format('opentype');font-weight:500;font-display:swap}
+:root{
+  --blue:#0047FF; --blue-hot:#3361FF; --blue-pressed:#0036C7;
+  --ink-950:#050717; --ink-900:#0A0E1C; --ink-800:#0F1424; --slate-800:#1A2138;
+  --bone-50:#FFFFFF; --bone-100:#F4F5F8;
+  --mute:rgba(244,245,248,.55); --mute-2:rgba(244,245,248,.32);
+  --hair:rgba(244,245,248,.08); --hair-2:rgba(244,245,248,.16);
+  --t-display:'Neurial Grotesk',system-ui,sans-serif;
+  --t-sans:'TWK Everett',system-ui,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;background:var(--ink-900);color:var(--bone-50);font-family:var(--t-sans);font-weight:400;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility;letter-spacing:-.005em;
+  display:grid;grid-template-columns:1.1fr 1fr}
+em{font-style:normal;color:var(--blue-hot)}
+
+/* ── Painel esquerdo: fotografia com luz, overlay azul ── */
+.panel{position:relative;overflow:hidden;display:flex;flex-direction:column;justify-content:space-between;padding:52px 56px;min-height:100vh}
+.panel img.ph{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:saturate(.8) brightness(.62)}
+.panel::before{content:'';position:absolute;inset:0;background:linear-gradient(155deg,rgba(5,7,23,.72) 0%,rgba(0,71,255,.34) 60%,rgba(5,7,23,.82) 100%)}
+.panel::after{content:'';position:absolute;left:0;right:0;bottom:0;height:45%;background:linear-gradient(180deg,transparent,rgba(10,14,28,.92))}
+.panel>*{position:relative;z-index:2}
+.panel .brand img{height:34px;display:block}
+.panel h1{font-family:var(--t-display);font-weight:700;letter-spacing:-.03em;line-height:1.04;font-size:clamp(38px,4.2vw,62px);max-width:560px}
+.panel .tagline{margin-top:18px;color:var(--mute);font-size:15px;line-height:1.6;max-width:430px}
+.panel .meta{display:flex;align-items:center;gap:10px;margin-top:34px;
+  font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+.panel .meta .dot{width:7px;height:7px;border-radius:50%;background:var(--blue)}
+
+/* ── Painel direito: formulário ── */
+.side{display:grid;place-items:center;padding:48px 32px;border-left:1px solid var(--hair)}
+.form{width:380px;max-width:100%}
+.form .brand-sm{display:none;height:30px;margin-bottom:36px}
+.tag{display:flex;align-items:center;gap:9px;font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+.tag .dot{width:7px;height:7px;border-radius:50%;background:var(--blue)}
+h2{font-family:var(--t-display);font-weight:700;letter-spacing:-.025em;font-size:40px;margin:14px 0 8px}
+.lead{color:var(--mute);font-size:15px;line-height:1.55;margin-bottom:34px}
+.erro{display:none;background:rgba(255,77,57,.10);border:1px solid rgba(255,77,57,.35);color:#FF8A7A;
+  padding:11px 14px;border-radius:12px;font-size:13.5px;margin-bottom:18px}
+label{display:block;font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin:0 0 8px}
+label small{text-transform:none;letter-spacing:0;color:var(--mute-2);font-size:11px}
+.field{margin-bottom:18px}
+input{width:100%;padding:15px 16px;border-radius:13px;border:1px solid var(--hair-2);background:var(--ink-800);
+  color:var(--bone-50);font-size:15px;font-family:var(--t-sans);transition:border-color .15s,box-shadow .15s}
+input::placeholder{color:var(--mute-2)}
+input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,71,255,.22)}
+button{display:inline-flex;align-items:center;justify-content:center;gap:10px;width:100%;margin-top:10px;
+  padding:16px 22px;border:none;border-radius:999px;background:var(--blue);color:var(--bone-50);
+  font-family:var(--t-sans);font-weight:500;font-size:15px;letter-spacing:-.005em;cursor:pointer;transition:background .15s}
+button:hover{background:var(--blue-hot)}
+button:active{background:var(--blue-pressed)}
+button .arrow{font-weight:500}
+.hint{color:var(--mute-2);font-size:12px;line-height:1.6;margin-top:22px}
+.hairline{height:1px;background:var(--hair);margin:26px 0 0}
+.foot{margin-top:14px;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute-2)}
+
+@media(max-width:920px){
+  body{grid-template-columns:1fr}
+  .panel{display:none}
+  .side{border-left:0;min-height:100vh}
+  .form .brand-sm{display:block}
+}
+</style>
+</head>
+<body>
+
+  <!-- Painel de marca: pessoas em ação, luz que conta a história -->
+  <section class="panel">
+    <div class="brand"><img src="/assets/logo-acesso-white.png" alt="Acesso Marketing" onerror="this.style.display='none'"></div>
+    <img class="ph" src="/assets/login-photo-v2.jpg" alt="">
+    <div>
+      <h1>Dados que viram <em>decisão.</em></h1>
+      <p class="tagline">Performance de Google Ads, Meta Ads, Analytics e CRM — em um só painel, ao vivo, para cada cliente.</p>
+      <div class="meta"><span class="dot"></span> ClientHub · Acesso Marketing</div>
+    </div>
+  </section>
+
+  <!-- Formulário -->
+  <section class="side">
+    <form class="form" method="POST" action="/login">
+      <img class="brand-sm" src="/assets/logo-acesso-white.png" alt="Acesso Marketing" onerror="this.style.display='none'">
+      <div class="tag"><span class="dot"></span> Acesso restrito</div>
+      <h2>Entrar</h2>
+      <p class="lead">Use as credenciais enviadas pela equipe.</p>
+
+      <div class="erro" id="erro">Usuário ou senha inválidos. Confira e tente de novo.</div>
+
+      <div class="field">
+        <label>Usuário <small>· ID do cliente ou equipe</small></label>
+        <input name="user" autocomplete="username" autofocus required>
+      </div>
+      <div class="field">
+        <label>Senha</label>
+        <input name="pass" type="password" autocomplete="current-password" required>
+      </div>
+
+      <button type="submit">Entrar <span class="arrow">→</span></button>
+
+      <div class="hairline"></div>
+      <div class="foot">© Acesso Marketing · Performance</div>
+    </form>
+  </section>
+
+<script>
+  if(new URLSearchParams(location.search).get('erro')) document.getElementById('erro').style.display='block';
+</script>
+</body>
+</html>

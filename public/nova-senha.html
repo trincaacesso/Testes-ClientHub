@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Definir nova senha · ClientHub</title>
+<style>
+@font-face{font-family:'Neurial Grotesk';src:url('/assets/fonts/NeurialGrotesk-Bold.otf') format('opentype');font-weight:700 800;font-display:swap}
+@font-face{font-family:'TWK Everett';src:url('/assets/fonts/TWKEverett-Regular.otf') format('opentype');font-weight:400;font-display:swap}
+@font-face{font-family:'TWK Everett';src:url('/assets/fonts/TWKEverett-Medium.otf') format('opentype');font-weight:500 700;font-display:swap}
+:root{--blue:#0047FF;--blue-hot:#3361FF;--blue-pressed:#0036C7;--ink-900:#0A0E1C;--ink-800:#0F1424;--bone-50:#FFFFFF;--mute:rgba(244,245,248,.55);--mute-2:rgba(244,245,248,.32);--hair:rgba(244,245,248,.08);--hair-2:rgba(244,245,248,.16);--t-display:'Neurial Grotesk',system-ui,sans-serif;--t-sans:'TWK Everett',system-ui,sans-serif}
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;background:var(--ink-900);color:var(--bone-50);font-family:var(--t-sans);letter-spacing:-.005em;-webkit-font-smoothing:antialiased;display:grid;place-items:center;padding:24px}
+.card{width:420px;max-width:100%;background:linear-gradient(140deg,rgba(26,33,56,.7),rgba(19,26,45,.55));border:1px solid var(--hair);border-radius:20px;padding:34px 32px;box-shadow:0 24px 60px rgba(0,0,0,.5)}
+.tag{display:flex;align-items:center;gap:9px;font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+.tag .dot{width:7px;height:7px;border-radius:50%;background:var(--blue)}
+h2{font-family:var(--t-display);font-weight:700;letter-spacing:-.025em;font-size:30px;margin:14px 0 8px}
+.lead{color:var(--mute);font-size:14.5px;line-height:1.55;margin-bottom:28px}
+.erro,.ok{display:none;padding:11px 14px;border-radius:12px;font-size:13.5px;margin-bottom:16px}
+.erro{background:rgba(255,77,57,.10);border:1px solid rgba(255,77,57,.35);color:#FF8A7A}
+.ok{background:rgba(0,156,115,.12);border:1px solid rgba(0,156,115,.4);color:#5fe0b4}
+label{display:block;font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin:0 0 8px}
+.field{margin-bottom:18px}
+input{width:100%;padding:14px 16px;border-radius:13px;border:1px solid var(--hair-2);background:var(--ink-800);color:var(--bone-50);font-size:15px;font-family:var(--t-sans)}
+input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 3px rgba(0,71,255,.22)}
+button{width:100%;margin-top:8px;padding:16px 22px;border:0;border-radius:999px;background:var(--blue);color:#fff;font-family:var(--t-sans);font-weight:500;font-size:15px;cursor:pointer;transition:background .15s}
+button:hover{background:var(--blue-hot)}button:disabled{opacity:.6;cursor:default}
+.hint{color:var(--mute-2);font-size:12px;margin-top:16px;line-height:1.6}
+</style>
+</head>
+<body>
+  <form class="card" id="form">
+    <div class="tag"><span class="dot"></span> Primeiro acesso</div>
+    <h2>Defina sua senha</h2>
+    <p class="lead">Por segurança, crie uma senha pessoal para acessar seu painel. Você usará essa senha nos próximos logins.</p>
+    <div class="erro" id="erro"></div>
+    <div class="ok" id="ok">Senha definida! Redirecionando…</div>
+    <div class="field"><label>Nova senha</label><input type="password" id="nova" autocomplete="new-password" required></div>
+    <div class="field"><label>Confirmar nova senha</label><input type="password" id="conf" autocomplete="new-password" required></div>
+    <button type="submit" id="btn">Salvar e entrar</button>
+    <p class="hint">Mínimo de 4 caracteres. <a href="/logout" style="color:var(--mute)">Sair</a></p>
+  </form>
+<script>
+const $=id=>document.getElementById(id);
+$('form').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const nova=$('nova').value, conf=$('conf').value;
+  const erro=$('erro'); erro.style.display='none';
+  if(nova.length<4){ erro.textContent='A senha precisa ter ao menos 4 caracteres.'; erro.style.display='block'; return; }
+  if(nova!==conf){ erro.textContent='As senhas não coincidem.'; erro.style.display='block'; return; }
+  $('btn').disabled=true;
+  try{
+    const r=await fetch('/api/change-password',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'nova='+encodeURIComponent(nova)});
+    const j=await r.json();
+    if(r.ok&&j.ok){ $('ok').style.display='block'; setTimeout(()=>location.href='/',700); }
+    else { erro.textContent=j.error||'Não foi possível salvar. Tente de novo.'; erro.style.display='block'; $('btn').disabled=false; }
+  }catch(_){ erro.textContent='Erro de rede. Tente de novo.'; erro.style.display='block'; $('btn').disabled=false; }
+});
+</script>
+</body>
+</html>

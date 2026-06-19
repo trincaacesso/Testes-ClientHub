@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Projeto · Acesso Marketing</title>
+<style>
+/* ── Design system Acesso: azul elétrico, neutros profundos, hairlines ── */
+@font-face{font-family:'Neurial Grotesk';src:url('/assets/fonts/NeurialGrotesk-Bold.otf') format('opentype');font-weight:700 800;font-display:swap}
+@font-face{font-family:'Neurial Grotesk';src:url('/assets/fonts/NeurialGrotesk-Medium.otf') format('opentype');font-weight:500 600;font-display:swap}
+@font-face{font-family:'TWK Everett';src:url('/assets/fonts/TWKEverett-Regular.otf') format('opentype');font-weight:400;font-display:swap}
+@font-face{font-family:'TWK Everett';src:url('/assets/fonts/TWKEverett-Medium.otf') format('opentype');font-weight:500 700;font-display:swap}
+:root{--blue:#0047FF;--blue-hot:#3361FF;--ink:#0A0E1C;--text:#F4F5F8;--muted:#99A3BF;
+  --hair:rgba(244,245,248,.08);--hair-2:rgba(244,245,248,.16);--surface:linear-gradient(140deg,rgba(26,33,56,.72),rgba(19,26,45,.55))}
+*{box-sizing:border-box;margin:0;padding:0}
+body{min-height:100vh;background:var(--ink);color:var(--text);font-family:'TWK Everett',system-ui,sans-serif;letter-spacing:-.005em;-webkit-font-smoothing:antialiased;position:relative;overflow-x:hidden}
+body::before,body::after{content:'';position:fixed;border-radius:50%;filter:blur(110px);opacity:.3;z-index:0;pointer-events:none}
+body::before{width:520px;height:520px;background:var(--blue);top:-130px;left:-90px}
+body::after{width:460px;height:460px;background:#3341E3;bottom:-150px;right:-100px}
+.wrap{position:relative;z-index:1;max-width:980px;margin:0 auto;padding:20px}
+.header{background:linear-gradient(120deg,#0047FF,#3341E3,#0036C7);border-radius:20px;padding:24px 28px;min-height:92px;
+  display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;position:relative;overflow:hidden;
+  box-shadow:0 14px 38px rgba(0,54,199,.35)}
+.header::before{content:'';position:absolute;top:-60px;right:-40px;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.22),transparent 70%)}
+.header>*{position:relative;z-index:1}
+.brand{display:flex;align-items:center;gap:16px}
+.brand img{height:34px;display:block}
+.brand .tag{font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.75)}
+.logout{padding:9px 18px;border-radius:999px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.10);color:#fff;font-size:13px;font-weight:500;text-decoration:none;transition:.15s}
+.logout:hover{background:rgba(255,255,255,.2)}
+.back{display:inline-block;margin:24px 0 6px;color:var(--muted);text-decoration:none;font-size:13px}
+.back:hover{color:var(--text)}
+.idt{display:flex;align-items:center;gap:16px;margin:6px 0 4px}
+.av{width:62px;height:62px;border-radius:17px;background:linear-gradient(135deg,#0047FF,#0036C7);display:flex;align-items:center;justify-content:center;font-family:'Neurial Grotesk';font-weight:700;font-size:23px;color:#fff;overflow:hidden}
+.av.img{background:#fff}
+.av.img img{width:100%;height:100%;object-fit:contain;padding:6px;box-sizing:border-box}
+.nm{font-family:'Neurial Grotesk';font-weight:700;font-size:27px;line-height:1.05;letter-spacing:-.02em}
+.sb{color:var(--muted);font-size:14px;margin-top:3px}
+.chs{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.ch{font-size:12px;font-weight:500;padding:4px 12px;border-radius:999px;border:1px solid var(--hair-2)}
+.ch.g{color:#8AA8FF;background:rgba(0,71,255,.16)}
+.ch.m{color:#b794ff;background:rgba(139,92,246,.16)}
+.ch.e{color:#7be0a3;background:rgba(31,157,86,.16)}
+.ch.o{color:var(--muted)}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:30px}
+@media(max-width:640px){.opts{grid-template-columns:1fr}}
+.opt{display:block;text-decoration:none;color:inherit;padding:30px 26px;border-radius:20px;
+  background:var(--surface);backdrop-filter:blur(20px) saturate(160%);
+  border:1px solid var(--hair);box-shadow:0 8px 26px rgba(5,7,23,.4);transition:.18s}
+.opt:hover{transform:translateY(-4px);border-color:var(--blue)}
+.opt.rep:hover{border-color:#EF8A1F}
+.opt .ico{width:54px;height:54px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:26px;margin-bottom:16px}
+.opt.dash .ico{background:rgba(0,71,255,.18)}
+.opt.rep .ico{background:rgba(239,138,31,.18)}
+.opt h3{font-family:'Neurial Grotesk';font-weight:700;font-size:19px;letter-spacing:-.015em}
+.opt p{color:var(--muted);font-size:13.5px;margin-top:7px;line-height:1.55}
+.opt .go{margin-top:16px;font-size:13px;font-weight:500;color:#6D84FF}
+.opt.rep .go{color:#ffb056}
+.tag-foot{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:rgba(244,245,248,.32);margin-top:26px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="header">
+    <div class="brand">
+      <img src="/assets/logo-acesso-white.png" alt="Acesso Marketing" onerror="this.style.display='none'">
+      <span class="tag">Tela do projeto</span>
+    </div>
+    <a class="logout" href="/logout">Sair</a>
+  </div>
+
+  <a class="back" href="/">← Voltar para os clientes</a>
+
+  <div class="idt">
+    <div class="av" id="av">--</div>
+    <div>
+      <div class="nm" id="nm">Projeto</div>
+      <div class="sb" id="sb"></div>
+    </div>
+  </div>
+  <div class="chs" id="chs"></div>
+
+  <div class="opts">
+    <a class="opt dash" id="optDash" href="#">
+      <div class="ico">📊</div>
+      <h3>Ver Dashboard</h3>
+      <p>Acompanhe a performance ao vivo: Google Ads, Meta Ads, criativos, GA4 e leads do CRM, com filtros de período.</p>
+      <div class="go">Abrir dashboard →</div>
+    </a>
+    <a class="opt rep" id="optRep" href="#">
+      <div class="ico">📄</div>
+      <h3>Gerar Relatório</h3>
+      <p>Monte um relatório personalizado (período, seções, campanhas, top criativos, comparação e análise por IA) e exporte em PDF.</p>
+      <div class="go">Montar relatório →</div>
+    </a>
+  </div>
+
+  <div class="tag-foot" id="tag"></div>
+</div>
+<script>
+(function(){
+  const P=window.PROJ||{}, S=window.SESSION||{};
+  const initials = n => (n||'?').split(/\s+/).slice(0,2).map(w=>w[0]||'').join('').toUpperCase();
+  const avEl=document.getElementById('av');
+  if(P.logo && P.logo!=='/assets/logo.svg'){
+    avEl.classList.add('img');
+    avEl.innerHTML='<img src="'+P.logo+'" alt="" onerror="this.parentElement.classList.remove(\'img\');this.parentElement.textContent=\''+initials(P.nome)+'\'">';
+  } else { avEl.textContent=initials(P.nome); }
+  document.getElementById('nm').textContent=P.nome||'Projeto';
+  document.getElementById('sb').textContent=P.sub||'';
+  const ch=[];
+  if(P.google) ch.push('<span class="ch g">🔍 Google Ads</span>');
+  if(P.meta)   ch.push('<span class="ch m">📘 Meta Ads</span>');
+  if(P.expad)  ch.push('<span class="ch e">📋 CRM Expad</span>');
+  if(P.empreendimentos&&P.empreendimentos.length) ch.push('<span class="ch o">'+P.empreendimentos.length+' empreendimentos</span>');
+  document.getElementById('chs').innerHTML=ch.join('')||'<span class="ch o">sem canais configurados</span>';
+  document.getElementById('optDash').href='/c/'+P.id;
+  document.getElementById('optRep').href='/c/'+P.id+'?report=1';
+  document.getElementById('tag').textContent='Acesso como '+(S.nome||'equipe')+(S.role?(' · '+S.role):'');
+})();
+</script>
+</body>
+</html>

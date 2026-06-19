@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Orguel — Campaign Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+/* === Orguel · estilo "Campaign Intelligence" (ref. layout Depyl) · identidade do Manual da Marca jan/24 ===
+   Azul #0039A6 · Azul médio #014AB0 · Laranja #FF7500 · Inter + Oswald */
+:root{
+  --azul:#0039A6; --azul-med:#014AB0; --azul-esc:#002A7A; --azul-cl:#e8eefb;
+  --laranja:#FF7500; --laranja-cl:#fff1e6; --laranja-tx:#b85400;
+  --ink:#16203a; --mute:#6b7589; --mute-2:#9aa3b5;
+  --line:#e7eaf1; --line-2:#eef1f7; --bg:#f4f6fa; --card:#fff;
+  --t-sans:'Inter',system-ui,sans-serif; --t-disp:'Oswald',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--t-sans);background:var(--bg);color:var(--ink);font-size:14px;-webkit-font-smoothing:antialiased}
+.app{display:grid;grid-template-columns:248px 1fr;min-height:100vh}
+/* ===== sidebar ===== */
+.sidebar{background:var(--card);border-right:1px solid var(--line);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+.sb-brand{display:flex;align-items:center;gap:11px;padding:18px 18px 16px;border-bottom:1px solid var(--line)}
+.sb-brand svg{width:38px;height:38px;flex:0 0 auto}
+.sb-brand .nm{font-family:var(--t-disp);font-weight:600;font-size:18px;letter-spacing:.04em;line-height:1}
+.sb-brand .st{font-size:11px;color:#1f9d57;display:flex;align-items:center;gap:5px;margin-top:3px}
+.sb-brand .st::before{content:"";width:6px;height:6px;border-radius:50%;background:#1f9d57}
+.sb-sec{padding:16px 18px 5px;font-size:10px;font-weight:600;color:var(--mute-2);letter-spacing:.08em;text-transform:uppercase}
+.sb-sec small{display:block;font-weight:400;color:#bcc3d1;text-transform:none;letter-spacing:0;margin-top:1px}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 14px;margin:1px 10px;border-radius:9px;cursor:pointer;color:#46506a;font-size:13.5px;font-weight:500;transition:.12s}
+.nav:hover{background:var(--bg)}
+.nav.active{background:linear-gradient(90deg,var(--azul-cl),#f3f6fd);color:var(--azul);box-shadow:inset 0 0 0 1px #d4ddf5}
+.nav .ic{width:17px;text-align:center;flex:0 0 auto;font-size:15px}
+.nav .arw{margin-left:auto;color:var(--azul);font-weight:700}
+.sb-foot{margin-top:auto;padding:14px 18px;border-top:1px solid var(--line);font-size:11px;color:var(--mute-2);line-height:1.5}
+/* ===== main ===== */
+.main{display:flex;flex-direction:column;min-height:100vh}
+.content{padding:26px 30px;max-width:1320px;width:100%}
+.head-row{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.eyebrow{font-size:11.5px;font-weight:600;color:var(--laranja);letter-spacing:.10em;text-transform:uppercase;display:flex;align-items:center;gap:7px;margin-bottom:7px}
+.h-title{font-family:var(--t-disp);font-weight:600;font-size:34px;line-height:1.05;letter-spacing:-.005em}
+.h-sub{font-size:13px;color:var(--mute);margin-top:6px}
+.head-tools{display:flex;align-items:center;gap:9px}
+.pdrop{position:relative}
+.pbtn{display:flex;align-items:center;gap:9px;font-family:inherit;font-size:13px;padding:9px 14px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);cursor:pointer}
+.pbtn b{font-weight:600}
+.pcar{color:var(--mute);font-size:13px;transition:transform .15s}
+.pcar.up{transform:rotate(180deg)}
+.pmenu{position:absolute;top:calc(100% + 7px);right:0;min-width:216px;background:var(--card);border:1px solid var(--line);border-radius:13px;box-shadow:0 16px 44px rgba(16,32,74,.16);padding:7px;z-index:40}
+.popt{padding:11px 15px;border-radius:9px;font-size:13.5px;color:#46506a;cursor:pointer}
+.popt:hover{background:var(--bg)}
+.popt.active{background:var(--laranja-cl);color:var(--laranja-tx);font-weight:600}
+.btn{font-size:13px;padding:9px 15px;border:0;border-radius:10px;background:var(--azul);color:#fff;cursor:pointer;display:inline-flex;align-items:center;gap:7px;font-family:inherit;font-weight:500;text-decoration:none}
+.btn:hover{background:var(--azul-esc)}
+.btn.ghost{background:var(--card);color:#46506a;border:1px solid var(--line)}.btn.ghost:hover{background:var(--bg)}
+/* pills integração */
+.intg{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+.pill{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:500;color:#3b455e;padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:var(--card)}
+.pill .ck{width:16px;height:16px;border-radius:50%;background:#1f9d57;color:#fff;display:grid;place-items:center;font-size:10px}
+.pill .ck.off{background:#cdd2dd}
+.pill small{color:var(--mute)}
+.sec-lbl{font-size:11.5px;font-weight:600;color:var(--azul);letter-spacing:.07em;text-transform:uppercase;margin:0 0 12px}
+/* KPI cards em degradê */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:18px}
+.kpi{border-radius:16px;padding:18px 20px 20px;min-height:118px;display:flex;flex-direction:column;justify-content:space-between}
+.kpi .kl{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#41506f}
+.kpi .kv{font-family:var(--t-disp);font-weight:600;font-size:36px;line-height:1;letter-spacing:-.01em;color:var(--ink)}
+.kpi .kv small{font-family:var(--t-sans);font-size:15px;font-weight:600;color:var(--mute);margin-right:3px}
+.kpi .ks{font-size:11px;color:var(--mute);margin-top:5px}
+.k1{background:#b7c6e9}.k2{background:#ccd6f0}.k3{background:#dee4f6}.k4{background:#eef1fb}
+/* grid 2 col */
+.row2{display:grid;grid-template-columns:1.45fr 1fr;gap:13px;margin-bottom:18px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px}
+.panel-t{font-size:14.5px;font-weight:600}
+.panel-s{font-size:11.5px;color:var(--mute);margin:2px 0 14px}
+/* share bars (Meta vs Google) */
+.share-lbl{display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:var(--mute);letter-spacing:.05em;text-transform:uppercase;margin:14px 0 6px}
+.share{height:11px;border-radius:6px;background:var(--laranja);overflow:hidden;display:flex}
+.share .a{height:100%;background:var(--azul)}
+.share-leg{display:flex;gap:16px;font-size:11.5px;color:var(--mute);margin-top:12px}
+.share-leg i{width:9px;height:9px;border-radius:2px;display:inline-block;margin-right:5px}
+.mini2{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:14px}
+.mini{background:var(--bg);border:1px solid var(--line);border-radius:11px;padding:11px 13px}
+.mini .ml{font-size:10.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--mute)}
+.mini .mv{font-family:var(--t-disp);font-weight:600;font-size:22px;margin-top:3px}
+/* ranking top campanhas */
+.rk{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line-2)}
+.rk:last-child{border:0}
+.rk-nm{flex:0 0 230px;font-size:12.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rk-tag{font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;margin-right:7px;vertical-align:middle}
+.tag-g{background:var(--laranja-cl);color:var(--laranja-tx)}.tag-m{background:var(--azul-cl);color:var(--azul)}
+.rk-bar{flex:1;height:9px;background:var(--line-2);border-radius:5px;overflow:hidden}
+.rk-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--azul),var(--azul-med))}
+.rk-val{flex:0 0 auto;font-size:12.5px;font-weight:600;font-variant-numeric:tabular-nums}
+/* plataformas / tabelas / criativos */
+.plat-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.plat-head{display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-bottom:11px;border-bottom:1px solid var(--line)}
+.plat-tag{font-size:11px;font-weight:600;padding:3px 10px;border-radius:6px}
+.plat-row{display:flex;justify-content:space-between;font-size:12.5px;padding:6px 0;border-bottom:1px solid var(--line-2);color:var(--mute)}
+.plat-row:last-child{border:0}.plat-row span:last-child{color:var(--ink);font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+thead th{text-align:right;padding:10px 13px;color:var(--mute);font-weight:500;font-size:11px;text-transform:uppercase;border-bottom:1px solid var(--line);background:#fafbfd}
+thead th:first-child{text-align:left}
+tbody td{text-align:right;padding:9px 13px;border-bottom:1px solid var(--line-2)}
+tbody td:first-child{text-align:left;font-weight:500}tbody tr:last-child td{border:0}
+.cr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:13px}
+.cr-card{background:var(--card);border:1px solid var(--line);border-radius:13px;overflow:hidden;display:flex;flex-direction:column}
+.cr-img{width:100%;aspect-ratio:1/1;object-fit:cover;background:var(--line-2);display:block}
+.cr-body{padding:10px 12px 12px;display:flex;flex-direction:column;gap:7px}
+.cr-camp{font-size:10.5px;color:var(--mute);line-height:1.3;height:27px;overflow:hidden;font-weight:500}
+.cr-metrics{display:grid;grid-template-columns:1fr 1fr;gap:6px 8px}
+.cr-m b{font-family:var(--t-disp);font-size:15px;font-weight:600}.cr-m span{color:var(--mute);font-size:10px;display:block}
+.cr-tag{font-size:9px;font-weight:700;padding:2px 7px;border-radius:5px;align-self:flex-start;background:var(--line-2);color:var(--mute)}
+.cr-tag.on{background:var(--azul-cl);color:var(--azul)}
+.crt-src{display:inline-flex;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:3px;gap:2px;margin-bottom:16px}
+.crt-src button{font-size:12.5px;padding:6px 14px;border:0;background:none;color:var(--mute);cursor:pointer;border-radius:8px;font-family:inherit;font-weight:500}
+.crt-src button.active{background:var(--azul);color:#fff}
+.news-topic{font-size:12px;font-weight:600;color:var(--azul);letter-spacing:.05em;text-transform:uppercase;margin:22px 0 12px}
+.news-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.news-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+.news-meta{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:9px}
+.news-cat{font-size:9.5px;font-weight:700;padding:3px 8px;border-radius:5px;background:var(--azul-cl);color:var(--azul);letter-spacing:.04em}
+.news-pub{font-size:10.5px;font-weight:600;color:var(--mute);letter-spacing:.04em;text-transform:uppercase}
+.news-date{font-size:11px;color:var(--mute-2);white-space:nowrap}
+.news-title{font-size:15px;font-weight:600;line-height:1.3;margin-bottom:7px}
+.news-resumo{font-size:13px;color:#46506a;line-height:1.55}
+.news-fonte{font-size:11px;color:var(--mute);margin-top:10px}
+.news-pauta{margin-top:13px;border:1px solid var(--line);border-radius:11px;padding:11px 13px;background:var(--bg)}
+.news-pauta .pl{font-size:10px;font-weight:700;color:var(--laranja-tx);letter-spacing:.05em;display:flex;align-items:center;gap:5px;margin-bottom:5px}
+.news-pauta p{font-size:12.5px;color:#46506a;line-height:1.5}
+@media(max-width:900px){.news-grid{grid-template-columns:1fr}}
+.empty{text-align:center;padding:44px 20px;color:var(--mute);font-size:13px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--azul);display:inline-block}.dot.loading{background:var(--laranja)}
+@media(max-width:900px){.app{grid-template-columns:1fr}.sidebar{position:static;height:auto}.kpis{grid-template-columns:1fr 1fr}.row2,.plat-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="sb-brand">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Orguel">
+        <rect width="64" height="64" rx="15" fill="#0039A6"/>
+        <path d="M44 27 A14 14 0 1 0 46 31" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+        <path d="M30 35 L46 19" stroke="#FF7500" stroke-width="6" stroke-linecap="round"/>
+        <path d="M37 19 L46 19 L46 28" fill="none" stroke="#FF7500" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div><div class="nm">ORGUEL</div><div class="st" id="sbStatus">Cliente ativo</div></div>
+    </div>
+    <div class="sb-sec">Visão geral</div>
+    <div class="nav active" data-view="dashboard"><span class="ic">▦</span> Dashboard <span class="arw">›</span></div>
+    <div class="nav" data-view="ga4"><span class="ic">📈</span> Analytics</div>
+    <div class="sb-sec">Mídia · Ads</div>
+    <div class="nav" data-view="plataformas"><span class="ic">⊞</span> Plataformas</div>
+    <div class="nav" data-view="criativos"><span class="ic">🖼</span> Criativos</div>
+    <div class="nav" data-view="diario"><span class="ic">📅</span> Diário</div>
+    <div class="sb-sec">CRM · Expad</div>
+    <div class="nav" data-view="funil"><span class="ic">⚲</span> Funil de leads</div>
+    <div class="sb-foot" id="footer">Engenharia, inovação e confiança.<br>Powered by Acesso Marketing</div>
+  </aside>
+
+  <div class="main">
+    <div class="content">
+      <div class="head-row">
+        <div>
+          <div class="eyebrow">✦ Campaign Intelligence</div>
+          <div class="h-title" id="hTitle">Campanhas Orguel</div>
+          <div class="h-sub" id="hSub">Carregando…</div>
+        </div>
+        <div class="head-tools">
+          <div class="pdrop">
+            <button class="pbtn" id="pbtn"><span>🗓</span> <b id="pTxt">Mês atual</b> <span class="pcar" id="pCar">⌄</span></button>
+            <div class="pmenu" id="pmenu" hidden>
+              <div class="popt" data-p="hoje">Hoje</div>
+              <div class="popt" data-p="7">Últimos 7 dias</div>
+              <div class="popt" data-p="30">Últimos 30 dias</div>
+              <div class="popt" data-p="90">Últimos 90 dias</div>
+              <div class="popt active" data-p="mes">Mês atual</div>
+              <div class="popt" data-p="mes-ant">Mês passado</div>
+            </div>
+          </div>
+          <button class="btn" onclick="loadAll(true)"><span class="dot loading" id="dot"></span> Atualizar</button>
+          <a class="btn ghost" href="/logout">Sair</a>
+        </div>
+      </div>
+      <div class="intg" id="intg"></div>
+      <div id="view"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const CLI = window.CLIENTE || {id:'orguel',nome:'Orguel',metas:{}};
+let period = 'mes';   // 'hoje' | '7' | '30' | '90' | 'mes' | 'mes-ant'
+let activeView = 'dashboard';
+let GOOGLE=null, META=null, EXPAD=null, GA4=null, NEWS=null, newsLoading=false, charts={};
+let metaCrt=null, metaCrtLoading=false, googleCrt=null, googleCrtLoading=false;
+let crtSrc = (CLI.hasMeta===false) ? 'google' : 'meta';
+
+const BRL = v => 'R$ ' + (+v||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const BRL0 = v => (+v||0).toLocaleString('pt-BR',{maximumFractionDigits:0});
+const NUM = v => (+v||0).toLocaleString('pt-BR');
+const PCT = (a,b) => b>0 ? Math.round(a/b*100) : 0;
+const ymd = d => d.toISOString().slice(0,10);
+const brDate = s => s ? s.slice(8,10)+'/'+s.slice(5,7) : '';
+const ymdL = d => d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const PERIOD_LBL = {hoje:'Hoje','7':'Últimos 7 dias','30':'Últimos 30 dias','90':'Últimos 90 dias',mes:'Mês atual','mes-ant':'Mês passado'};
+function periodLabel(){ return PERIOD_LBL[period] || 'Período'; }
+function periodRange(){
+  const now=new Date(), to=ymdL(now);
+  if(period==='hoje') return {from:to, to};
+  if(period==='mes') return {from:ymdL(new Date(now.getFullYear(),now.getMonth(),1)), to};
+  if(period==='mes-ant'){ const f=new Date(now.getFullYear(),now.getMonth()-1,1), l=new Date(now.getFullYear(),now.getMonth(),0); return {from:ymdL(f), to:ymdL(l)}; }
+  const n=+period; const d=new Date(now); d.setDate(d.getDate()-(n-1)); return {from:ymdL(d), to};
+}
+// dias p/ re-busca de criativos (endpoint só aceita "últimos N dias terminando hoje")
+function periodDaysNum(){
+  if(period==='hoje') return 1;
+  if(period==='mes') return new Date().getDate();
+  if(period==='mes-ant'){ const now=new Date(); const f=new Date(now.getFullYear(),now.getMonth()-1,1); return Math.round((now-f)/864e5)+1; }
+  return +period;
+}
+function sliceDias(dias, from, to){
+  return (dias||[]).filter(x=>x.data>=from&&x.data<=to)
+    .reduce((a,x)=>({custo:a.custo+(+x.custo||0),conv:a.conv+(+x.conv||0),cliques:a.cliques+(+x.cliques||0),impr:a.impr+(+x.impr||0)}),{custo:0,conv:0,cliques:0,impr:0});
+}
+function metasCli(){
+  const g=(CLI.metas&&CLI.metas.google)||{orcamentoMensal:0,metaLeadsMensal:0};
+  const m=(CLI.metas&&CLI.metas.meta)||{orcamento:0,metaLeads:0};
+  return {g,m};
+}
+function periodData(){
+  const {from,to}=periodRange();
+  return {from,to,
+    gtot: GOOGLE?sliceDias(GOOGLE.dias,from,to):{custo:0,conv:0,cliques:0,impr:0},
+    mtot: META?sliceDias(META.dias,from,to):{custo:0,conv:0,cliques:0,impr:0}};
+}
+
+/* ---- carga ---- */
+async function loadAll(){
+  document.getElementById('dot').className='dot loading';
+  document.getElementById('hSub').textContent='carregando…';
+  try{
+    const [g,m]=await Promise.all([
+      fetch('/api/google?cli='+CLI.id,{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),
+      fetch('/api/meta?cli='+CLI.id,{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null)
+    ]);
+    GOOGLE = g&&Array.isArray(g.dias)?g:null; META = m&&Array.isArray(m.dias)?m:null;
+    metaCrt=null; googleCrt=null;
+    await loadExpad();
+    document.getElementById('dot').className='dot';
+  }catch(e){}
+  renderIntg(); render();
+}
+async function loadExpad(){
+  const {from,to}=periodRange();
+  try{ const r=await fetch('/api/expad-sales?cli='+CLI.id+'&from='+from+'&to='+to,{cache:'no-store'}); const j=await r.json();
+    EXPAD=(r.ok&&j&&j.sales)?j.sales:null;
+  }catch(e){ EXPAD=null; }
+}
+async function loadGA4(){
+  const {from,to}=periodRange();
+  try{ const r=await fetch('/api/ga4?cli='+CLI.id+'&from='+from+'&to='+to,{cache:'no-store'}); const j=await r.json();
+    GA4=(r.ok&&j&&j.totais)?j:null;
+  }catch(e){ GA4=null; }
+}
+async function loadMetaCreatives(){ metaCrtLoading=true; try{const r=await fetch('/api/meta?cli='+CLI.id+'&days='+periodDaysNum(),{cache:'no-store'});const j=await r.json();metaCrt=(r.ok&&j&&Array.isArray(j.criativos))?j:null;}catch(e){metaCrt=null;} metaCrtLoading=false; }
+async function loadGoogleCreatives(){ googleCrtLoading=true; try{const r=await fetch('/api/google?cli='+CLI.id+'&days='+periodDaysNum(),{cache:'no-store'});const j=await r.json();googleCrt=(r.ok&&j&&Array.isArray(j.criativos))?j:null;}catch(e){googleCrt=null;} googleCrtLoading=false; }
+function effectiveCrtSrc(){ return (CLI.hasMeta===false)?'google':crtSrc; }
+async function loadCrtForPeriod(){ if(effectiveCrtSrc()==='google'){ if(!googleCrt) await loadGoogleCreatives(); } else { if(!metaCrt) await loadMetaCreatives(); } }
+
+/* ---- pills integração + cabeçalho ---- */
+function renderIntg(){
+  const gc = GOOGLE&&GOOGLE.regioes?GOOGLE.regioes.length:0;
+  const mc = META&&META.regioes?META.regioes.length:0;
+  document.getElementById('hSub').textContent=(gc+mc)+' campanhas (top) · Período: '+periodLabel();
+  const pill=(on,nome,extra)=>'<div class="pill"><span class="ck'+(on?'':' off')+'">'+(on?'✓':'·')+'</span> '+nome+(extra?' <small>'+extra+'</small>':'')+'</div>';
+  document.getElementById('intg').innerHTML=
+    pill(!!META,'Meta Ads', META?(mc+' camp.'):'sem dados')+
+    pill(!!GOOGLE,'Google Ads', GOOGLE?(gc+' camp.'):'sem dados')+
+    pill(!!GA4,'GA4', GA4?'conectado':'');
+}
+
+/* ---- router ---- */
+function render(){
+  document.getElementById('view').innerHTML='';
+  if(activeView==='dashboard') renderDashboard();
+  else if(activeView==='plataformas') renderPlataformas();
+  else if(activeView==='criativos') renderCriativos();
+  else if(activeView==='diario') renderDiario();
+  else if(activeView==='funil') renderFunil();
+  else if(activeView==='ga4') renderGA4();
+  else if(activeView==='news'){ renderNews(); if(!NEWS && !newsLoading) loadNews(false); }
+}
+
+function renderDashboard(){
+  const {from,to,gtot,mtot}=periodData();
+  const inv=gtot.custo+mtot.custo, ld=gtot.conv+mtot.conv, cpl=ld>0?inv/ld:0, alc=gtot.impr+mtot.impr;
+  const invG=gtot.custo,invM=mtot.custo,ldG=gtot.conv,ldM=mtot.conv;
+  const invShare = inv>0?Math.round(invM/inv*100):0, ldShare = ld>0?Math.round(ldM/ld*100):0;
+  const cplM = ldM>0?invM/ldM:0, cplG = ldG>0?invG/ldG:0;
+  const html=
+    '<div class="sec-lbl">Visão geral · '+periodLabel()+'</div>'+
+    '<div class="kpis">'+
+      kpi('k1','Investimento','<small>R$</small>'+BRL0(inv), PCT(inv,(metasCli().g.orcamentoMensal||0)+(metasCli().m.orcamento||0))? (PCT(inv,(metasCli().g.orcamentoMensal||0)+(metasCli().m.orcamento||0))+'% do orçado'):'verba investida')+
+      kpi('k2','Leads', NUM(ld), 'Google '+NUM(ldG)+' · Meta '+NUM(ldM))+
+      kpi('k3','CPL médio','<small>R$</small>'+(ld?cpl.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}):'—'), 'investimento ÷ leads')+
+      kpi('k4','Alcance','<small></small>'+NUM(alc), 'impressões no período')+
+    '</div>'+
+    '<div class="row2">'+
+      '<div class="panel"><div class="panel-t">Investimento × Leads por dia</div><div class="panel-s">Onde a verba vai e o que retorna ao longo do período</div><div style="position:relative;height:230px"><canvas id="chDia"></canvas></div></div>'+
+      '<div class="panel"><div class="panel-t">Meta vs Google</div><div class="panel-s">Divisão de verba e leads</div>'+
+        '<div class="share-lbl"><span>Investimento</span><span>'+invShare+'% · '+(100-invShare)+'%</span></div>'+
+        '<div class="share"><div class="a" style="width:'+invShare+'%"></div></div>'+
+        '<div class="share-lbl"><span>Leads</span><span>'+ldShare+'% · '+(100-ldShare)+'%</span></div>'+
+        '<div class="share"><div class="a" style="width:'+ldShare+'%"></div></div>'+
+        '<div class="mini2"><div class="mini"><div class="ml">Meta · CPL</div><div class="mv">'+(ldM?BRL(cplM):'—')+'</div></div>'+
+          '<div class="mini"><div class="ml">Google · CPL</div><div class="mv">'+(ldG?BRL(cplG):'—')+'</div></div></div>'+
+        '<div class="share-leg"><span><i style="background:var(--azul)"></i>Meta Ads</span><span><i style="background:var(--laranja)"></i>Google Ads</span></div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="panel"><div class="panel-t">Top campanhas · por verba</div><div class="panel-s">Maiores investimentos no período (Meta + Google)</div><div id="rkBox" style="margin-top:6px"></div></div>';
+  document.getElementById('view').innerHTML=html;
+  drawDia(from,to); drawRanking(from,to);
+}
+function kpi(cls,l,v,s){ return '<div class="kpi '+cls+'"><div class="kl">'+l+'</div><div class="kv">'+v+'</div><div class="ks">'+s+'</div></div>'; }
+function drawDia(from,to){
+  Object.values(charts).forEach(c=>c&&c.destroy()); charts={};
+  const map={};
+  (GOOGLE?GOOGLE.dias:[]).forEach(x=>{if(x.data>=from&&x.data<=to){const o=map[x.data]||(map[x.data]={c:0,l:0});o.c+=+x.custo||0;o.l+=+x.conv||0;}});
+  (META?META.dias:[]).forEach(x=>{if(x.data>=from&&x.data<=to){const o=map[x.data]||(map[x.data]={c:0,l:0});o.c+=+x.custo||0;o.l+=+x.conv||0;}});
+  const ks=Object.keys(map).sort();
+  charts.d=new Chart(document.getElementById('chDia'),{data:{labels:ks.map(brDate),datasets:[
+    {type:'bar',label:'Investimento',data:ks.map(k=>map[k].c),backgroundColor:'#0039A6',borderRadius:3,yAxisID:'y',order:2},
+    {type:'line',label:'Leads',data:ks.map(k=>map[k].l),borderColor:'#FF7500',backgroundColor:'rgba(255,117,0,.15)',tension:.3,pointRadius:0,borderWidth:2,yAxisID:'y1',order:1,fill:true}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11},boxWidth:10}}},scales:{y:{position:'left',grid:{color:'#eef1f7'},ticks:{font:{size:10},callback:v=>'R$'+BRL0(v)}},y1:{position:'right',grid:{display:false},ticks:{font:{size:10}}},x:{grid:{display:false},ticks:{font:{size:9},maxTicksLimit:10}}}}});
+}
+function drawRanking(from,to){
+  const list=[];
+  (META&&META.regioes?META.regioes:[]).forEach(([n,v])=>list.push({n,v,p:'m'}));
+  (GOOGLE&&GOOGLE.regioes?GOOGLE.regioes:[]).forEach(([n,v])=>list.push({n,v,p:'g'}));
+  list.sort((a,b)=>b.v-a.v);
+  const top=list.slice(0,8), max=top.length?top[0].v:1;
+  document.getElementById('rkBox').innerHTML = top.length? top.map(c=>
+    '<div class="rk"><div class="rk-nm"><span class="rk-tag '+(c.p==='m'?'tag-m':'tag-g')+'">'+(c.p==='m'?'META':'GOOGLE')+'</span>'+c.n+'</div>'+
+    '<div class="rk-bar"><div class="rk-fill" style="width:'+Math.max(3,Math.round(c.v/max*100))+'%"></div></div>'+
+    '<div class="rk-val">'+BRL(c.v)+'</div></div>').join('') : '<div class="empty">Sem campanhas no período.</div>';
+}
+
+function renderPlataformas(){
+  const {gtot,mtot}=periodData(); const {g:mg,m:mm}=metasCli();
+  const card=(tag,cls,t,orc,metaLd)=>{const cpl=t.conv>0?t.custo/t.conv:0,ctr=t.impr>0?t.cliques/t.impr*100:0;
+    return '<div class="panel"><div class="plat-head"><span class="plat-tag '+cls+'">'+tag+'</span></div>'+
+      r('Investimento',BRL(t.custo))+r('Orçamento mensal',orc?('R$ '+BRL0(orc)):'—')+r('% do orçamento',orc?(PCT(t.custo,orc)+'%'):'—')+
+      r('Leads',NUM(t.conv))+r('Meta de leads',metaLd?NUM(metaLd):'—')+r('% da meta',metaLd?(PCT(t.conv,metaLd)+'%'):'—')+
+      r('CPL realizado',BRL(cpl))+r('Cliques',NUM(t.cliques))+r('CTR',ctr.toFixed(2)+'%')+'</div>';};
+  function r(l,v){return '<div class="plat-row"><span>'+l+'</span><span>'+v+'</span></div>';}
+  document.getElementById('view').innerHTML='<div class="sec-lbl">Plataformas · '+periodLabel()+'</div><div class="plat-grid">'+
+    card('Google Ads','tag-g',gtot,mg.orcamentoMensal,mg.metaLeadsMensal)+card('Meta Ads','tag-m',mtot,mm.orcamento,mm.metaLeads)+'</div>';
+}
+
+function renderCriativos(){
+  const hasMeta=CLI.hasMeta!==false, src=hasMeta?crtSrc:'google';
+  const toggle='<div class="crt-src">'+(hasMeta?'<button class="crt-sbtn'+(src==='meta'?' active':'')+'" data-src="meta">📘 Meta</button>':'')+
+    '<button class="crt-sbtn'+(src==='google'?' active':'')+'" data-src="google">🔍 Google</button></div>';
+  document.getElementById('view').innerHTML='<div class="sec-lbl">Criativos · '+periodLabel()+'</div>'+toggle+(src==='google'?googleCrtGrid():metaCrtGrid());
+}
+function metaCrtGrid(){
+  if(metaCrtLoading) return '<div class="empty">Atualizando criativos…</div>';
+  const d=metaCrt||META; if(!d||!d.criativos||!d.criativos.length) return '<div class="empty">Sem criativos de Meta no período.</div>';
+  return '<div class="cr-grid">'+d.criativos.slice().sort((a,b)=>(+b.spend||0)-(+a.spend||0)).map(c=>
+    '<div class="cr-card">'+(c.img?'<img class="cr-img" src="'+c.img+'" referrerpolicy="no-referrer" onerror="this.style.display=\'none\'">':'<div class="cr-img"></div>')+
+    '<div class="cr-body"><span class="cr-tag '+(c.status==='ACTIVE'?'on':'')+'">'+(c.status==='ACTIVE'?'Ativo':'Pausado')+'</span><div class="cr-camp">'+(c.nome||'—')+'</div>'+
+    '<div class="cr-metrics"><div class="cr-m"><b>R$'+BRL0(c.spend)+'</b><span>investido</span></div><div class="cr-m"><b>'+NUM(c.leads)+'</b><span>leads</span></div>'+
+    '<div class="cr-m"><b>'+(c.leads?('R$'+BRL0(c.cpl)):'—')+'</b><span>CPL</span></div><div class="cr-m"><b>'+(c.ctr||0).toFixed(1)+'%</b><span>CTR</span></div></div></div></div>').join('')+'</div>';
+}
+function googleCrtGrid(){
+  if(googleCrtLoading) return '<div class="empty">Atualizando criativos…</div>';
+  const d=googleCrt||GOOGLE; if(!d||!d.criativos||!d.criativos.length) return '<div class="empty">Sem criativos de imagem do Google (imagens vêm do Performance Max).</div>';
+  const pm={BEST:['Melhor','#1F9D56'],GOOD:['Boa','#0039A6'],LOW:['Baixa','#DC4632'],LEARNING:['Aprendendo','#b85400'],PENDING:['Pendente','#888780'],UNKNOWN:['—','#888780']};
+  return '<div class="cr-grid">'+d.criativos.slice().map(c=>{const pf=pm[c.perf]||['',''],s=c.stats;
+    const tag=pf[0]?('<span class="cr-tag" style="background:'+pf[1]+'22;color:'+pf[1]+'">'+pf[0]+'</span>'):'<span class="cr-tag">PMax</span>';
+    const mt=s?('<div class="cr-m"><b>R$'+BRL0(s.custo)+'</b><span>investido</span></div><div class="cr-m"><b>'+NUM(s.conv)+'</b><span>conversões</span></div><div class="cr-m"><b>'+(s.conv?('R$'+BRL0(s.cpa)):'—')+'</b><span>custo/conv</span></div><div class="cr-m"><b>'+(s.ctr||0)+'%</b><span>CTR</span></div>'):'<div class="cr-m"><b>—</b><span>sem métricas</span></div>';
+    return '<div class="cr-card">'+(c.img?'<img class="cr-img" src="'+c.img+'" referrerpolicy="no-referrer" onerror="this.style.display=\'none\'">':'<div class="cr-img"></div>')+
+      '<div class="cr-body">'+tag+'<div class="cr-camp">'+(c.grupo||c.tipo||'Imagem PMax')+'</div><div class="cr-metrics">'+mt+'</div></div></div>';}).join('')+'</div>';
+}
+
+function renderDiario(){
+  const {from,to}=periodRange(); const map={};
+  (GOOGLE?GOOGLE.dias:[]).forEach(x=>{if(x.data>=from&&x.data<=to){const o=map[x.data]||(map[x.data]={gC:0,gL:0,mC:0,mL:0});o.gC+=+x.custo||0;o.gL+=+x.conv||0;}});
+  (META?META.dias:[]).forEach(x=>{if(x.data>=from&&x.data<=to){const o=map[x.data]||(map[x.data]={gC:0,gL:0,mC:0,mL:0});o.mC+=+x.custo||0;o.mL+=+x.conv||0;}});
+  const days=Object.keys(map).sort();
+  let body = days.length? days.map(d=>{const o=map[d];const inv=o.gC+o.mC,ld=o.gL+o.mL,cpl=ld?inv/ld:0;
+    return '<tr><td>'+brDate(d)+'</td><td>R$'+BRL0(o.gC)+'</td><td>'+NUM(o.gL)+'</td><td>R$'+BRL0(o.mC)+'</td><td>'+NUM(o.mL)+'</td><td>'+BRL(cpl)+'</td></tr>';}).join('') : '';
+  document.getElementById('view').innerHTML='<div class="sec-lbl">Diário · '+periodLabel()+'</div><div class="panel" style="padding:0;overflow:hidden">'+
+    (body?('<table><thead><tr><th>Dia</th><th>Verba Google</th><th>Leads G</th><th>Verba Meta</th><th>Leads M</th><th>CPL total</th></tr></thead><tbody>'+body+'</tbody></table>'):'<div class="empty">Sem dados no período.</div>')+'</div>';
+}
+
+function renderFunil(){
+  if(!EXPAD){ document.getElementById('view').innerHTML='<div class="sec-lbl">CRM · Expad</div><div class="panel"><div class="empty">Sem dados do CRM Expad no período (ou não configurado).</div></div>'; return; }
+  document.getElementById('view').innerHTML='<div class="sec-lbl">Funil de leads · CRM Expad · '+periodLabel()+'</div>'+
+    '<div class="kpis"><div class="kpi k1"><div class="kl">Novos leads</div><div class="kv">'+NUM(EXPAD.novos)+'</div><div class="ks">entraram no CRM</div></div>'+
+    '<div class="kpi k2"><div class="kl">Qualificados</div><div class="kv">'+NUM(EXPAD.qualificados)+'</div><div class="ks">em andamento</div></div>'+
+    '<div class="kpi k3"><div class="kl">Ganhos</div><div class="kv">'+NUM(EXPAD.ganhos)+'</div><div class="ks">negócios ganhos</div></div>'+
+    '<div class="kpi k4"><div class="kl">Conversão</div><div class="kv">'+(EXPAD.novos?Math.round(EXPAD.ganhos/EXPAD.novos*100):0)+'<small style="font-size:18px"> %</small></div><div class="ks">ganhos ÷ novos</div></div></div>'+
+    '<div class="panel"><div class="panel-s">Fonte: CRM Expad — leads do funil, separados da mídia paga.</div></div>';
+}
+
+function renderGA4(){
+  document.getElementById('view').innerHTML='<div class="sec-lbl">Analytics · Google Analytics 4</div><div class="panel"><div class="empty">Carregando GA4…</div></div>';
+  loadGA4().then(()=>{
+    if(activeView!=='ga4') return;
+    if(!GA4){ document.getElementById('view').innerHTML='<div class="sec-lbl">Analytics · GA4</div><div class="panel"><div class="empty">GA4 indisponível (verifique a configuração no servidor).</div></div>'; return; }
+    const t=GA4.totais||{};
+    const html='<div class="sec-lbl">Analytics · GA4 · '+(GA4.periodo||periodLabel())+'</div>'+
+      '<div class="kpis"><div class="kpi k1"><div class="kl">Sessões</div><div class="kv">'+NUM(t.sessoes)+'</div><div class="ks">no período</div></div>'+
+      '<div class="kpi k2"><div class="kl">Usuários</div><div class="kv">'+NUM(t.usuarios)+'</div><div class="ks">ativos</div></div>'+
+      '<div class="kpi k3"><div class="kl">Novos usuários</div><div class="kv">'+NUM(t.novos)+'</div><div class="ks">primeira visita</div></div>'+
+      '<div class="kpi k4"><div class="kl">Conversões</div><div class="kv">'+NUM(t.conv)+'</div><div class="ks">eventos-chave</div></div></div>'+
+      '<div class="row2"><div class="panel"><div class="panel-t">Sessões por dia</div><div style="position:relative;height:230px"><canvas id="chGa4"></canvas></div></div>'+
+      '<div class="panel"><div class="panel-t">Canais de aquisição</div><div class="panel-s">sessões · conversões</div><div style="margin-top:8px">'+
+        ((GA4.canais||[]).slice(0,8).map(c=>'<div class="plat-row"><span>'+c.canal+'</span><span>'+NUM(c.sessoes)+' · '+NUM(c.conv)+' conv</span></div>').join('')||'<div class="empty">Sem canais.</div>')+'</div></div></div>';
+    document.getElementById('view').innerHTML=html;
+    const ds=GA4.dias||[];
+    Object.values(charts).forEach(c=>c&&c.destroy()); charts={};
+    charts.g=new Chart(document.getElementById('chGa4'),{type:'line',data:{labels:ds.map(x=>brDate(x.data)),datasets:[{data:ds.map(x=>x.sessoes),borderColor:'#0039A6',backgroundColor:'rgba(0,57,166,.12)',fill:true,tension:.3,pointRadius:0,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{grid:{color:'#eef1f7'},ticks:{font:{size:10}}},x:{grid:{display:false},ticks:{font:{size:9},maxTicksLimit:10}}}}});
+  });
+}
+
+function renderNews(){
+  const head='<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px"><div class="sec-lbl" style="margin:0">📰 News do segmento · Inteligência</div><button class="btn ghost" id="newsRefresh">↻ Atualizar notícias</button></div>';
+  const view=document.getElementById('view');
+  if(newsLoading){ view.innerHTML=head+'<div class="panel" style="margin-top:14px"><div class="empty">Gerando inteligência do segmento com IA… (pode levar alguns segundos)</div></div>'; return; }
+  if(!NEWS || !(NEWS.topicos||[]).length){ view.innerHTML=head+'<div class="panel" style="margin-top:14px"><div class="empty">'+(NEWS?'Sem conteúdo gerado.':'Clique em “Atualizar notícias” para gerar (requer IA configurada no servidor).')+'</div></div>'; bindNewsRefresh(); return; }
+  const body=(NEWS.topicos||[]).map((t,i)=>
+    '<div class="news-topic">'+(i+1)+') '+(t.titulo||'')+'</div><div class="news-grid">'+
+    (t.itens||[]).map(it=>
+      '<div class="news-card"><div class="news-meta"><span><span class="news-cat">'+(it.categoria||'—')+'</span> '+(it.publico?'<span class="news-pub">'+it.publico+'</span>':'')+'</span>'+(it.data?'<span class="news-date">'+it.data+'</span>':'')+'</div>'+
+      '<div class="news-title">'+(it.titulo||'')+'</div><div class="news-resumo">'+(it.resumo||'')+'</div>'+
+      (it.fonte?'<div class="news-fonte">Fonte: '+it.fonte+'</div>':'')+
+      (it.pauta?'<div class="news-pauta"><div class="pl">💡 Pauta sugerida</div><p>'+it.pauta+'</p></div>':'')+
+      '</div>').join('')+'</div>').join('');
+  view.innerHTML=head+'<div style="font-size:11px;color:var(--mute-2);margin:10px 0 2px">Gerado por IA'+(NEWS.gerado?(' · '+NEWS.gerado):'')+' · conteúdo de apoio — revise antes de publicar</div>'+body;
+  bindNewsRefresh();
+}
+function bindNewsRefresh(){ const b=document.getElementById('newsRefresh'); if(b) b.onclick=()=>loadNews(true); }
+async function loadNews(refresh){
+  newsLoading=true; if(activeView==='news') renderNews();
+  try{ const r=await fetch('/api/news?cli='+CLI.id+(refresh?'&refresh=1':''),{cache:'no-store'}); const j=await r.json();
+    NEWS=(r.ok&&j&&Array.isArray(j.topicos))?j:null;
+  }catch(e){ NEWS=null; }
+  newsLoading=false; if(activeView==='news') renderNews();
+}
+
+/* ---- eventos ---- */
+document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.nav').forEach(x=>{x.classList.remove('active');const a=x.querySelector('.arw');if(a)a.remove();});
+  b.classList.add('active'); if(!b.querySelector('.arw')) b.insertAdjacentHTML('beforeend','<span class="arw">›</span>');
+  activeView=b.dataset.view;
+  if(activeView==='criativos'){ render(); loadCrtForPeriod().then(render); return; }
+  render();
+});
+const pbtn=document.getElementById('pbtn'), pmenu=document.getElementById('pmenu'), pCar=document.getElementById('pCar');
+pbtn.onclick=e=>{ e.stopPropagation(); pmenu.hidden=!pmenu.hidden; pCar.classList.toggle('up',!pmenu.hidden); };
+document.addEventListener('click',()=>{ pmenu.hidden=true; pCar.classList.remove('up'); });
+pmenu.onclick=e=>{
+  const o=e.target.closest('.popt'); if(!o) return;
+  pmenu.querySelectorAll('.popt').forEach(x=>x.classList.remove('active')); o.classList.add('active');
+  period=o.dataset.p; document.getElementById('pTxt').textContent=o.textContent;
+  pmenu.hidden=true; pCar.classList.remove('up');
+  metaCrt=null; googleCrt=null; GA4=null;
+  loadExpad().then(()=>{ renderIntg(); if(activeView==='criativos'){ loadCrtForPeriod().then(render); } else render(); });
+};
+document.getElementById('view').addEventListener('click',ev=>{
+  const b=ev.target.closest('.crt-sbtn'); if(!b)return;
+  crtSrc=b.dataset.src; render(); loadCrtForPeriod().then(render);
+});
+
+if(CLI.hasMeta===false){ document.getElementById('sbStatus').textContent='Cliente ativo · só Google'; }
+loadAll();
+</script>
+</body>
+</html>
