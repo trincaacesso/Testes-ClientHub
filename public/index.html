@@ -193,6 +193,7 @@ body.meta-locked #viewMeta>*:not(.lock-panel){display:none}
 .tab.active[data-view="criativos"]{background:#EF8A1F;box-shadow:0 4px 14px rgba(239,138,31,.4)}
 .tab.active[data-view="expad"]{background:#1F9D56;box-shadow:0 4px 14px rgba(31,157,86,.4)}
 .tab.active[data-view="ga4"]{background:#E8710A;box-shadow:0 4px 14px rgba(232,113,10,.4)}
+.tab.active[data-view="pinterest"]{background:#E60023;box-shadow:0 4px 14px rgba(230,0,35,.4)}
 .tab.active[data-view="tiktok"]{background:#111;box-shadow:0 4px 14px rgba(37,244,238,.45)}
 .e-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--row-border);font-size:13px}
 .e-row:last-child{border:none}
@@ -248,6 +249,7 @@ body.meta-locked #viewMeta>*:not(.lock-panel){display:none}
       <button class="tab" data-view="criativos">Criativos</button>
       <button class="tab" data-view="expad">Leads Expad</button>
       <button class="tab" data-view="ga4">GA4</button>
+      <button class="tab" data-view="pinterest" id="tabPinterest" hidden>Pinterest</button>
       <button class="tab" data-view="tiktok" id="tabTiktok" hidden>TikTok Ads</button>
     </div>
     <div class="toolbar-actions">
@@ -485,6 +487,22 @@ body.meta-locked #viewMeta>*:not(.lock-panel){display:none}
     </div>
     <footer>Fonte: <b>Google Analytics 4</b> · <span id="g4FootInfo">&nbsp;</span></footer>
   </div><!-- /viewGA4 -->
+
+  <!-- ===================== VIEW: PINTEREST ===================== -->
+  <div id="viewPinterest" hidden>
+    <div class="section-title">📌 Pinterest Ads <small id="pinInfo">&nbsp;</small></div>
+    <div class="meta-kpis" style="grid-template-columns:repeat(4,1fr)">
+      <div class="kpi glass"><div class="top"><span class="label">Impressões</span><span class="ico b">👁️</span></div><div class="val" id="pinImpr">—</div><div class="meta"><span>no período</span></div></div>
+      <div class="kpi glass"><div class="top"><span class="label">Cliques</span><span class="ico o">🖱️</span></div><div class="val" id="pinClicks">—</div><div class="meta"><span>no período</span></div></div>
+      <div class="kpi glass"><div class="top"><span class="label">Salvamentos</span><span class="ico g">📍</span></div><div class="val" id="pinSaves">—</div><div class="meta"><span>saves</span></div></div>
+      <div class="kpi glass"><div class="top"><span class="label">Investimento</span><span class="ico g">💰</span></div><div class="val" id="pinSpend">—</div><div class="meta"><span>no período</span></div></div>
+    </div>
+    <div class="meta-kpis" style="grid-template-columns:1fr 1fr;margin-top:14px">
+      <div class="panel glass"><h4>📊 Campanhas <small style="font-weight:400;color:var(--muted)">impressões · cliques</small></h4><div id="pinCampanhas"><p class="crt-empty">—</p></div></div>
+      <div class="panel glass"><h4>📌 Pins em destaque</h4><div id="pinPins"><p class="crt-empty">—</p></div></div>
+    </div>
+    <footer>Fonte: <b>Pinterest Ads</b> · <span id="pinFootInfo">&nbsp;</span></footer>
+  </div><!-- /viewPinterest -->
 
   <!-- ===================== VIEW: TIKTOK ADS ===================== -->
   <div id="viewTiktok" hidden>
@@ -868,6 +886,7 @@ document.getElementById('periods').addEventListener('click',e=>{
     const d=new Date(), mes1=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-01';
     if(activeView==='expad'){ expadFrom=mes1; expadTo=ymdAgo(0); loadExpad(); return; }
     if(activeView==='ga4'){ ga4From=mes1; ga4To=ymdAgo(0); loadGA4(); return; }
+    if(activeView==='pinterest'){ pinFrom=mes1; pinTo=ymdAgo(0); loadPinterest(); return; }
     if(activeView==='tiktok'){ const dom=new Date().getDate(); loadTiktok(dom); return; }
     if(activeView==='criativos'){ const dom=new Date().getDate(); crtSource==='google'?loadGoogleCreatives(dom):loadMetaCreatives(dom); return; }
     const dash=activeDash(); if(dash){ dash.setRange(mes1, dash.max); syncDateInputs(); }
@@ -875,6 +894,7 @@ document.getElementById('periods').addEventListener('click',e=>{
   }
   if(activeView==='expad'){ const n=+dv; expadFrom=ymdAgo(n-1); expadTo=ymdAgo(0); loadExpad(); return; }
   if(activeView==='ga4'){ const n=+dv; ga4From=ymdAgo(n-1); ga4To=ymdAgo(0); loadGA4(); return; }
+  if(activeView==='pinterest'){ const n=+dv; pinFrom=ymdAgo(n-1); pinTo=ymdAgo(0); loadPinterest(); return; }
   if(activeView==='tiktok'){ loadTiktok(+dv||0); return; }
   if(activeView==='criativos'){ crtSource==='google'?loadGoogleCreatives(+dv):loadMetaCreatives(+dv); return; }
   const dash=activeDash(); if(dash){dash.setLast(+dv); syncDateInputs();}
@@ -891,6 +911,12 @@ document.getElementById('applyRange').addEventListener('click',()=>{
     if(ga4From&&ga4To&&ga4From>ga4To){const t=ga4From;ga4From=ga4To;ga4To=t;}
     document.querySelectorAll('#periods .pill').forEach(p=>p.classList.remove('active'));
     loadGA4(); return;
+  }
+  if(activeView==='pinterest'){
+    pinFrom=dFrom.value||''; pinTo=dTo.value||'';
+    if(pinFrom&&pinTo&&pinFrom>pinTo){const t=pinFrom;pinFrom=pinTo;pinTo=t;}
+    document.querySelectorAll('#periods .pill').forEach(p=>p.classList.remove('active'));
+    loadPinterest(); return;
   }
   if(activeView==='tiktok'){
     document.querySelectorAll('#periods .pill').forEach(p=>p.classList.remove('active'));
@@ -1059,6 +1085,7 @@ document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{
   document.getElementById('viewCriativos').hidden = v!=='criativos';
   document.getElementById('viewExpad').hidden = v!=='expad';
   document.getElementById('viewGA4').hidden = v!=='ga4';
+  const vpin=document.getElementById('viewPinterest'); if(vpin) vpin.hidden = v!=='pinterest';
   const vtt=document.getElementById('viewTiktok'); if(vtt) vtt.hidden = v!=='tiktok';
   document.body.classList.toggle('view-criativos', v==='criativos');
   activeView=v;
@@ -1072,6 +1099,9 @@ document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{
   else if(v==='ga4'){ document.getElementById('periodLabel').textContent='Google Analytics 4';
     dFrom.removeAttribute('min'); dFrom.removeAttribute('max'); dTo.removeAttribute('min'); dTo.removeAttribute('max'); // período livre no GA4
     loadGA4(); }
+  else if(v==='pinterest'){ document.getElementById('periodLabel').textContent='Pinterest Ads';
+    dFrom.removeAttribute('min'); dFrom.removeAttribute('max'); dTo.removeAttribute('min'); dTo.removeAttribute('max'); // período livre no Pinterest
+    loadPinterest(); }
   else if(v==='tiktok'){ document.getElementById('periodLabel').textContent='TikTok Ads';
     dFrom.removeAttribute('min'); dFrom.removeAttribute('max'); dTo.removeAttribute('min'); dTo.removeAttribute('max'); // período livre no TikTok
     loadTiktok(activePillDays()); }
@@ -1123,7 +1153,7 @@ window.selEmp = '';
   bar.addEventListener('click', ev=>{
     const b=ev.target.closest('.emp-item'); if(!b) return;
     bar.querySelectorAll('.emp-item').forEach(p=>p.classList.remove('active'));
-    b.classList.add('active'); window.selEmp=b.dataset.emp; applyEmpMetas(window.selEmp); googleGerado='ao vivo'; loadGoogle(); loadMeta(); if(activeView==='ga4') loadGA4(); if(activeView==='tiktok') loadTiktok(activePillDays());
+    b.classList.add('active'); window.selEmp=b.dataset.emp; applyEmpMetas(window.selEmp); googleGerado='ao vivo'; loadGoogle(); loadMeta(); if(activeView==='ga4') loadGA4(); if(activeView==='pinterest') loadPinterest(); if(activeView==='tiktok') loadTiktok(activePillDays());
   });
 })();
 loadGoogle();
@@ -1167,6 +1197,37 @@ async function loadGA4(){
     document.getElementById('g4Paginas').innerHTML=(j.paginas||[]).map(pg=>'<div class="metrics-row"><span class="m-label" title="'+pg.pagina.replace(/"/g,'&quot;')+'">'+(pg.pagina.length>36?pg.pagina.slice(0,34)+'…':pg.pagina)+'</span><b>'+NUM(pg.views)+'</b></div>').join('')||'<p class="crt-empty">Sem dados no período.</p>';
     info.textContent='· ao vivo · propriedade '+(j.propertyId||'');
     document.getElementById('g4FootInfo').textContent='período '+(j.periodo||'últimos 30 dias');
+  }catch(e){ info.textContent='· erro: '+e.message; }
+}
+
+// ===== Pinterest Ads — carrega ao clicar na aba =====
+// Mostra a aba Pinterest só p/ clientes com "pinterest":true no clients.json (window.CLIENTE.hasPinterest).
+(function(){ const tb=document.getElementById('tabPinterest'); if(tb && window.CLIENTE && window.CLIENTE.hasPinterest) tb.hidden=false; })();
+let pinFrom='', pinTo='';
+async function loadPinterest(){
+  const info=document.getElementById('pinInfo');
+  info.textContent='· carregando…';
+  try{
+    const pq=(window.selEmp?('&emp='+encodeURIComponent(window.selEmp)):'')+(pinFrom?('&from='+encodeURIComponent(pinFrom)):'')+(pinTo?('&to='+encodeURIComponent(pinTo)):'');
+    const r=await fetch('/api/pinterest?cli='+encodeURIComponent((window.CLIENTE&&window.CLIENTE.id)||'')+pq,{cache:'no-store'});
+    const j=await r.json();
+    if(!r.ok){
+      info.textContent='· '+(j.error||('HTTP '+r.status));
+      ['pinImpr','pinClicks','pinSaves','pinSpend'].forEach(id=>document.getElementById(id).textContent='—');
+      document.getElementById('pinCampanhas').innerHTML='<p class="crt-empty">'+(j.error||'erro')+(j.detail?(' — '+String(j.detail).slice(0,140)):'')+'</p>';
+      document.getElementById('pinPins').innerHTML='<p class="crt-empty">—</p>';
+      return;
+    }
+    window.PINTEREST = j;   // exposto pro gerador de relatório
+    const t=j.totais||{};
+    document.getElementById('pinImpr').textContent=NUM(t.impressoes);
+    document.getElementById('pinClicks').textContent=NUM(t.cliques);
+    document.getElementById('pinSaves').textContent=NUM(t.salvamentos);
+    document.getElementById('pinSpend').textContent=BRL(t.gasto);
+    document.getElementById('pinCampanhas').innerHTML=(j.campanhas||[]).slice(0,10).map(c=>'<div class="metrics-row"><span class="m-label" title="'+String(c.nome).replace(/"/g,'&quot;')+'">'+(String(c.nome).length>34?String(c.nome).slice(0,32)+'…':c.nome)+'</span><b>'+NUM(c.impressoes)+' · '+NUM(c.cliques)+' cliques</b></div>').join('')||'<p class="crt-empty">Sem dados no período.</p>';
+    document.getElementById('pinPins').innerHTML=(j.pins||[]).map(pn=>'<div class="metrics-row"><span class="m-label">'+pn.pin+'</span><b>'+NUM(pn.impressoes)+'</b></div>').join('')||'<p class="crt-empty">Sem dados no período.</p>';
+    info.textContent='· ao vivo · conta '+(j.adAccountId||'');
+    document.getElementById('pinFootInfo').textContent='período '+(j.periodo||'últimos 30 dias');
   }catch(e){ info.textContent='· erro: '+e.message; }
 }
 

@@ -23,6 +23,7 @@ const { fetchMetaData } = require('./scripts/meta-lib');
 const { fetchGoogleAds } = require('./scripts/google-lib');
 const { fetchExpad } = require('./scripts/expad-lib');
 const ga4 = require('./scripts/ga4-lib');
+const pinterest = require('./scripts/pinterest-lib');
 const { fetchTiktokData, exchangeAuthCode, getAuthorizedAdvertisers } = require('./scripts/tiktok-lib');
 
 const PORT = process.env.PORT || 3000;
@@ -232,6 +233,21 @@ function getGA4(cli, pid, from, to) {
   return slot.inflight;
 }
 
+// ---------- Pinterest Ads (cache por cli|conta|período, mesmo padrão do GA4) ----------
+const PIN_TTL_MS = (parseInt(process.env.PINTEREST_CACHE_MIN || '60', 10)) * 60 * 1000;
+const pinCache = {}; // cli|acc|from|to -> {data, ts, inflight}
+function getPinterest(cli, acc, from, to) {
+  const key = cli + '|' + acc + '|' + from + '|' + to;
+  const slot = pinCache[key] || (pinCache[key] = { data: null, ts: 0, inflight: null });
+  if (slot.data && Date.now() - slot.ts < PIN_TTL_MS) return Promise.resolve(slot.data);
+  if (slot.inflight) return slot.inflight;
+  slot.inflight = (async () => {
+    try { const d = await pinterest.fetchPinterest(acc, { from, to }); slot.data = d; slot.ts = Date.now(); slot.inflight = null; return d; }
+    catch (e) { slot.inflight = null; throw e; }
+  })();
+  return slot.inflight;
+}
+
 // ---------- Análise por IA (Claude/Anthropic ou OpenAI) ----------
 function buildAIPrompt(d) {
   const brl = v => 'R$ ' + (Number(v) || 0).toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -405,6 +421,7 @@ function clientPublic(c, id) { // config exposta ao front (SEM senha)
     hasMeta: !!c.metaAccount || emps.some(e => e.metaAccount),
     metaSemAcesso: !!c.metaSemAcesso,   // cliente roda Meta mas a agência não tem acesso à conta
     hasTiktok: !!c.tiktokAdvertiserId,   // mostra a aba TikTok só p/ quem tem advertiser_id no clients.json
+    hasPinterest: !!c.pinterest,         // mostra a aba Pinterest só p/ clientes com "pinterest": true no clients.json
     empreendimentos: emps.length ? emps.map(e => ({ id: e.id, nome: e.nome, metas: e.metas || null, hasMeta: !!e.metaAccount })) : null };
 }
 
@@ -663,6 +680,27 @@ const server = http.createServer((req, res) => {
         return getGA4(cli, pid, from, to).then(d => json(res, 200, d));
       })
       .catch(e => json(res, 502, { error: 'falha GA4', detail: e.message }));
+  }
+
+  // ---- Pinterest Ads ao vivo (por cliente; "pinterest":true + pinterestAdAccountId no clients.json) ----
+  if (p === '/api/pinterest') {
+    const cli = u.searchParams.get('cli');
+    if (!canSee(sess, cli)) return json(res, 403, { error: 'sem acesso' });
+    const c = CLIENTS[cli];
+    if (!c) return json(res, 404, { error: 'cliente não encontrado' });
+    if (!c.pinterest) return json(res, 404, { error: 'cliente sem Pinterest (defina "pinterest": true no clients.json)' });
+    if (!pinterest.configured()) return json(res, 503, { error: 'Pinterest não configurado (defina PINTEREST_ACCESS_TOKEN no servidor)' });
+    // resolve a conta de anúncios: por empreendimento (emp) ou pinterestAdAccountId direto
+    let acc = c.pinterestAdAccountId || '';
+    if (Array.isArray(c.empreendimentos) && c.empreendimentos.length) {
+      const emp = u.searchParams.get('emp');
+      const e = c.empreendimentos.find(x => x.id === emp) || c.empreendimentos[0];
+      acc = (e && e.pinterestAdAccountId) || acc;
+    }
+    if (!acc) return json(res, 404, { error: 'cliente sem conta Pinterest (defina pinterestAdAccountId no clients.json)' });
+    const from = u.searchParams.get('from') || _ymd(new Date(Date.now() - 29 * 864e5));
+    const to = u.searchParams.get('to') || _ymd(new Date());
+    return getPinterest(cli, acc, from, to).then(d => json(res, 200, d)).catch(e => json(res, 502, { error: 'falha Pinterest', detail: e.message }));
   }
 
   // ---- GA4 discover (equipe): lista propriedades + mapeamento sugerido por cliente ----
