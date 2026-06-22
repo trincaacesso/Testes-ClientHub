@@ -23,6 +23,7 @@ const { fetchMetaData } = require('./scripts/meta-lib');
 const { fetchGoogleAds } = require('./scripts/google-lib');
 const { fetchExpad } = require('./scripts/expad-lib');
 const ga4 = require('./scripts/ga4-lib');
+const gsc = require('./scripts/gsc-lib');
 const pinterest = require('./scripts/pinterest-lib');
 const { fetchTiktokData, exchangeAuthCode, getAuthorizedAdvertisers } = require('./scripts/tiktok-lib');
 
@@ -243,6 +244,56 @@ function getPinterest(cli, acc, from, to) {
   if (slot.inflight) return slot.inflight;
   slot.inflight = (async () => {
     try { const d = await pinterest.fetchPinterest(acc, { from, to }); slot.data = d; slot.ts = Date.now(); slot.inflight = null; return d; }
+    catch (e) { slot.inflight = null; throw e; }
+  })();
+  return slot.inflight;
+}
+
+// ---------- Google Search Console (mesmo padrão do GA4: lista de sites em cache + match por cliente) ----------
+const GSC_TTL_MS = (parseInt(process.env.GSC_CACHE_MIN || '60', 10)) * 60 * 1000;
+const gscCache = {}; // cli|site|from|to -> {data, ts, inflight}
+let gscSites = { list: null, ts: 0, inflight: null };
+// host normalizado de uma propriedade GSC: 'sc-domain:exemplo.com.br' / 'https://www.exemplo.com.br/' -> 'exemplocombr'
+const gscHost = s => String(s || '').replace(/^sc-domain:/, '').replace(/^https?:\/\//, '').replace(/^www\./, '').split('/')[0];
+async function gscSiteList() {
+  if (gscSites.list && Date.now() - gscSites.ts < 12 * 3600e3) return gscSites.list;
+  if (gscSites.inflight) return gscSites.inflight;
+  gscSites.inflight = (async () => {
+    try { const l = await gsc.listSites(); gscSites = { list: l, ts: Date.now(), inflight: null }; return l; }
+    catch (e) { gscSites.inflight = null; throw e; }
+  })();
+  return gscSites.inflight;
+}
+function gscMatch(list, termo) {
+  const n = ga4Norm(termo); if (!n) return null;       // reaproveita o normalizador do GA4
+  let best = null, bestScore = 0;
+  for (const s of list) {
+    const h = ga4Norm(gscHost(s.site));
+    let score = 0;
+    if (h === n) score = 100;
+    else if (h.includes(n) || n.includes(h)) score = 80;
+    if (score > bestScore) { best = s; bestScore = score; }
+  }
+  return bestScore >= 80 ? best : null;
+}
+async function resolveGSCSite(cli, emp) {
+  const c = CLIENTS[cli] || {};
+  if (emp && Array.isArray(c.empreendimentos)) {                 // por empreendimento
+    const e = c.empreendimentos.find(x => x.id === emp);
+    if (e && e.gscSite) return String(e.gscSite);
+  }
+  if (c.gscSite) return String(c.gscSite);                       // site fixo do cliente (prioridade)
+  const term = c.gscSiteName || c.nome || cli;                   // nome/domínio p/ casar com a lista de sites
+  const m = gscMatch(await gscSiteList(), term);
+  return m ? m.site : '';
+}
+function getGSC(cli, site, from, to) {
+  const key = cli + '|' + site + '|' + from + '|' + to;
+  const slot = gscCache[key] || (gscCache[key] = { data: null, ts: 0, inflight: null });
+  if (slot.data && Date.now() - slot.ts < GSC_TTL_MS) return Promise.resolve(slot.data);
+  if (slot.inflight) return slot.inflight;
+  slot.inflight = (async () => {
+    try { const d = await gsc.fetchGSC(site, { from, to }); slot.data = d; slot.ts = Date.now(); slot.inflight = null; return d; }
     catch (e) { slot.inflight = null; throw e; }
   })();
   return slot.inflight;
@@ -715,6 +766,38 @@ const server = http.createServer((req, res) => {
       });
       json(res, 200, { totalPropriedades: list.length, semMatch: mapeamento.filter(x => !x.match).map(x => x.cliente), mapeamento, propriedades: list });
     }).catch(e => json(res, 502, { error: 'falha GA4', detail: e.message }));
+  }
+
+  // ---- Search Console ao vivo (por cliente; site casado pelo domínio/nome ou gscSite fixo) ----
+  if (p === '/api/gsc') {
+    const cli = u.searchParams.get('cli');
+    if (!canSee(sess, cli)) return json(res, 403, { error: 'sem acesso' });
+    if (!gsc.configured()) return json(res, 503, { error: 'Search Console não configurado (defina GOOGLE_OAUTH_CLIENT_ID, GOOGLE_OAUTH_CLIENT_SECRET e GOOGLE_OAUTH_REFRESH_TOKEN no servidor)' });
+    if (!CLIENTS[cli]) return json(res, 404, { error: 'cliente não encontrado' });
+    // GSC tem ~2-3 dias de atraso nos dados: por padrão a janela termina há 3 dias.
+    const to = u.searchParams.get('to') || _ymd(new Date(Date.now() - 3 * 864e5));
+    const from = u.searchParams.get('from') || _ymd(new Date(Date.now() - 32 * 864e5));
+    const emp = u.searchParams.get('emp') || '';
+    return resolveGSCSite(cli, emp)
+      .then(site => {
+        if (!site) return json(res, 404, { error: 'nenhuma propriedade do Search Console encontrada para "' + (CLIENTS[cli].nome || cli) + '" — confira em /api/gsc-discover ou fixe gscSite no clients.json' });
+        return getGSC(cli, site, from, to).then(d => json(res, 200, d));
+      })
+      .catch(e => json(res, 502, { error: 'falha Search Console', detail: e.message }));
+  }
+
+  // ---- Search Console discover (equipe): lista sites + mapeamento sugerido por cliente ----
+  if (p === '/api/gsc-discover') {
+    if (!isStaff(sess)) return json(res, 403, { error: 'apenas equipe (admin/analista)' });
+    if (!gsc.configured()) return json(res, 503, { error: 'Search Console não configurado' });
+    return gscSiteList().then(list => {
+      const mapeamento = Object.entries(CLIENTS).map(([id, c]) => {
+        const fixed = c.gscSite ? { site: String(c.gscSite), nivel: '(fixado no clients.json)' } : null;
+        const m = fixed || gscMatch(list, c.gscSiteName || c.nome || id);
+        return { cliente: id, nome: c.nome, match: m ? { site: m.site, nivel: m.nivel } : null };
+      });
+      json(res, 200, { totalSites: list.length, semMatch: mapeamento.filter(x => !x.match).map(x => x.cliente), mapeamento, sites: list });
+    }).catch(e => json(res, 502, { error: 'falha Search Console', detail: e.message }));
   }
 
   // ---- Análise por IA (gera texto do relatório) ----

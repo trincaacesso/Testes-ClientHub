@@ -193,6 +193,7 @@ body.meta-locked #viewMeta>*:not(.lock-panel){display:none}
 .tab.active[data-view="criativos"]{background:#EF8A1F;box-shadow:0 4px 14px rgba(239,138,31,.4)}
 .tab.active[data-view="expad"]{background:#1F9D56;box-shadow:0 4px 14px rgba(31,157,86,.4)}
 .tab.active[data-view="ga4"]{background:#E8710A;box-shadow:0 4px 14px rgba(232,113,10,.4)}
+.tab.active[data-view="gsc"]{background:#1A73E8;box-shadow:0 4px 14px rgba(26,115,232,.4)}
 .tab.active[data-view="pinterest"]{background:#E60023;box-shadow:0 4px 14px rgba(230,0,35,.4)}
 .tab.active[data-view="tiktok"]{background:#111;box-shadow:0 4px 14px rgba(37,244,238,.45)}
 .e-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--row-border);font-size:13px}
@@ -249,6 +250,7 @@ body.meta-locked #viewMeta>*:not(.lock-panel){display:none}
       <button class="tab" data-view="criativos">Criativos</button>
       <button class="tab" data-view="expad">Leads Expad</button>
       <button class="tab" data-view="ga4">GA4</button>
+      <button class="tab" data-view="gsc">Search Console</button>
       <button class="tab" data-view="pinterest" id="tabPinterest" hidden>Pinterest</button>
       <button class="tab" data-view="tiktok" id="tabTiktok" hidden>TikTok Ads</button>
     </div>
@@ -487,6 +489,22 @@ body.meta-locked #viewMeta>*:not(.lock-panel){display:none}
     </div>
     <footer>Fonte: <b>Google Analytics 4</b> · <span id="g4FootInfo">&nbsp;</span></footer>
   </div><!-- /viewGA4 -->
+
+  <!-- ===================== VIEW: SEARCH CONSOLE ===================== -->
+  <div id="viewGSC" hidden>
+    <div class="section-title">🔎 Google Search Console <small id="gscInfo">&nbsp;</small></div>
+    <div class="meta-kpis" style="grid-template-columns:repeat(4,1fr)">
+      <div class="kpi glass"><div class="top"><span class="label">Cliques</span><span class="ico b">🖱️</span></div><div class="val" id="gscClicks">—</div><div class="meta"><span>busca orgânica</span></div></div>
+      <div class="kpi glass"><div class="top"><span class="label">Impressões</span><span class="ico o">👁️</span></div><div class="val" id="gscImpr">—</div><div class="meta"><span>no período</span></div></div>
+      <div class="kpi glass"><div class="top"><span class="label">CTR médio</span><span class="ico g">⚡</span></div><div class="val" id="gscCtr">—</div><div class="meta"><span>cliques / impressões</span></div></div>
+      <div class="kpi glass"><div class="top"><span class="label">Posição média</span><span class="ico g">📈</span></div><div class="val" id="gscPos">—</div><div class="meta"><span>menor é melhor</span></div></div>
+    </div>
+    <div class="meta-kpis" style="grid-template-columns:1fr 1fr;margin-top:14px">
+      <div class="panel glass"><h4>🔤 Principais consultas <small style="font-weight:400;color:var(--muted)">cliques · impressões</small></h4><div id="gscQueries"><p class="crt-empty">—</p></div></div>
+      <div class="panel glass"><h4>📄 Principais páginas <small style="font-weight:400;color:var(--muted)">cliques · impressões</small></h4><div id="gscPages"><p class="crt-empty">—</p></div></div>
+    </div>
+    <footer>Fonte: <b>Google Search Console</b> · <span id="gscFootInfo">&nbsp;</span></footer>
+  </div><!-- /viewGSC -->
 
   <!-- ===================== VIEW: PINTEREST ===================== -->
   <div id="viewPinterest" hidden>
@@ -886,6 +904,7 @@ document.getElementById('periods').addEventListener('click',e=>{
     const d=new Date(), mes1=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-01';
     if(activeView==='expad'){ expadFrom=mes1; expadTo=ymdAgo(0); loadExpad(); return; }
     if(activeView==='ga4'){ ga4From=mes1; ga4To=ymdAgo(0); loadGA4(); return; }
+    if(activeView==='gsc'){ gscFrom=mes1; gscTo=ymdAgo(3); if(gscTo<gscFrom) gscTo=ymdAgo(0); loadGSC(); return; }
     if(activeView==='pinterest'){ pinFrom=mes1; pinTo=ymdAgo(0); loadPinterest(); return; }
     if(activeView==='tiktok'){ const dom=new Date().getDate(); loadTiktok(dom); return; }
     if(activeView==='criativos'){ const dom=new Date().getDate(); crtSource==='google'?loadGoogleCreatives(dom):loadMetaCreatives(dom); return; }
@@ -894,6 +913,7 @@ document.getElementById('periods').addEventListener('click',e=>{
   }
   if(activeView==='expad'){ const n=+dv; expadFrom=ymdAgo(n-1); expadTo=ymdAgo(0); loadExpad(); return; }
   if(activeView==='ga4'){ const n=+dv; ga4From=ymdAgo(n-1); ga4To=ymdAgo(0); loadGA4(); return; }
+  if(activeView==='gsc'){ const n=+dv; gscFrom=ymdAgo(n+2); gscTo=ymdAgo(3); loadGSC(); return; }
   if(activeView==='pinterest'){ const n=+dv; pinFrom=ymdAgo(n-1); pinTo=ymdAgo(0); loadPinterest(); return; }
   if(activeView==='tiktok'){ loadTiktok(+dv||0); return; }
   if(activeView==='criativos'){ crtSource==='google'?loadGoogleCreatives(+dv):loadMetaCreatives(+dv); return; }
@@ -911,6 +931,12 @@ document.getElementById('applyRange').addEventListener('click',()=>{
     if(ga4From&&ga4To&&ga4From>ga4To){const t=ga4From;ga4From=ga4To;ga4To=t;}
     document.querySelectorAll('#periods .pill').forEach(p=>p.classList.remove('active'));
     loadGA4(); return;
+  }
+  if(activeView==='gsc'){
+    gscFrom=dFrom.value||''; gscTo=dTo.value||'';
+    if(gscFrom&&gscTo&&gscFrom>gscTo){const t=gscFrom;gscFrom=gscTo;gscTo=t;}
+    document.querySelectorAll('#periods .pill').forEach(p=>p.classList.remove('active'));
+    loadGSC(); return;
   }
   if(activeView==='pinterest'){
     pinFrom=dFrom.value||''; pinTo=dTo.value||'';
@@ -1085,6 +1111,7 @@ document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{
   document.getElementById('viewCriativos').hidden = v!=='criativos';
   document.getElementById('viewExpad').hidden = v!=='expad';
   document.getElementById('viewGA4').hidden = v!=='ga4';
+  const vgsc=document.getElementById('viewGSC'); if(vgsc) vgsc.hidden = v!=='gsc';
   const vpin=document.getElementById('viewPinterest'); if(vpin) vpin.hidden = v!=='pinterest';
   const vtt=document.getElementById('viewTiktok'); if(vtt) vtt.hidden = v!=='tiktok';
   document.body.classList.toggle('view-criativos', v==='criativos');
@@ -1099,6 +1126,9 @@ document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{
   else if(v==='ga4'){ document.getElementById('periodLabel').textContent='Google Analytics 4';
     dFrom.removeAttribute('min'); dFrom.removeAttribute('max'); dTo.removeAttribute('min'); dTo.removeAttribute('max'); // período livre no GA4
     loadGA4(); }
+  else if(v==='gsc'){ document.getElementById('periodLabel').textContent='Search Console';
+    dFrom.removeAttribute('min'); dFrom.removeAttribute('max'); dTo.removeAttribute('min'); dTo.removeAttribute('max'); // período livre no Search Console
+    loadGSC(); }
   else if(v==='pinterest'){ document.getElementById('periodLabel').textContent='Pinterest Ads';
     dFrom.removeAttribute('min'); dFrom.removeAttribute('max'); dTo.removeAttribute('min'); dTo.removeAttribute('max'); // período livre no Pinterest
     loadPinterest(); }
@@ -1153,7 +1183,7 @@ window.selEmp = '';
   bar.addEventListener('click', ev=>{
     const b=ev.target.closest('.emp-item'); if(!b) return;
     bar.querySelectorAll('.emp-item').forEach(p=>p.classList.remove('active'));
-    b.classList.add('active'); window.selEmp=b.dataset.emp; applyEmpMetas(window.selEmp); googleGerado='ao vivo'; loadGoogle(); loadMeta(); if(activeView==='ga4') loadGA4(); if(activeView==='pinterest') loadPinterest(); if(activeView==='tiktok') loadTiktok(activePillDays());
+    b.classList.add('active'); window.selEmp=b.dataset.emp; applyEmpMetas(window.selEmp); googleGerado='ao vivo'; loadGoogle(); loadMeta(); if(activeView==='ga4') loadGA4(); if(activeView==='gsc') loadGSC(); if(activeView==='pinterest') loadPinterest(); if(activeView==='tiktok') loadTiktok(activePillDays());
   });
 })();
 loadGoogle();
@@ -1197,6 +1227,36 @@ async function loadGA4(){
     document.getElementById('g4Paginas').innerHTML=(j.paginas||[]).map(pg=>'<div class="metrics-row"><span class="m-label" title="'+pg.pagina.replace(/"/g,'&quot;')+'">'+(pg.pagina.length>36?pg.pagina.slice(0,34)+'…':pg.pagina)+'</span><b>'+NUM(pg.views)+'</b></div>').join('')||'<p class="crt-empty">Sem dados no período.</p>';
     info.textContent='· ao vivo · propriedade '+(j.propertyId||'');
     document.getElementById('g4FootInfo').textContent='período '+(j.periodo||'últimos 30 dias');
+  }catch(e){ info.textContent='· erro: '+e.message; }
+}
+
+// ===== Search Console — carrega ao clicar na aba =====
+let gscFrom='', gscTo='';
+async function loadGSC(){
+  const info=document.getElementById('gscInfo');
+  info.textContent='· carregando…';
+  try{
+    const pq=(window.selEmp?('&emp='+encodeURIComponent(window.selEmp)):'')+(gscFrom?('&from='+encodeURIComponent(gscFrom)):'')+(gscTo?('&to='+encodeURIComponent(gscTo)):'');
+    const r=await fetch('/api/gsc?cli='+encodeURIComponent((window.CLIENTE&&window.CLIENTE.id)||'')+pq,{cache:'no-store'});
+    const j=await r.json();
+    if(!r.ok){
+      info.textContent='· '+(j.error||('HTTP '+r.status));
+      ['gscClicks','gscImpr','gscCtr','gscPos'].forEach(id=>document.getElementById(id).textContent='—');
+      document.getElementById('gscQueries').innerHTML='<p class="crt-empty">'+(j.error||'erro')+(j.detail?(' — '+String(j.detail).slice(0,140)):'')+'</p>';
+      document.getElementById('gscPages').innerHTML='<p class="crt-empty">—</p>';
+      return;
+    }
+    window.GSC = j;   // exposto pro gerador de relatório
+    const t=j.totais||{};
+    document.getElementById('gscClicks').textContent=NUM(t.cliques);
+    document.getElementById('gscImpr').textContent=NUM(t.impressoes);
+    document.getElementById('gscCtr').textContent=NUM(t.ctr)+'%';
+    document.getElementById('gscPos').textContent=NUM(t.posicao);
+    const prettyUrl=u=>{ try{ const x=new URL(u); return (x.pathname+x.search)||'/'; }catch(_){ return u; } };
+    document.getElementById('gscQueries').innerHTML=(j.consultas||[]).slice(0,12).map(c=>'<div class="metrics-row"><span class="m-label" title="'+String(c.termo).replace(/"/g,'&quot;')+'">'+(String(c.termo).length>34?String(c.termo).slice(0,32)+'…':c.termo)+'</span><b>'+NUM(c.cliques)+' · '+NUM(c.impressoes)+'</b></div>').join('')||'<p class="crt-empty">Sem dados no período.</p>';
+    document.getElementById('gscPages').innerHTML=(j.paginas||[]).slice(0,10).map(pg=>{const lbl=prettyUrl(pg.pagina);return '<div class="metrics-row"><span class="m-label" title="'+String(pg.pagina).replace(/"/g,'&quot;')+'">'+(lbl.length>34?lbl.slice(0,32)+'…':lbl)+'</span><b>'+NUM(pg.cliques)+' · '+NUM(pg.impressoes)+'</b></div>';}).join('')||'<p class="crt-empty">Sem dados no período.</p>';
+    info.textContent='· ao vivo · '+(j.site||'');
+    document.getElementById('gscFootInfo').textContent='período '+(j.periodo||'')+' · dados com ~3 dias de atraso (padrão do Search Console)';
   }catch(e){ info.textContent='· erro: '+e.message; }
 }
 
