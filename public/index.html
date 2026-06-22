@@ -782,11 +782,18 @@ function buildGoogle(dias, regioes, tot){
 }
 buildGoogle(DIAS, REGIOES, TOT);
 
+// ===== Overlay de loading global (substitui os textos "· carregando…") =====
+// Contador p/ suportar carregamentos simultâneos (ex.: Google + Meta no boot).
+let _ldCount=0;
+function ldOn(){ _ldCount++; const o=document.getElementById('loadOverlay'); if(o) o.hidden=false; }
+function ldOff(){ _ldCount=Math.max(0,_ldCount-1); if(_ldCount<=0){ const o=document.getElementById('loadOverlay'); if(o) o.hidden=true; } }
+
 // Busca o Google em TEMPO REAL via /api/google (API oficial; chaves no servidor).
 async function loadGoogle(){
   if(!(window.CLIENTE&&window.CLIENTE.id)) return;
   let googleError='';
   const empQ = window.selEmp ? ('&emp='+encodeURIComponent(window.selEmp)) : '';
+  ldOn();
   try{
     const r=await fetch('/api/google?cli='+encodeURIComponent(window.CLIENTE.id)+empQ,{cache:'no-store'});
     if(r.ok){ const j=await r.json();
@@ -796,6 +803,7 @@ async function loadGoogle(){
       googleError='resposta sem dados'; }
     else { let msg='HTTP '+r.status; try{const j=await r.json(); if(j&&j.error) msg=j.error+(j.detail?(' — '+String(j.detail).slice(0,220)):'');}catch(_){} googleError=msg; }
   }catch(e){ googleError='rede: '+e.message; }
+  finally{ ldOff(); }
   renderKeywords([]);
   const fi=document.getElementById('footInfo'); if(fi&&googleError) fi.innerHTML+=' · <span style="color:#ff7a66">⚠ Google ao vivo falhou: '+googleError+'</span>';
 }
@@ -1156,11 +1164,13 @@ async function loadMeta(){
     document.body.classList.add('meta-locked'); return;
   }
   document.body.classList.remove('meta-locked');
+  ldOn();
   try{
     const r=await fetch('/api/meta'+(window.CLIENTE&&window.CLIENTE.id?('?cli='+encodeURIComponent(window.CLIENTE.id)+(window.selEmp?('&emp='+encodeURIComponent(window.selEmp)):'')):''),{cache:'no-store'});
     if(r.ok){ const j=await r.json(); if(j&&Array.isArray(j.criativos)){ META_DATA=j; metaError=''; } else { metaError='resposta inesperada do /api/meta'; } }
     else { let msg='HTTP '+r.status; try{ const j=await r.json(); if(j&&j.error) msg=j.error+(j.detail?(' — '+String(j.detail).slice(0,160)):''); }catch(_){} metaError=msg; }
   }catch(e){ metaError='rede: '+e.message; }
+  finally{ ldOff(); }
   buildMeta();
   renderCreatives();
 }
@@ -1190,14 +1200,16 @@ loadGoogle();
 
 // ===== Leads Expad (CRM) — carrega ao clicar na aba =====
 async function loadExpad(){
-  const info=document.getElementById('expadInfo'); info.textContent='· carregando…';
+  const info=document.getElementById('expadInfo');
   let err='';
+  ldOn();
   try{
     const pq=(window.selEmp?('&emp='+encodeURIComponent(window.selEmp)):'')+(expadFrom?('&from='+encodeURIComponent(expadFrom)):'')+(expadTo?('&to='+encodeURIComponent(expadTo)):'');
     const r=await fetch('/api/expad-sales'+(window.CLIENTE&&window.CLIENTE.id?('?cli='+encodeURIComponent(window.CLIENTE.id)):'?cli=')+pq,{cache:'no-store'});
     if(r.ok){ const j=await r.json(); if(j&&j.sales){ renderExpad(j); return; } err = (j&&j.raw)?'formato inesperado — veja /api/expad-sales':'resposta sem vendas'; }
     else { err='HTTP '+r.status; try{const j=await r.json(); if(j&&j.error) err=j.error+(j.detail?(' — '+String(j.detail).slice(0,160)):'');}catch(_){} }
   }catch(e){ err='rede: '+e.message; }
+  finally{ ldOff(); }
   info.innerHTML='· <span style="color:#ff7a66">⚠ '+err+'</span>';
   ['eQualif','eGanhos'].forEach(id=>{const el=document.getElementById(id); if(el) el.textContent='—';});
 }
@@ -1205,7 +1217,7 @@ async function loadExpad(){
 let ga4From='', ga4To='';
 async function loadGA4(){
   const info=document.getElementById('ga4Info');
-  info.textContent='· carregando…';
+  ldOn();
   try{
     const pq=(window.selEmp?('&emp='+encodeURIComponent(window.selEmp)):'')+(ga4From?('&from='+encodeURIComponent(ga4From)):'')+(ga4To?('&to='+encodeURIComponent(ga4To)):'');
     const r=await fetch('/api/ga4?cli='+encodeURIComponent((window.CLIENTE&&window.CLIENTE.id)||'')+pq,{cache:'no-store'});
@@ -1228,13 +1240,14 @@ async function loadGA4(){
     info.textContent='· ao vivo · propriedade '+(j.propertyId||'');
     document.getElementById('g4FootInfo').textContent='período '+(j.periodo||'últimos 30 dias');
   }catch(e){ info.textContent='· erro: '+e.message; }
+  finally{ ldOff(); }
 }
 
 // ===== Search Console — carrega ao clicar na aba =====
 let gscFrom='', gscTo='';
 async function loadGSC(){
   const info=document.getElementById('gscInfo');
-  info.textContent='· carregando…';
+  ldOn();
   try{
     const pq=(window.selEmp?('&emp='+encodeURIComponent(window.selEmp)):'')+(gscFrom?('&from='+encodeURIComponent(gscFrom)):'')+(gscTo?('&to='+encodeURIComponent(gscTo)):'');
     const r=await fetch('/api/gsc?cli='+encodeURIComponent((window.CLIENTE&&window.CLIENTE.id)||'')+pq,{cache:'no-store'});
@@ -1258,6 +1271,7 @@ async function loadGSC(){
     info.textContent='· ao vivo · '+(j.site||'');
     document.getElementById('gscFootInfo').textContent='período '+(j.periodo||'')+' · dados com ~3 dias de atraso (padrão do Search Console)';
   }catch(e){ info.textContent='· erro: '+e.message; }
+  finally{ ldOff(); }
 }
 
 // ===== Pinterest Ads — carrega ao clicar na aba =====
@@ -1266,7 +1280,7 @@ async function loadGSC(){
 let pinFrom='', pinTo='';
 async function loadPinterest(){
   const info=document.getElementById('pinInfo');
-  info.textContent='· carregando…';
+  ldOn();
   try{
     const pq=(window.selEmp?('&emp='+encodeURIComponent(window.selEmp)):'')+(pinFrom?('&from='+encodeURIComponent(pinFrom)):'')+(pinTo?('&to='+encodeURIComponent(pinTo)):'');
     const r=await fetch('/api/pinterest?cli='+encodeURIComponent((window.CLIENTE&&window.CLIENTE.id)||'')+pq,{cache:'no-store'});
@@ -1289,6 +1303,7 @@ async function loadPinterest(){
     info.textContent='· ao vivo · conta '+(j.adAccountId||'');
     document.getElementById('pinFootInfo').textContent='período '+(j.periodo||'últimos 30 dias');
   }catch(e){ info.textContent='· erro: '+e.message; }
+  finally{ ldOff(); }
 }
 
 // ===== TikTok Ads — carrega ao clicar na aba =====
@@ -1296,11 +1311,10 @@ let chTT, chTTd;
 const _TTPAL=['#25F4EE','#FE2C55','#8b5cf6','#0047FF','#EF8A1F','#1F9D56','#E8710A','#DC4632','#00b8d9','#777'];
 // Mostra a aba TikTok só p/ clientes que têm advertiser_id (window.CLIENTE.hasTiktok).
 (function(){ const tb=document.getElementById('tabTiktok'); if(tb && window.CLIENTE && window.CLIENTE.hasTiktok) tb.hidden=false; })();
-function ttSetLoading(on){ const o=document.getElementById('loadOverlay'); if(o) o.hidden=!on; }
+function ttSetLoading(on){ on?ldOn():ldOff(); }
 // arg: número de dias (janela terminando hoje) OU {from,to} em YYYY-MM-DD (período exato).
 async function loadTiktok(arg){
   const info=document.getElementById('ttInfo');
-  info.textContent='· carregando…';
   ttSetLoading(true);
   const cliQ = (window.CLIENTE&&window.CLIENTE.id)?('?cli='+encodeURIComponent(window.CLIENTE.id)):'?cli=';
   const empQ = window.selEmp?('&emp='+encodeURIComponent(window.selEmp)):'';
