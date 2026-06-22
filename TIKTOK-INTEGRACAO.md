@@ -1,8 +1,16 @@
 # Integração TikTok Ads — guia rápido
 
 A aba **TikTok Ads** aparece automaticamente **só** para os clientes que tiverem
-`tiktokAdvertiserId` preenchido no `clients.json`. Hoje está habilitada no
-**Cotemig Colégio**.
+`tiktokAdvertiserId` preenchido no `clients.json` (lógica em `server.js` →
+`clientPublic()` → `hasTiktok`).
+
+### Clientes com TikTok hoje
+| Cliente (chave no `clients.json`) | Nome | `tiktokAdvertiserId` | Observação |
+|---|---|---|---|
+| `cotemig-colegio` | Cotemig Colégio | `7039121894964084738` | — |
+| `cotemig-faculdade` | Cotemig Faculdade | `7156675428080467970` | — |
+| `suggar` | Suggar Eletrodomésticos | `7302560928502005762` | Dash padrão; Google/Meta/Expad/GA4 prontos (vazios) p/ preencher depois |
+| _(Depyl Action)_ | CA - Depyl Action | `7279099103961808898` | **Dash à parte** — anotado aqui p/ futura ativação; ainda não criado no `clients.json` |
 
 ## 1) Variáveis de ambiente (Render / Railway)
 
@@ -47,9 +55,38 @@ gráfico diário, distribuição por campanha e a tabela de top campanhas.
 
 ## Para habilitar em OUTRO cliente
 
-Basta adicionar `"tiktokAdvertiserId": "..."` no bloco dele no `clients.json`.
-O mesmo `TIKTOK_ACCESS_TOKEN` cobre todos os anunciantes que autorizaram o app.
+### A) Cliente que JÁ existe no `clients.json`
+Basta adicionar `"tiktokAdvertiserId": "..."` no bloco dele. O mesmo
+`TIKTOK_ACCESS_TOKEN` cobre todos os anunciantes que autorizaram o app.
+
+### B) Cliente NOVO (modelo: Suggar)
+Cole um bloco assim no final do `clients.json` (antes do `}` que fecha o arquivo).
+Os campos vazios deixam Google / Meta / Criativos / Expad / GA4 **prontos** —
+é só preencher o id de cada canal quando tiver. Só o TikTok já funciona.
+
+```json
+"chave-do-cliente": {
+  "nome": "Nome do Cliente",
+  "sub": "Segmento · TikTok Ads · BRL",
+  "logo": "/assets/logo.svg",
+  "googleCustomerId": "",
+  "metaAccount": "",
+  "tiktokAdvertiserId": "0000000000000000000",
+  "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+  "expadAccountId": "", "expadApiKey": "",
+  "ga4Property": "",
+  "senha": "chave123"
+}
+```
+
+> ⚠️ Edite **as DUAS cópias**: `clients.json` (raiz, lida pelo servidor) e
+> `public/clients.json` (deploy estático do Netlify). Mantenha as duas iguais.
+> O login do cliente é a **chave** + a **senha** desse bloco.
 
 ## Endpoints criados
 - `GET /api/tiktok?cli=<id>&days=<n>` — dados ao vivo do cliente (com cache).
 - `GET /api/tiktok-auth?code=<auth_code>` — **só equipe**; troca o auth_code pelo access_token.
+- `GET /api/tiktok-check` — **só equipe**; valida o token e lista os anunciantes
+  autorizados, marcando quais clientes do `clients.json` estão `coberto_pelo_token`.
+  Use isto depois de adicionar um cliente novo: se `coberto_pelo_token: false`,
+  o cliente precisa autorizar o app (passo 2) antes da aba mostrar dados.

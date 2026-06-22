@@ -735,5 +735,17 @@
     "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
     "metaSemAcesso": true,
     "senha": "talinautovidros123"
+  },
+  "suggar": {
+    "nome": "Suggar Eletrodomésticos",
+    "sub": "Eletrodomésticos · TikTok Ads · BRL",
+    "logo": "/assets/logo.svg",
+    "googleCustomerId": "",
+    "metaAccount": "",
+    "tiktokAdvertiserId": "7302560928502005762",
+    "metas": { "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 }, "meta": { "orcamento": 0, "metaLeads": 0 } },
+    "expadAccountId": "", "expadApiKey": "",
+    "ga4Property": "",
+    "senha": "suggar123"
   }
 }
