@@ -196,6 +196,11 @@ body.meta-locked #viewMeta>*:not(.lock-panel){display:none}
 .tab.active[data-view="gsc"]{background:#1A73E8;box-shadow:0 4px 14px rgba(26,115,232,.4)}
 .tab.active[data-view="pinterest"]{background:#E60023;box-shadow:0 4px 14px rgba(230,0,35,.4)}
 .tab.active[data-view="tiktok"]{background:#111;box-shadow:0 4px 14px rgba(37,244,238,.45)}
+.tab.active[data-view="linkedin"]{background:#0A66C2;box-shadow:0 4px 14px rgba(10,102,194,.4)}
+.tab.active[data-view="gmb"]{background:#34A853;box-shadow:0 4px 14px rgba(52,168,83,.4)}
+/* Cadeado genérico p/ abas sem integração (TikTok, LinkedIn, Pinterest, Google Meu Negócio) */
+.lockable.locked > :not(.lock-panel){display:none}
+.lockable.locked .lock-panel{display:flex}
 .e-row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--row-border);font-size:13px}
 .e-row:last-child{border:none}
 .e-row .m-label{color:var(--muted)}
@@ -251,8 +256,10 @@ body.meta-locked #viewMeta>*:not(.lock-panel){display:none}
       <button class="tab" data-view="expad">Leads Expad</button>
       <button class="tab" data-view="ga4">GA4</button>
       <button class="tab" data-view="gsc">Search Console</button>
-      <button class="tab" data-view="pinterest" id="tabPinterest" hidden>Pinterest</button>
-      <button class="tab" data-view="tiktok" id="tabTiktok" hidden>TikTok Ads</button>
+      <button class="tab" data-view="tiktok">TikTok Ads</button>
+      <button class="tab" data-view="linkedin">LinkedIn</button>
+      <button class="tab" data-view="pinterest">Pinterest</button>
+      <button class="tab" data-view="gmb">Google Meu Negócio</button>
     </div>
     <div class="toolbar-actions">
       <a class="icon-btn" id="hubBtn" href="#" title="Voltar ao projeto" style="text-decoration:none;display:none">←</a>
@@ -507,7 +514,8 @@ body.meta-locked #viewMeta>*:not(.lock-panel){display:none}
   </div><!-- /viewGSC -->
 
   <!-- ===================== VIEW: PINTEREST ===================== -->
-  <div id="viewPinterest" hidden>
+  <div id="viewPinterest" class="lockable" hidden>
+    <div class="lock-panel"><div class="ico">🔒</div><h3>Pinterest não disponível</h3><p>Este cliente não tem Pinterest configurado. Assim que a conta for conectada, os dados aparecem aqui.</p></div>
     <div class="section-title">📌 Pinterest Ads <small id="pinInfo">&nbsp;</small></div>
     <div class="meta-kpis" style="grid-template-columns:repeat(4,1fr)">
       <div class="kpi glass"><div class="top"><span class="label">Impressões</span><span class="ico b">👁️</span></div><div class="val" id="pinImpr">—</div><div class="meta"><span>no período</span></div></div>
@@ -523,7 +531,8 @@ body.meta-locked #viewMeta>*:not(.lock-panel){display:none}
   </div><!-- /viewPinterest -->
 
   <!-- ===================== VIEW: TIKTOK ADS ===================== -->
-  <div id="viewTiktok" hidden>
+  <div id="viewTiktok" class="lockable" hidden>
+    <div class="lock-panel"><div class="ico">🔒</div><h3>TikTok não disponível</h3><p>Este cliente não tem TikTok Ads configurado. Assim que a conta for conectada, os dados aparecem aqui.</p></div>
     <div class="section-title">🎵 TikTok Ads <small id="ttInfo">&nbsp;</small></div>
     <div class="meta-kpis" style="grid-template-columns:repeat(3,1fr)">
       <div class="kpi glass"><div class="top"><span class="label">Investimento</span><span class="ico b">💸</span></div><div class="val" id="ttSpend">—</div><div class="meta"><span>no período</span></div></div>
@@ -545,6 +554,40 @@ body.meta-locked #viewMeta>*:not(.lock-panel){display:none}
     </div>
     <footer>Fonte: <b>TikTok Ads</b> · <span id="ttFootInfo">&nbsp;</span></footer>
   </div><!-- /viewTiktok -->
+
+  <!-- ===================== VIEW: LINKEDIN ===================== -->
+  <div id="viewLinkedin" class="lockable" hidden>
+    <div class="lock-panel"><div class="ico">🔒</div><h3>LinkedIn não disponível</h3><p>Este cliente não tem integração com o LinkedIn Ads. Assim que a conta for conectada, os dados aparecem aqui.</p></div>
+    <div class="section-title">💼 LinkedIn Ads <small id="liInfo">&nbsp;</small></div>
+    <div class="meta-kpis" style="grid-template-columns:repeat(4,1fr)">
+      <div class="kpi glass"><div class="top"><span class="label">Impressões</span><span class="ico b">👁️</span></div><div class="val" id="liImpr">—</div><div class="meta"><span>no período</span></div></div>
+      <div class="kpi glass"><div class="top"><span class="label">Cliques</span><span class="ico o">🖱️</span></div><div class="val" id="liClicks">—</div><div class="meta"><span>CTR <b id="liCtr">—</b></span></div></div>
+      <div class="kpi glass"><div class="top"><span class="label">Investimento</span><span class="ico g">💰</span></div><div class="val" id="liSpend">—</div><div class="meta"><span>no período</span></div></div>
+      <div class="kpi glass"><div class="top"><span class="label">Conversões</span><span class="ico g">🎯</span></div><div class="val" id="liConv">—</div><div class="meta"><span>leads</span></div></div>
+    </div>
+    <div class="meta-kpis" style="grid-template-columns:1fr 1fr;margin-top:14px">
+      <div class="panel glass"><h4>📊 Campanhas</h4><div id="liCamps"><p class="crt-empty">—</p></div></div>
+      <div class="panel glass"><h4>👥 Público</h4><div id="liAud"><p class="crt-empty">—</p></div></div>
+    </div>
+    <footer>Fonte: <b>LinkedIn Ads</b> · <span id="liFootInfo">&nbsp;</span></footer>
+  </div><!-- /viewLinkedin -->
+
+  <!-- ===================== VIEW: GOOGLE MEU NEGÓCIO ===================== -->
+  <div id="viewGmb" class="lockable" hidden>
+    <div class="lock-panel"><div class="ico">🔒</div><h3>Google Meu Negócio não disponível</h3><p>Este cliente não tem integração com o Google Meu Negócio (Perfil da Empresa). Assim que a conta for conectada, os dados aparecem aqui.</p></div>
+    <div class="section-title">📍 Google Meu Negócio <small id="gmbInfo">&nbsp;</small></div>
+    <div class="meta-kpis" style="grid-template-columns:repeat(4,1fr)">
+      <div class="kpi glass"><div class="top"><span class="label">Visualizações do perfil</span><span class="ico b">👁️</span></div><div class="val" id="gmbViews">—</div><div class="meta"><span>no período</span></div></div>
+      <div class="kpi glass"><div class="top"><span class="label">Pesquisas</span><span class="ico o">🔎</span></div><div class="val" id="gmbSearch">—</div><div class="meta"><span>no período</span></div></div>
+      <div class="kpi glass"><div class="top"><span class="label">Ações dos clientes</span><span class="ico g">📞</span></div><div class="val" id="gmbActions">—</div><div class="meta"><span>site · rotas · ligações</span></div></div>
+      <div class="kpi glass"><div class="top"><span class="label">Avaliação média</span><span class="ico g">⭐</span></div><div class="val" id="gmbRating">—</div><div class="meta"><span>nota</span></div></div>
+    </div>
+    <div class="meta-kpis" style="grid-template-columns:1fr 1fr;margin-top:14px">
+      <div class="panel glass"><h4>📞 Ações dos clientes</h4><div id="gmbActionsList"><p class="crt-empty">—</p></div></div>
+      <div class="panel glass"><h4>⭐ Avaliações recentes</h4><div id="gmbReviews"><p class="crt-empty">—</p></div></div>
+    </div>
+    <footer>Fonte: <b>Google Meu Negócio</b> · <span id="gmbFootInfo">&nbsp;</span></footer>
+  </div><!-- /viewGmb -->
 </div>
 
 <script>
@@ -1110,6 +1153,14 @@ document.getElementById('crtSource').addEventListener('click',e=>{
   crtSource==='google' ? loadGoogleCreatives(activePillDays()) : loadMetaCreatives(activePillDays());
 });
 
+// Abas lockáveis: ficam sempre visíveis; mostram cadeado quando o cliente não tem a integração (flag em window.CLIENTE).
+// LinkedIn e Google Meu Negócio ainda não têm integração (load:null) → ficam sempre no cadeado até existir o backend.
+const LOCKABLE = {
+  tiktok:    { view:'viewTiktok',    flag:'hasTiktok',    label:'TikTok Ads',         load:()=>loadTiktok(activePillDays()) },
+  linkedin:  { view:'viewLinkedin',  flag:'hasLinkedin',  label:'LinkedIn Ads',       load:null },
+  pinterest: { view:'viewPinterest', flag:'hasPinterest', label:'Pinterest Ads',      load:()=>loadPinterest() },
+  gmb:       { view:'viewGmb',       flag:'hasGmb',       label:'Google Meu Negócio', load:null },
+};
 document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{
   const v=b.dataset.view;
   document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
@@ -1122,6 +1173,8 @@ document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{
   const vgsc=document.getElementById('viewGSC'); if(vgsc) vgsc.hidden = v!=='gsc';
   const vpin=document.getElementById('viewPinterest'); if(vpin) vpin.hidden = v!=='pinterest';
   const vtt=document.getElementById('viewTiktok'); if(vtt) vtt.hidden = v!=='tiktok';
+  const vli=document.getElementById('viewLinkedin'); if(vli) vli.hidden = v!=='linkedin';
+  const vgmb=document.getElementById('viewGmb'); if(vgmb) vgmb.hidden = v!=='gmb';
   document.body.classList.toggle('view-criativos', v==='criativos');
   activeView=v;
   if(v==='criativos'){ document.getElementById('periodLabel').textContent='Criativos';
@@ -1137,12 +1190,12 @@ document.querySelectorAll('.tab').forEach(b=>b.addEventListener('click',()=>{
   else if(v==='gsc'){ document.getElementById('periodLabel').textContent='Search Console';
     dFrom.removeAttribute('min'); dFrom.removeAttribute('max'); dTo.removeAttribute('min'); dTo.removeAttribute('max'); // período livre no Search Console
     loadGSC(); }
-  else if(v==='pinterest'){ document.getElementById('periodLabel').textContent='Pinterest Ads';
-    dFrom.removeAttribute('min'); dFrom.removeAttribute('max'); dTo.removeAttribute('min'); dTo.removeAttribute('max'); // período livre no Pinterest
-    loadPinterest(); }
-  else if(v==='tiktok'){ document.getElementById('periodLabel').textContent='TikTok Ads';
-    dFrom.removeAttribute('min'); dFrom.removeAttribute('max'); dTo.removeAttribute('min'); dTo.removeAttribute('max'); // período livre no TikTok
-    loadTiktok(activePillDays()); }
+  else if(LOCKABLE[v]){ const cfg=LOCKABLE[v];
+    document.getElementById('periodLabel').textContent=cfg.label;
+    dFrom.removeAttribute('min'); dFrom.removeAttribute('max'); dTo.removeAttribute('min'); dTo.removeAttribute('max'); // período livre
+    const locked = !(window.CLIENTE && window.CLIENTE[cfg.flag]);   // sem integração → cadeado
+    const vw=document.getElementById(cfg.view); if(vw) vw.classList.toggle('locked', locked);
+    if(!locked && cfg.load) cfg.load(); }
   else { const dash=activeDash();
     if(dash){ syncDateInputs(); dash.render(); }
     else { document.getElementById('periodLabel').textContent = metaError ? ('Meta — erro: '+metaError) : 'Meta Ads · carregando…'; } }
@@ -1275,10 +1328,10 @@ async function loadGSC(){
 }
 
 // ===== Pinterest Ads — carrega ao clicar na aba =====
-// Mostra a aba Pinterest só p/ clientes com "pinterest":true no clients.json (window.CLIENTE.hasPinterest).
-(function(){ const tb=document.getElementById('tabPinterest'); if(tb && window.CLIENTE && window.CLIENTE.hasPinterest) tb.hidden=false; })();
+// A aba Pinterest fica sempre visível; sem integração mostra cadeado (ver LOCKABLE). Guard evita fetch em cliente sem Pinterest.
 let pinFrom='', pinTo='';
 async function loadPinterest(){
+  if(!(window.CLIENTE&&window.CLIENTE.hasPinterest)) return;
   const info=document.getElementById('pinInfo');
   ldOn();
   try{
@@ -1309,11 +1362,11 @@ async function loadPinterest(){
 // ===== TikTok Ads — carrega ao clicar na aba =====
 let chTT, chTTd;
 const _TTPAL=['#25F4EE','#FE2C55','#8b5cf6','#0047FF','#EF8A1F','#1F9D56','#E8710A','#DC4632','#00b8d9','#777'];
-// Mostra a aba TikTok só p/ clientes que têm advertiser_id (window.CLIENTE.hasTiktok).
-(function(){ const tb=document.getElementById('tabTiktok'); if(tb && window.CLIENTE && window.CLIENTE.hasTiktok) tb.hidden=false; })();
+// A aba TikTok fica sempre visível; sem integração mostra cadeado (ver LOCKABLE).
 function ttSetLoading(on){ on?ldOn():ldOff(); }
 // arg: número de dias (janela terminando hoje) OU {from,to} em YYYY-MM-DD (período exato).
 async function loadTiktok(arg){
+  if(!(window.CLIENTE&&window.CLIENTE.hasTiktok)) return;
   const info=document.getElementById('ttInfo');
   ttSetLoading(true);
   const cliQ = (window.CLIENTE&&window.CLIENTE.id)?('?cli='+encodeURIComponent(window.CLIENTE.id)):'?cli=';

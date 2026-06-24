@@ -473,6 +473,8 @@ function clientPublic(c, id) { // config exposta ao front (SEM senha)
     metaSemAcesso: !!c.metaSemAcesso,   // cliente roda Meta mas a agência não tem acesso à conta
     hasTiktok: !!c.tiktokAdvertiserId,   // mostra a aba TikTok só p/ quem tem advertiser_id no clients.json
     hasPinterest: !!c.pinterest,         // mostra a aba Pinterest só p/ clientes com "pinterest": true no clients.json
+    hasLinkedin: !!c.linkedin,           // aba LinkedIn: sem isso → cadeado ("linkedin": true p/ liberar)
+    hasGmb: !!c.gmb,                     // aba Google Meu Negócio: sem isso → cadeado ("gmb": true p/ liberar)
     empreendimentos: emps.length ? emps.map(e => ({ id: e.id, nome: e.nome, metas: e.metas || null, hasMeta: !!e.metaAccount })) : null };
 }
 
