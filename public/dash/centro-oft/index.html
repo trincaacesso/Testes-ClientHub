@@ -1,344 +1,487 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard de Performance · Marketing Digital</title>
-
-  <script>
-    (function() {
-      try {
-        const t = localStorage.getItem('dashboard-theme') || 'dark';
-        document.documentElement.setAttribute('data-theme', t);
-      } catch (e) {
-        document.documentElement.setAttribute('data-theme', 'dark');
-      }
-    })();
-  </script>
-
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
-
-  <link rel="stylesheet" href="css/variables.css">
-  <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/components.css">
-  <link rel="stylesheet" href="css/dashboard.css">
-
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Centro Oftalmológico — Inteligência de Campanhas</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sora:wght@500;600;700&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+/* === Centro Oftalmológico · "Campaign Intelligence" (ref. layout Orguel, adaptado p/ saúde ocular)
+   Azul clínico #0E5C8E · Azul médio #1B82C4 · Teal/visão #14B8BE · Inter + Sora === */
+:root{
+  --azul:#0E5C8E; --azul-med:#1B82C4; --azul-esc:#0A436A; --azul-cl:#e7f1f9;
+  --teal:#14B8BE; --teal-cl:#e2f7f8; --teal-tx:#0a7f84;
+  --ink:#14263a; --mute:#637186; --mute-2:#97a3b4;
+  --line:#e6ecf2; --line-2:#eef2f7; --bg:#f3f7fa; --card:#fff;
+  --ok:#1f9d57;
+  --t-sans:'Inter',system-ui,sans-serif; --t-disp:'Sora',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--t-sans);background:var(--bg);color:var(--ink);font-size:14px;-webkit-font-smoothing:antialiased}
+.app{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
+/* ===== sidebar ===== */
+.sidebar{background:var(--card);border-right:1px solid var(--line);display:flex;flex-direction:column;position:sticky;top:0;height:100vh;overflow-y:auto}
+.sb-brand{display:flex;align-items:center;gap:11px;padding:18px 18px 16px;border-bottom:1px solid var(--line)}
+.sb-brand svg{width:40px;height:40px;flex:0 0 auto}
+.sb-brand .nm{font-family:var(--t-disp);font-weight:700;font-size:16px;letter-spacing:.01em;line-height:1.1}
+.sb-brand .st{font-size:11px;color:var(--ok);display:flex;align-items:center;gap:5px;margin-top:4px}
+.sb-brand .st::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--ok)}
+.sb-sec{padding:16px 18px 5px;font-size:10px;font-weight:600;color:var(--mute-2);letter-spacing:.08em;text-transform:uppercase}
+.nav{display:flex;align-items:center;gap:10px;padding:9px 14px;margin:1px 10px;border-radius:9px;cursor:pointer;color:#46536a;font-size:13.5px;font-weight:500;transition:.12s}
+.nav:hover{background:var(--bg)}
+.nav.active{background:linear-gradient(90deg,var(--azul-cl),#f3f8fc);color:var(--azul);box-shadow:inset 0 0 0 1px #cfe2f1}
+.nav .ic{width:18px;text-align:center;flex:0 0 auto;font-size:15px}
+.nav .arw{margin-left:auto;color:var(--azul);font-weight:700}
+.sb-foot{margin-top:auto;padding:14px 18px;border-top:1px solid var(--line);font-size:11px;color:var(--mute-2);line-height:1.5}
+/* ===== main ===== */
+.main{display:flex;flex-direction:column;min-height:100vh}
+.content{padding:26px 30px;max-width:1340px;width:100%}
+.head-row{display:flex;justify-content:space-between;align-items:flex-start;gap:14px;flex-wrap:wrap;margin-bottom:18px}
+.eyebrow{font-size:11.5px;font-weight:600;color:var(--teal-tx);letter-spacing:.10em;text-transform:uppercase;display:flex;align-items:center;gap:7px;margin-bottom:7px}
+.h-title{font-family:var(--t-disp);font-weight:700;font-size:31px;line-height:1.08;letter-spacing:-.01em}
+.h-sub{font-size:13px;color:var(--mute);margin-top:6px}
+.head-tools{display:flex;align-items:center;gap:9px}
+.pdrop{position:relative}
+.pbtn{display:flex;align-items:center;gap:9px;font-family:inherit;font-size:13px;padding:9px 14px;border:1px solid var(--line);border-radius:10px;background:var(--card);color:var(--ink);cursor:pointer}
+.pbtn b{font-weight:600}
+.pcar{color:var(--mute);font-size:13px;transition:transform .15s}
+.pcar.up{transform:rotate(180deg)}
+.pmenu{position:absolute;top:calc(100% + 7px);right:0;min-width:216px;background:var(--card);border:1px solid var(--line);border-radius:13px;box-shadow:0 16px 44px rgba(14,38,58,.16);padding:7px;z-index:40}
+.popt{padding:11px 15px;border-radius:9px;font-size:13.5px;color:#46536a;cursor:pointer}
+.popt:hover{background:var(--bg)}
+.popt.active{background:var(--teal-cl);color:var(--teal-tx);font-weight:600}
+.btn{font-size:13px;padding:9px 15px;border:0;border-radius:10px;background:var(--azul);color:#fff;cursor:pointer;display:inline-flex;align-items:center;gap:7px;font-family:inherit;font-weight:500;text-decoration:none}
+.btn:hover{background:var(--azul-esc)}
+.btn.ghost{background:var(--card);color:#46536a;border:1px solid var(--line)}.btn.ghost:hover{background:var(--bg)}
+/* pills integração */
+.intg{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px}
+.pill{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:500;color:#3b475e;padding:8px 14px;border:1px solid var(--line);border-radius:999px;background:var(--card)}
+.pill .ck{width:16px;height:16px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;font-size:10px}
+.pill .ck.off{background:#cdd4dd}
+.pill small{color:var(--mute)}
+.sec-lbl{font-size:11.5px;font-weight:600;color:var(--azul);letter-spacing:.07em;text-transform:uppercase;margin:0 0 12px}
+/* KPI cards em degradê */
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:13px;margin-bottom:18px}
+.kpi{border-radius:16px;padding:18px 20px 20px;min-height:118px;display:flex;flex-direction:column;justify-content:space-between}
+.kpi .kl{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#34516b}
+.kpi .kv{font-family:var(--t-disp);font-weight:700;font-size:34px;line-height:1;letter-spacing:-.01em;color:var(--ink)}
+.kpi .kv small{font-family:var(--t-sans);font-size:15px;font-weight:600;color:var(--mute);margin-right:3px}
+.kpi .ks{font-size:11px;color:var(--mute);margin-top:5px}
+.k1{background:#bcdbee}.k2{background:#cfe6f3}.k3{background:#dcecf7}.k4{background:#e9f4f5}
+/* grid 2 col */
+.row2{display:grid;grid-template-columns:1.45fr 1fr;gap:13px;margin-bottom:18px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px 20px}
+.panel-t{font-size:14.5px;font-weight:600}
+.panel-s{font-size:11.5px;color:var(--mute);margin:2px 0 14px}
+/* share bars (Meta vs Google) */
+.share-lbl{display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:var(--mute);letter-spacing:.05em;text-transform:uppercase;margin:14px 0 6px}
+.share{height:11px;border-radius:6px;background:var(--teal);overflow:hidden;display:flex}
+.share .a{height:100%;background:var(--azul)}
+.share-leg{display:flex;gap:16px;font-size:11.5px;color:var(--mute);margin-top:12px}
+.share-leg i{width:9px;height:9px;border-radius:2px;display:inline-block;margin-right:5px}
+.mini2{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-top:14px}
+.mini{background:var(--bg);border:1px solid var(--line);border-radius:11px;padding:11px 13px}
+.mini .ml{font-size:10.5px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--mute)}
+.mini .mv{font-family:var(--t-disp);font-weight:600;font-size:21px;margin-top:3px}
+/* ranking top campanhas */
+.rk{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line-2)}
+.rk:last-child{border:0}
+.rk-nm{flex:0 0 250px;font-size:12.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rk-tag{font-size:9px;font-weight:700;padding:2px 6px;border-radius:4px;margin-right:7px;vertical-align:middle}
+.tag-g{background:var(--teal-cl);color:var(--teal-tx)}.tag-m{background:var(--azul-cl);color:var(--azul)}
+.rk-bar{flex:1;height:9px;background:var(--line-2);border-radius:5px;overflow:hidden}
+.rk-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--azul),var(--azul-med))}
+.rk-val{flex:0 0 auto;font-size:12.5px;font-weight:600;font-variant-numeric:tabular-nums}
+/* áreas de atendimento */
+.area-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:13px}
+.area-card{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:16px 18px}
+.area-top{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.area-ic{width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font-size:19px;flex:0 0 auto;background:var(--azul-cl)}
+.area-nm{font-size:13.5px;font-weight:600;line-height:1.15}
+.area-camps{font-size:11px;color:var(--mute);margin-top:1px}
+.area-val{font-family:var(--t-disp);font-weight:700;font-size:24px}
+.area-sub{font-size:11px;color:var(--mute);margin-top:2px}
+.area-bar{height:8px;border-radius:5px;background:var(--line-2);overflow:hidden;margin-top:12px}
+.area-fill{height:100%;border-radius:5px;background:linear-gradient(90deg,var(--teal),var(--azul-med))}
+/* plataformas / tabelas / criativos */
+.plat-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+.plat-head{display:flex;align-items:center;gap:8px;margin-bottom:12px;padding-bottom:11px;border-bottom:1px solid var(--line)}
+.plat-tag{font-size:11px;font-weight:600;padding:3px 10px;border-radius:6px}
+.plat-row{display:flex;justify-content:space-between;font-size:12.5px;padding:6px 0;border-bottom:1px solid var(--line-2);color:var(--mute)}
+.plat-row:last-child{border:0}.plat-row span:last-child{color:var(--ink);font-weight:600}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+thead th{text-align:right;padding:10px 13px;color:var(--mute);font-weight:500;font-size:11px;text-transform:uppercase;border-bottom:1px solid var(--line);background:#fafbfd}
+thead th:first-child{text-align:left}
+tbody td{text-align:right;padding:9px 13px;border-bottom:1px solid var(--line-2)}
+tbody td:first-child{text-align:left;font-weight:500}tbody tr:last-child td{border:0}
+tfoot td{text-align:right;padding:10px 13px;font-weight:700;border-top:2px solid var(--line);background:#fafbfd}
+tfoot td:first-child{text-align:left}
+.cr-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:13px}
+.cr-card{background:var(--card);border:1px solid var(--line);border-radius:13px;overflow:hidden;display:flex;flex-direction:column}
+.cr-img{width:100%;aspect-ratio:1/1;object-fit:cover;background:var(--line-2);display:block}
+.cr-body{padding:10px 12px 12px;display:flex;flex-direction:column;gap:7px}
+.cr-camp{font-size:10.5px;color:var(--mute);line-height:1.3;height:27px;overflow:hidden;font-weight:500}
+.cr-metrics{display:grid;grid-template-columns:1fr 1fr;gap:6px 8px}
+.cr-m b{font-family:var(--t-disp);font-size:15px;font-weight:600}.cr-m span{color:var(--mute);font-size:10px;display:block}
+.cr-tag{font-size:9px;font-weight:700;padding:2px 7px;border-radius:5px;align-self:flex-start;background:var(--line-2);color:var(--mute)}
+.cr-tag.on{background:var(--teal-cl);color:var(--teal-tx)}
+.crt-src{display:inline-flex;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:3px;gap:2px;margin-bottom:16px}
+.crt-src button{font-size:12.5px;padding:6px 14px;border:0;background:none;color:var(--mute);cursor:pointer;border-radius:8px;font-family:inherit;font-weight:500}
+.crt-src button.active{background:var(--azul);color:#fff}
+.empty{text-align:center;padding:44px 20px;color:var(--mute);font-size:13px}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--azul);display:inline-block}.dot.loading{background:var(--teal)}
+@media(max-width:900px){.app{grid-template-columns:1fr}.sidebar{position:static;height:auto}.kpis{grid-template-columns:1fr 1fr}.row2,.plat-grid{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-
-<div id="loadingOverlay" class="loading-overlay">
-  <div class="spinner"></div>
-  <div class="text">Carregando dados...</div>
-</div>
-
 <div class="app">
-
-  <!-- ============== HEADER (azul gradiente) ============== -->
-  <header class="header-bar">
-    <div class="header-brand">
-      <img src="assets/logo-acesso-white.png" alt="Acesso" class="logo-acesso">
-    </div>
-    <div class="header-client">
-      <div>
-        <div class="client-name" id="clientName">Centro Oftalmológico</div>
-      </div>
-      <div class="client-logo" id="clientLogo">CO</div>
-    </div>
-  </header>
-
-  <!-- ============== TOOLBAR ============== -->
-  <div class="toolbar">
-    <div class="tabs-pill" role="tablist" aria-label="Aba">
-      <button class="active" data-view="stats">Estatísticas</button>
-      <button data-view="creatives">Criativos</button>
-    </div>
-
-    <div class="toolbar-actions">
-      <div class="segmented" role="tablist" aria-label="Plataforma">
-        <button class="active" data-platform="all"><span class="dot"></span>Todas</button>
-        <button data-platform="google"><span class="dot"></span>Google</button>
-        <button data-platform="facebook"><span class="dot"></span>Meta</button>
-      </div>
-
-      <button class="btn-glass-pill" id="btnReport" title="Gerar relatório CSV">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/>
-        </svg>
-        Relatório
-      </button>
-
-      <button class="btn-glass" id="refreshBtn" title="Atualizar dados">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="23 4 23 10 17 10"/>
-          <polyline points="1 20 1 14 7 14"/>
-          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
-        </svg>
-      </button>
-
-      <button class="btn-glass" id="themeToggle" title="Alternar tema">
-        <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
-        </svg>
-        <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
-          <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
-        </svg>
-      </button>
-
-      <a class="btn-glass" id="logoutBtn" href="/logout" title="Sair" style="text-decoration:none;display:inline-flex;align-items:center">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
-        </svg>
-      </a>
-    </div>
-  </div>
-
-  <!-- ============== SELETOR DE PERÍODO ============== -->
-  <div class="period-bar">
-    <div class="period-bar-left">
-      <div class="status-dot-group">
-        <span class="status-dot online" id="statusDot"></span>
-        <span id="statusLabel">Ao vivo</span>
-      </div>
-      <div class="period-display">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-          <line x1="16" y1="2" x2="16" y2="6"/>
-          <line x1="8" y1="2" x2="8" y2="6"/>
-          <line x1="3" y1="10" x2="21" y2="10"/>
-        </svg>
-        <span id="periodLabel">—</span>
-      </div>
-    </div>
-    <div class="period-bar-right">
-      <div class="period-quick">
-        <button data-quick="today">Hoje</button>
-        <button data-quick="yesterday">Ontem</button>
-        <button data-quick="last7">7d</button>
-        <button data-quick="last30" class="active">30d</button>
-        <button data-quick="month">Este mês</button>
-      </div>
-      <button class="btn-glass" id="calendarToggle" title="Escolher data ou período">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
-          <line x1="16" y1="2" x2="16" y2="6"/>
-          <line x1="8" y1="2" x2="8" y2="6"/>
-          <line x1="3" y1="10" x2="21" y2="10"/>
-        </svg>
-      </button>
-      <div class="calendar-popup" id="calendarPopup" hidden>
-        <div class="calendar-head">
-          <button class="cal-nav" id="calPrev"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg></button>
-          <div class="cal-title" id="calTitle">—</div>
-          <button class="cal-nav" id="calNext"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></button>
-        </div>
-        <div class="cal-mode">
-          <button class="active" data-mode="single">Dia único</button>
-          <button data-mode="range">Período</button>
-        </div>
-        <div class="cal-hint" id="calHint">Clique em um dia</div>
-        <div class="cal-weekdays"><span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span></div>
-        <div class="cal-grid" id="calGrid"></div>
-        <div class="cal-actions">
-          <button class="btn-glass-pill" id="calClear">Limpar</button>
-          <button class="btn-glass-pill primary" id="calApply">Aplicar</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- ============== VIEW: ESTATÍSTICAS ============== -->
-  <div class="view view-stats" data-view="stats">
-
-    <!-- HERO: KPIs compactos + Gráfico combinado -->
-    <section class="hero-section">
-      <div class="kpi-stack" id="kpiStack"></div>
-
-      <div class="card hero-card">
-        <div class="hero-headline">
-          <div class="hero-value-block">
-            <div class="label">Investimento diário × Leads acumulados</div>
-            <div class="value-sm" id="heroSub">—</div>
-          </div>
-          <div class="legend-row">
-            <span><span class="legend-dot" style="background:#4F93F5"></span>Investimento (R$)</span>
-            <span><span class="legend-dot" style="background:#F6A83C"></span>Leads acumulados</span>
-          </div>
-        </div>
-        <div class="chart-area">
-          <canvas id="comboChart"></canvas>
-        </div>
-      </div>
-    </section>
-
-    <!-- Análise diária (2 gráficos: Leads/dia + CPL/dia vs meta) -->
-    <div class="section-title">
-      <svg class="section-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="16"/>
+  <aside class="sidebar">
+    <div class="sb-brand">
+      <svg viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Centro Oftalmológico">
+        <rect width="64" height="64" rx="15" fill="#0E5C8E"/>
+        <path d="M11 32 C20 19, 44 19, 53 32 C44 45, 20 45, 11 32 Z" fill="none" stroke="#fff" stroke-width="3.2" stroke-linejoin="round"/>
+        <circle cx="32" cy="32" r="7.5" fill="#14B8BE"/>
+        <circle cx="29.5" cy="29.5" r="2.2" fill="#fff"/>
       </svg>
-      Análise diária <span class="count">dados dia-a-dia · reage ao seletor</span>
+      <div><div class="nm">Centro<br>Oftalmológico</div><div class="st" id="sbStatus">Cliente ativo</div></div>
     </div>
-    <section class="row-2">
-      <div class="card">
-        <div class="card-head">
-          <div>
-            <div class="card-title">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px">
-                <circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/>
-              </svg>
-              Leads por dia
+    <div class="sb-sec">Visão geral</div>
+    <div class="nav active" data-view="dashboard"><span class="ic">▦</span> Dashboard <span class="arw">›</span></div>
+    <div class="nav" data-view="ga4"><span class="ic">📈</span> Analytics</div>
+    <div class="sb-sec">Mídia · Ads</div>
+    <div class="nav" data-view="areas"><span class="ic">👁</span> Áreas de atendimento</div>
+    <div class="nav" data-view="plataformas"><span class="ic">⊞</span> Plataformas</div>
+    <div class="nav" data-view="criativos"><span class="ic">🖼</span> Criativos</div>
+    <div class="nav" data-view="diario"><span class="ic">📅</span> Diário</div>
+    <div class="sb-foot" id="footer">Cuidando da sua visão.<br>Powered by Acesso Marketing</div>
+  </aside>
+
+  <div class="main">
+    <div class="content">
+      <div class="head-row">
+        <div>
+          <div class="eyebrow">✦ Campaign Intelligence · Saúde Ocular</div>
+          <div class="h-title" id="hTitle">Centro Oftalmológico</div>
+          <div class="h-sub" id="hSub">Carregando…</div>
+        </div>
+        <div class="head-tools">
+          <div class="pdrop">
+            <button class="pbtn" id="pbtn"><span>🗓</span> <b id="pTxt">Mês atual</b> <span class="pcar" id="pCar">⌄</span></button>
+            <div class="pmenu" id="pmenu" hidden>
+              <div class="popt" data-p="hoje">Hoje</div>
+              <div class="popt" data-p="7">Últimos 7 dias</div>
+              <div class="popt" data-p="30">Últimos 30 dias</div>
+              <div class="popt" data-p="90">Últimos 90 dias</div>
+              <div class="popt active" data-p="mes">Mês atual</div>
+              <div class="popt" data-p="mes-ant">Mês passado</div>
             </div>
           </div>
-        </div>
-        <div class="chart-wrap tall"><canvas id="leadsByDayChart"></canvas></div>
-      </div>
-      <div class="card">
-        <div class="card-head">
-          <div>
-            <div class="card-title">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A78BFA" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px">
-                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
-              </svg>
-              CPL por dia
-            </div>
-            <div class="card-sub" id="cplVsMetaSub">vs meta —</div>
-          </div>
-        </div>
-        <div class="chart-wrap tall"><canvas id="cplByDayChart"></canvas></div>
-      </div>
-    </section>
-
-    <!-- Composição do investimento (donut + comparação plataformas) -->
-    <div class="section-title">
-      <svg class="section-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/>
-      </svg>
-      Composição do investimento <span class="count">quebra por tipo de campanha</span>
-    </div>
-    <section class="composition-section">
-      <!-- Donut: visível quando filtro = "Todas" -->
-      <div class="card" id="compositionDonutCard">
-        <div class="card-head">
-          <div>
-            <div class="card-title">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px">
-                <path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/>
-              </svg>
-              Distribuição por tipo / campanha
-            </div>
-          </div>
-        </div>
-        <div class="donut-area">
-          <div class="chart-wrap donut-canvas"><canvas id="campaignsDonut"></canvas></div>
-          <div class="donut-legend" id="donutLegend"></div>
+          <button class="btn" onclick="loadAll(true)"><span class="dot loading" id="dot"></span> Atualizar</button>
+          <a class="btn ghost" href="/logout">Sair</a>
         </div>
       </div>
-
-      <!-- Top 5 campanhas: visível quando filtro = "google" ou "facebook" -->
-      <div class="card" id="topCampaignsCard" hidden>
-        <div class="card-head">
-          <div>
-            <div class="card-title">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-2px;margin-right:5px">
-                <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
-              </svg>
-              <span id="topCampaignsTitle">Top 5 campanhas</span>
-            </div>
-            <div class="card-sub" id="topCampaignsSub">por investimento no período</div>
-          </div>
-          <span class="card-tag" id="topCampaignsTag">—</span>
-        </div>
-        <div class="top-campaigns-list" id="topCampaignsList"></div>
-      </div>
-
-      <!-- Cards comparativos Google × Meta -->
-      <div class="platform-compare" id="platformCompare"></div>
-    </section>
-
-    <!-- Tabela detalhada colapsável -->
-    <div class="section-title collapsible-title" id="tableToggleHead">
-      <svg class="section-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-      </svg>
-      Detalhamento diário <span class="count">histórico do período · clique para expandir</span>
-      <button class="collapse-btn" id="tableCollapseBtn" aria-label="Expandir/Recolher">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="6 9 12 15 18 9"/>
-        </svg>
-      </button>
-    </div>
-    <section class="card table-card" id="tableCard">
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Data</th>
-              <th>Dia</th>
-              <th>Investimento</th>
-              <th>Leads</th>
-              <th>CPL</th>
-              <th>Cliques</th>
-              <th>CPC</th>
-              <th>CTR</th>
-            </tr>
-          </thead>
-          <tbody id="tableBody"></tbody>
-          <tfoot><tr id="tableFoot"></tr></tfoot>
-        </table>
-      </div>
-    </section>
-  </div>
-
-  <!-- ============== VIEW: CRIATIVOS ============== -->
-  <div class="view view-creatives" data-view="creatives" hidden>
-    <div class="section-title">
-      <svg class="section-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--primary)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-        <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/>
-      </svg>
-      Criativos & Anúncios <span class="count">Meta Ads + Google Ads</span>
-    </div>
-
-    <div class="creatives-summary card" id="creativesSummary"></div>
-
-    <div class="creatives-filters">
-      <div class="segmented" role="tablist" aria-label="Filtrar por status">
-        <button class="active" data-status="all"><span class="dot"></span>Todos <span class="count-badge" id="countAll">0</span></button>
-        <button data-status="active"><span class="dot dot-active"></span>Ativos <span class="count-badge" id="countActive">0</span></button>
-        <button data-status="paused"><span class="dot dot-paused"></span>Pausados <span class="count-badge" id="countPaused">0</span></button>
-      </div>
-    </div>
-
-    <div class="creatives-grid" id="creativesGrid">
-      <div class="creatives-loading">
-        <div class="spinner-sm"></div>
-        <span>Carregando criativos...</span>
-      </div>
+      <div class="intg" id="intg"></div>
+      <div id="view"></div>
     </div>
   </div>
-
-  <footer class="footer-min">
-    Dashboard · <strong>Acesso</strong> · Marketing Digital
-  </footer>
 </div>
 
-<script src="js/config.js"></script>
-<script src="data/dataset.js"></script>
-<script src="js/sheets.js"></script>
-<script src="js/expad.js"></script>
-<script src="js/expad-qualified.js"></script>
-<script src="js/meta.js"></script>
-<script src="js/utils.js"></script>
-<script src="js/theme.js"></script>
-<script src="js/kpis.js"></script>
-<script src="js/forecast.js"></script>
-<script src="js/platforms.js"></script>
-<script src="js/charts.js"></script>
-<script src="js/campaigns.js"></script>
-<script src="js/table.js"></script>
-<script src="js/date-filter.js"></script>
-<script src="js/report.js"></script>
-<script src="js/main.js"></script>
+<script>
+const CLI = window.CLIENTE || {id:'centro-oft',nome:'Centro Oftalmológico',metas:{}};
+let period = 'mes';   // 'hoje' | '7' | '30' | '90' | 'mes' | 'mes-ant'
+let activeView = 'dashboard';
+let GOOGLE=null, META=null, GA4=null, charts={};
+let metaCrt=null, metaCrtLoading=false, googleCrt=null, googleCrtLoading=false;
+const HAS_META = CLI.hasMeta!==false;
+const HAS_GOOGLE = !!CLI.googleCustomerId;
+let crtSrc = HAS_META ? 'meta' : 'google';
+
+const BRL = v => 'R$ ' + (+v||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+const BRL0 = v => (+v||0).toLocaleString('pt-BR',{maximumFractionDigits:0});
+const NUM = v => (+v||0).toLocaleString('pt-BR');
+const PCT = (a,b) => b>0 ? Math.round(a/b*100) : 0;
+const brDate = s => s ? s.slice(8,10)+'/'+s.slice(5,7) : '';
+const ymdL = d => d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+const PERIOD_LBL = {hoje:'Hoje','7':'Últimos 7 dias','30':'Últimos 30 dias','90':'Últimos 90 dias',mes:'Mês atual','mes-ant':'Mês passado'};
+function periodLabel(){ return PERIOD_LBL[period] || 'Período'; }
+function periodRange(){
+  const now=new Date(), to=ymdL(now);
+  if(period==='hoje') return {from:to, to};
+  if(period==='mes') return {from:ymdL(new Date(now.getFullYear(),now.getMonth(),1)), to};
+  if(period==='mes-ant'){ const f=new Date(now.getFullYear(),now.getMonth()-1,1), l=new Date(now.getFullYear(),now.getMonth(),0); return {from:ymdL(f), to:ymdL(l)}; }
+  const n=+period; const d=new Date(now); d.setDate(d.getDate()-(n-1)); return {from:ymdL(d), to};
+}
+// dias p/ re-busca de criativos (endpoint só aceita "últimos N dias terminando hoje")
+function periodDaysNum(){
+  if(period==='hoje') return 1;
+  if(period==='mes') return new Date().getDate();
+  if(period==='mes-ant'){ const now=new Date(); const f=new Date(now.getFullYear(),now.getMonth()-1,1); return Math.round((now-f)/864e5)+1; }
+  return +period;
+}
+function sliceDias(dias, from, to){
+  return (dias||[]).filter(x=>x.data>=from&&x.data<=to)
+    .reduce((a,x)=>({custo:a.custo+(+x.custo||0),conv:a.conv+(+x.conv||0),cliques:a.cliques+(+x.cliques||0),impr:a.impr+(+x.impr||0)}),{custo:0,conv:0,cliques:0,impr:0});
+}
+function metasCli(){
+  const g=(CLI.metas&&CLI.metas.google)||{orcamentoMensal:0,metaLeadsMensal:0};
+  const m=(CLI.metas&&CLI.metas.meta)||{orcamento:0,metaLeads:0};
+  return {g,m};
+}
+function periodData(){
+  const {from,to}=periodRange();
+  return {from,to,
+    gtot: GOOGLE?sliceDias(GOOGLE.dias,from,to):{custo:0,conv:0,cliques:0,impr:0},
+    mtot: META?sliceDias(META.dias,from,to):{custo:0,conv:0,cliques:0,impr:0}};
+}
+
+/* ---- categorização por área de atendimento (a partir do nome da campanha) ---- */
+const AREAS = [
+  {key:'cirurgias', nome:'Cirurgias',          ic:'🔬', re:/cirurg|catarat|refrat|c[óo]rnea|transplant|facec/i},
+  {key:'consultas', nome:'Consultas & Exames', ic:'👁', re:/consult|exame|avalia/i},
+  {key:'convenios', nome:'Convênios',          ic:'🤝', re:/conv[êe]nio|unimed|plano|amil|bradesco|sulam/i},
+  {key:'branding',  nome:'Branding · Marca',    ic:'⭐', re:/brand|institu|marca|reconhe/i},
+  {key:'remarketing',nome:'Remarketing',        ic:'🔁', re:/remarket|retarget|reengaj|p[úu]blico/i},
+];
+function areaOf(name){
+  const n=name||'';
+  for(const a of AREAS){ if(a.re.test(n)) return a; }
+  return {key:'outras', nome:'Outras campanhas', ic:'📌'};
+}
+
+/* ---- carga ---- */
+async function loadAll(){
+  document.getElementById('dot').className='dot loading';
+  document.getElementById('hSub').textContent='carregando…';
+  try{
+    const reqs=[
+      HAS_GOOGLE ? fetch('/api/google?cli='+CLI.id,{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null) : Promise.resolve(null),
+      HAS_META   ? fetch('/api/meta?cli='+CLI.id,{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null)   : Promise.resolve(null)
+    ];
+    const [g,m]=await Promise.all(reqs);
+    GOOGLE = g&&Array.isArray(g.dias)?g:null; META = m&&Array.isArray(m.dias)?m:null;
+    metaCrt=null; googleCrt=null;
+    document.getElementById('dot').className='dot';
+  }catch(e){}
+  renderIntg(); render();
+}
+async function loadGA4(){
+  const {from,to}=periodRange();
+  try{ const r=await fetch('/api/ga4?cli='+CLI.id+'&from='+from+'&to='+to,{cache:'no-store'}); const j=await r.json();
+    GA4=(r.ok&&j&&j.totais)?j:null;
+  }catch(e){ GA4=null; }
+}
+async function loadMetaCreatives(){ metaCrtLoading=true; try{const r=await fetch('/api/meta?cli='+CLI.id+'&days='+periodDaysNum(),{cache:'no-store'});const j=await r.json();metaCrt=(r.ok&&j&&Array.isArray(j.criativos))?j:null;}catch(e){metaCrt=null;} metaCrtLoading=false; }
+async function loadGoogleCreatives(){ googleCrtLoading=true; try{const r=await fetch('/api/google?cli='+CLI.id+'&days='+periodDaysNum(),{cache:'no-store'});const j=await r.json();googleCrt=(r.ok&&j&&Array.isArray(j.criativos))?j:null;}catch(e){googleCrt=null;} googleCrtLoading=false; }
+function effectiveCrtSrc(){ if(!HAS_META) return 'google'; if(!HAS_GOOGLE) return 'meta'; return crtSrc; }
+async function loadCrtForPeriod(){ if(effectiveCrtSrc()==='google'){ if(!googleCrt) await loadGoogleCreatives(); } else { if(!metaCrt) await loadMetaCreatives(); } }
+
+/* ---- pills integração + cabeçalho ---- */
+function renderIntg(){
+  const gc = GOOGLE&&GOOGLE.regioes?GOOGLE.regioes.length:0;
+  const mc = META&&META.regioes?META.regioes.length:0;
+  document.getElementById('hSub').textContent=(gc+mc)+' campanhas (top) · Período: '+periodLabel();
+  const pill=(on,nome,extra)=>'<div class="pill"><span class="ck'+(on?'':' off')+'">'+(on?'✓':'·')+'</span> '+nome+(extra?' <small>'+extra+'</small>':'')+'</div>';
+  document.getElementById('intg').innerHTML=
+    pill(!!GOOGLE,'Google Ads', GOOGLE?(gc+' camp.'):(HAS_GOOGLE?'sem dados':'não configurado'))+
+    pill(!!META,'Meta Ads', META?(mc+' camp.'):(HAS_META?'sem dados':'não configurado'))+
+    pill(!!GA4,'GA4', GA4?'conectado':'');
+}
+
+/* ---- router ---- */
+function render(){
+  document.getElementById('view').innerHTML='';
+  if(activeView==='dashboard') renderDashboard();
+  else if(activeView==='areas') renderAreas();
+  else if(activeView==='plataformas') renderPlataformas();
+  else if(activeView==='criativos') renderCriativos();
+  else if(activeView==='diario') renderDiario();
+  else if(activeView==='ga4') renderGA4();
+}
+
+function renderDashboard(){
+  const {from,to,gtot,mtot}=periodData();
+  const inv=gtot.custo+mtot.custo, ld=gtot.conv+mtot.conv, cpl=ld>0?inv/ld:0, alc=gtot.impr+mtot.impr;
+  const invG=gtot.custo,invM=mtot.custo,ldG=gtot.conv,ldM=mtot.conv;
+  const invShare = inv>0?Math.round(invM/inv*100):0, ldShare = ld>0?Math.round(ldM/ld*100):0;
+  const cplM = ldM>0?invM/ldM:0, cplG = ldG>0?invG/ldG:0;
+  const {g:mg,m:mm}=metasCli();
+  const orcTot=(mg.orcamentoMensal||0)+(mm.orcamento||0), metaLdTot=(mg.metaLeadsMensal||0)+(mm.metaLeads||0);
+  const html=
+    '<div class="sec-lbl">Visão geral · '+periodLabel()+'</div>'+
+    '<div class="kpis">'+
+      kpi('k1','Investimento','<small>R$</small>'+BRL0(inv), orcTot?(PCT(inv,orcTot)+'% do orçamento mensal'):'verba investida')+
+      kpi('k2','Leads', NUM(ld), metaLdTot?(PCT(ld,metaLdTot)+'% da meta · '+NUM(metaLdTot)+' alvo'):'Google '+NUM(ldG)+' · Meta '+NUM(ldM))+
+      kpi('k3','CPL médio','<small>R$</small>'+(ld?cpl.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}):'—'), 'investimento ÷ leads')+
+      kpi('k4','Alcance','<small></small>'+NUM(alc), 'impressões no período')+
+    '</div>'+
+    '<div class="row2">'+
+      '<div class="panel"><div class="panel-t">Investimento × Leads por dia</div><div class="panel-s">Onde a verba vai e quantos pacientes em potencial retornam</div><div style="position:relative;height:230px"><canvas id="chDia"></canvas></div></div>'+
+      '<div class="panel"><div class="panel-t">Meta vs Google</div><div class="panel-s">Divisão de verba e leads entre as plataformas</div>'+
+        '<div class="share-lbl"><span>Investimento</span><span>'+invShare+'% · '+(100-invShare)+'%</span></div>'+
+        '<div class="share"><div class="a" style="width:'+invShare+'%"></div></div>'+
+        '<div class="share-lbl"><span>Leads</span><span>'+ldShare+'% · '+(100-ldShare)+'%</span></div>'+
+        '<div class="share"><div class="a" style="width:'+ldShare+'%"></div></div>'+
+        '<div class="mini2"><div class="mini"><div class="ml">Meta · CPL</div><div class="mv">'+(ldM?BRL(cplM):'—')+'</div></div>'+
+          '<div class="mini"><div class="ml">Google · CPL</div><div class="mv">'+(ldG?BRL(cplG):'—')+'</div></div></div>'+
+        '<div class="share-leg"><span><i style="background:var(--azul)"></i>Meta Ads</span><span><i style="background:var(--teal)"></i>Google Ads</span></div>'+
+      '</div>'+
+    '</div>'+
+    '<div class="panel"><div class="panel-t">Top campanhas · por verba</div><div class="panel-s">Maiores investimentos no período (Google + Meta)</div><div id="rkBox" style="margin-top:6px"></div></div>';
+  document.getElementById('view').innerHTML=html;
+  drawDia(from,to); drawRanking(from,to);
+}
+function kpi(cls,l,v,s){ return '<div class="kpi '+cls+'"><div class="kl">'+l+'</div><div class="kv">'+v+'</div><div class="ks">'+s+'</div></div>'; }
+function drawDia(from,to){
+  Object.values(charts).forEach(c=>c&&c.destroy()); charts={};
+  const map={};
+  (GOOGLE?GOOGLE.dias:[]).forEach(x=>{if(x.data>=from&&x.data<=to){const o=map[x.data]||(map[x.data]={c:0,l:0});o.c+=+x.custo||0;o.l+=+x.conv||0;}});
+  (META?META.dias:[]).forEach(x=>{if(x.data>=from&&x.data<=to){const o=map[x.data]||(map[x.data]={c:0,l:0});o.c+=+x.custo||0;o.l+=+x.conv||0;}});
+  const ks=Object.keys(map).sort();
+  if(!ks.length){ document.getElementById('chDia').parentElement.innerHTML='<div class="empty">Sem dados de mídia no período.</div>'; return; }
+  charts.d=new Chart(document.getElementById('chDia'),{data:{labels:ks.map(brDate),datasets:[
+    {type:'bar',label:'Investimento',data:ks.map(k=>map[k].c),backgroundColor:'#0E5C8E',borderRadius:3,yAxisID:'y',order:2},
+    {type:'line',label:'Leads',data:ks.map(k=>map[k].l),borderColor:'#14B8BE',backgroundColor:'rgba(20,184,190,.15)',tension:.3,pointRadius:0,borderWidth:2,yAxisID:'y1',order:1,fill:true}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{font:{size:11},boxWidth:10}}},scales:{y:{position:'left',grid:{color:'#eef2f7'},ticks:{font:{size:10},callback:v=>'R$'+BRL0(v)}},y1:{position:'right',grid:{display:false},ticks:{font:{size:10}}},x:{grid:{display:false},ticks:{font:{size:9},maxTicksLimit:10}}}}});
+}
+function rankList(from,to){
+  const list=[];
+  (META&&META.regioes?META.regioes:[]).forEach(([n,v])=>list.push({n,v,p:'m'}));
+  (GOOGLE&&GOOGLE.regioes?GOOGLE.regioes:[]).forEach(([n,v])=>list.push({n,v,p:'g'}));
+  list.sort((a,b)=>b.v-a.v);
+  return list;
+}
+function drawRanking(from,to){
+  const top=rankList(from,to).slice(0,8), max=top.length?top[0].v:1;
+  document.getElementById('rkBox').innerHTML = top.length? top.map(c=>
+    '<div class="rk"><div class="rk-nm"><span class="rk-tag '+(c.p==='m'?'tag-m':'tag-g')+'">'+(c.p==='m'?'META':'GOOGLE')+'</span>'+c.n+'</div>'+
+    '<div class="rk-bar"><div class="rk-fill" style="width:'+Math.max(3,Math.round(c.v/max*100))+'%"></div></div>'+
+    '<div class="rk-val">'+BRL(c.v)+'</div></div>').join('') : '<div class="empty">Sem campanhas no período.</div>';
+}
+
+/* ---- Áreas de atendimento (exclusivo Centro Oftalmológico) ---- */
+function renderAreas(){
+  const {from,to}=periodRange();
+  const list=rankList(from,to);
+  if(!list.length){ document.getElementById('view').innerHTML='<div class="sec-lbl">Áreas de atendimento · '+periodLabel()+'</div><div class="panel"><div class="empty">Sem campanhas no período para agrupar por área.</div></div>'; return; }
+  const agg={};
+  list.forEach(c=>{ const a=areaOf(c.n); const o=agg[a.key]||(agg[a.key]={nome:a.nome,ic:a.ic,spend:0,n:0}); o.spend+=+c.v||0; o.n++; });
+  const arr=Object.values(agg).sort((a,b)=>b.spend-a.spend);
+  const total=arr.reduce((s,a)=>s+a.spend,0)||1; const max=arr[0].spend||1;
+  document.getElementById('view').innerHTML=
+    '<div class="sec-lbl">Áreas de atendimento · '+periodLabel()+'</div>'+
+    '<div class="panel-s" style="margin:-4px 0 14px">Como a verba de mídia se distribui entre as especialidades e frentes da clínica, classificada automaticamente pelo nome das campanhas.</div>'+
+    '<div class="area-grid">'+arr.map(a=>
+      '<div class="area-card"><div class="area-top"><div class="area-ic">'+a.ic+'</div>'+
+      '<div><div class="area-nm">'+a.nome+'</div><div class="area-camps">'+a.n+' campanha'+(a.n>1?'s':'')+'</div></div></div>'+
+      '<div class="area-val">R$ '+BRL0(a.spend)+'</div><div class="area-sub">'+PCT(a.spend,total)+'% da verba no período</div>'+
+      '<div class="area-bar"><div class="area-fill" style="width:'+Math.max(3,Math.round(a.spend/max*100))+'%"></div></div></div>').join('')+'</div>';
+}
+
+function renderPlataformas(){
+  const {gtot,mtot}=periodData(); const {g:mg,m:mm}=metasCli();
+  const card=(tag,cls,t,orc,metaLd)=>{const cpl=t.conv>0?t.custo/t.conv:0,ctr=t.impr>0?t.cliques/t.impr*100:0;
+    return '<div class="panel"><div class="plat-head"><span class="plat-tag '+cls+'">'+tag+'</span></div>'+
+      r('Investimento',BRL(t.custo))+r('Orçamento mensal',orc?('R$ '+BRL0(orc)):'—')+r('% do orçamento',orc?(PCT(t.custo,orc)+'%'):'—')+
+      r('Leads',NUM(t.conv))+r('Meta de leads',metaLd?NUM(metaLd):'—')+r('% da meta',metaLd?(PCT(t.conv,metaLd)+'%'):'—')+
+      r('CPL realizado',BRL(cpl))+r('Cliques',NUM(t.cliques))+r('CTR',ctr.toFixed(2)+'%')+'</div>';};
+  function r(l,v){return '<div class="plat-row"><span>'+l+'</span><span>'+v+'</span></div>';}
+  document.getElementById('view').innerHTML='<div class="sec-lbl">Plataformas · '+periodLabel()+'</div><div class="plat-grid">'+
+    card('Google Ads','tag-g',gtot,mg.orcamentoMensal,mg.metaLeadsMensal)+card('Meta Ads','tag-m',mtot,mm.orcamento,mm.metaLeads)+'</div>';
+}
+
+function renderCriativos(){
+  const src=effectiveCrtSrc();
+  const toggle='<div class="crt-src">'+(HAS_META?'<button class="crt-sbtn'+(src==='meta'?' active':'')+'" data-src="meta">📘 Meta</button>':'')+
+    (HAS_GOOGLE?'<button class="crt-sbtn'+(src==='google'?' active':'')+'" data-src="google">🔍 Google</button>':'')+'</div>';
+  document.getElementById('view').innerHTML='<div class="sec-lbl">Criativos · '+periodLabel()+'</div>'+toggle+(src==='google'?googleCrtGrid():metaCrtGrid());
+}
+function metaCrtGrid(){
+  if(metaCrtLoading) return '<div class="empty">Atualizando criativos…</div>';
+  const d=metaCrt||META; if(!d||!d.criativos||!d.criativos.length) return '<div class="empty">Sem criativos de Meta no período.</div>';
+  return '<div class="cr-grid">'+d.criativos.slice().sort((a,b)=>(+b.spend||0)-(+a.spend||0)).map(c=>
+    '<div class="cr-card">'+(c.img?'<img class="cr-img" src="'+c.img+'" referrerpolicy="no-referrer" onerror="this.style.display=\'none\'">':'<div class="cr-img"></div>')+
+    '<div class="cr-body"><span class="cr-tag '+(c.status==='ACTIVE'?'on':'')+'">'+(c.status==='ACTIVE'?'Ativo':'Pausado')+'</span><div class="cr-camp">'+(c.nome||'—')+'</div>'+
+    '<div class="cr-metrics"><div class="cr-m"><b>R$'+BRL0(c.spend)+'</b><span>investido</span></div><div class="cr-m"><b>'+NUM(c.leads)+'</b><span>leads</span></div>'+
+    '<div class="cr-m"><b>'+(c.leads?('R$'+BRL0(c.cpl)):'—')+'</b><span>CPL</span></div><div class="cr-m"><b>'+(c.ctr||0).toFixed(1)+'%</b><span>CTR</span></div></div></div></div>').join('')+'</div>';
+}
+function googleCrtGrid(){
+  if(googleCrtLoading) return '<div class="empty">Atualizando criativos…</div>';
+  const d=googleCrt||GOOGLE; if(!d||!d.criativos||!d.criativos.length) return '<div class="empty">Sem criativos de imagem do Google (imagens vêm do Performance Max).</div>';
+  const pm={BEST:['Melhor','#1F9D56'],GOOD:['Boa','#0E5C8E'],LOW:['Baixa','#DC4632'],LEARNING:['Aprendendo','#b85400'],PENDING:['Pendente','#888780'],UNKNOWN:['—','#888780']};
+  return '<div class="cr-grid">'+d.criativos.slice().map(c=>{const pf=pm[c.perf]||['',''],s=c.stats;
+    const tag=pf[0]?('<span class="cr-tag" style="background:'+pf[1]+'22;color:'+pf[1]+'">'+pf[0]+'</span>'):'<span class="cr-tag">PMax</span>';
+    const mt=s?('<div class="cr-m"><b>R$'+BRL0(s.custo)+'</b><span>investido</span></div><div class="cr-m"><b>'+NUM(s.conv)+'</b><span>conversões</span></div><div class="cr-m"><b>'+(s.conv?('R$'+BRL0(s.cpa)):'—')+'</b><span>custo/conv</span></div><div class="cr-m"><b>'+(s.ctr||0)+'%</b><span>CTR</span></div>'):'<div class="cr-m"><b>—</b><span>sem métricas</span></div>';
+    return '<div class="cr-card">'+(c.img?'<img class="cr-img" src="'+c.img+'" referrerpolicy="no-referrer" onerror="this.style.display=\'none\'">':'<div class="cr-img"></div>')+
+      '<div class="cr-body">'+tag+'<div class="cr-camp">'+(c.grupo||c.tipo||'Imagem PMax')+'</div><div class="cr-metrics">'+mt+'</div></div></div>';}).join('')+'</div>';
+}
+
+function renderDiario(){
+  const {from,to}=periodRange(); const map={};
+  (GOOGLE?GOOGLE.dias:[]).forEach(x=>{if(x.data>=from&&x.data<=to){const o=map[x.data]||(map[x.data]={gC:0,gL:0,mC:0,mL:0});o.gC+=+x.custo||0;o.gL+=+x.conv||0;}});
+  (META?META.dias:[]).forEach(x=>{if(x.data>=from&&x.data<=to){const o=map[x.data]||(map[x.data]={gC:0,gL:0,mC:0,mL:0});o.mC+=+x.custo||0;o.mL+=+x.conv||0;}});
+  const days=Object.keys(map).sort();
+  let tG=0,tGl=0,tM=0,tMl=0;
+  let body = days.length? days.map(d=>{const o=map[d];const inv=o.gC+o.mC,ld=o.gL+o.mL,cpl=ld?inv/ld:0;
+    tG+=o.gC;tGl+=o.gL;tM+=o.mC;tMl+=o.mL;
+    return '<tr><td>'+brDate(d)+'</td><td>R$'+BRL0(o.gC)+'</td><td>'+NUM(o.gL)+'</td><td>R$'+BRL0(o.mC)+'</td><td>'+NUM(o.mL)+'</td><td>'+BRL(cpl)+'</td></tr>';}).join('') : '';
+  const inT=tG+tM,ldT=tGl+tMl,cplT=ldT?inT/ldT:0;
+  const foot='<tfoot><tr><td>Total</td><td>R$'+BRL0(tG)+'</td><td>'+NUM(tGl)+'</td><td>R$'+BRL0(tM)+'</td><td>'+NUM(tMl)+'</td><td>'+BRL(cplT)+'</td></tr></tfoot>';
+  document.getElementById('view').innerHTML='<div class="sec-lbl">Diário · '+periodLabel()+'</div><div class="panel" style="padding:0;overflow:hidden">'+
+    (body?('<table><thead><tr><th>Dia</th><th>Verba Google</th><th>Leads G</th><th>Verba Meta</th><th>Leads M</th><th>CPL total</th></tr></thead><tbody>'+body+'</tbody>'+foot+'</table>'):'<div class="empty">Sem dados no período.</div>')+'</div>';
+}
+
+function renderGA4(){
+  document.getElementById('view').innerHTML='<div class="sec-lbl">Analytics · Google Analytics 4</div><div class="panel"><div class="empty">Carregando GA4…</div></div>';
+  loadGA4().then(()=>{
+    if(activeView!=='ga4') return;
+    if(!GA4){ document.getElementById('view').innerHTML='<div class="sec-lbl">Analytics · GA4</div><div class="panel"><div class="empty">GA4 indisponível (verifique a configuração no servidor).</div></div>'; return; }
+    const t=GA4.totais||{};
+    const html='<div class="sec-lbl">Analytics · GA4 · '+(GA4.periodo||periodLabel())+'</div>'+
+      '<div class="kpis"><div class="kpi k1"><div class="kl">Sessões</div><div class="kv">'+NUM(t.sessoes)+'</div><div class="ks">no período</div></div>'+
+      '<div class="kpi k2"><div class="kl">Usuários</div><div class="kv">'+NUM(t.usuarios)+'</div><div class="ks">ativos</div></div>'+
+      '<div class="kpi k3"><div class="kl">Novos usuários</div><div class="kv">'+NUM(t.novos)+'</div><div class="ks">primeira visita</div></div>'+
+      '<div class="kpi k4"><div class="kl">Conversões</div><div class="kv">'+NUM(t.conv)+'</div><div class="ks">eventos-chave</div></div></div>'+
+      '<div class="row2"><div class="panel"><div class="panel-t">Sessões por dia</div><div style="position:relative;height:230px"><canvas id="chGa4"></canvas></div></div>'+
+      '<div class="panel"><div class="panel-t">Canais de aquisição</div><div class="panel-s">sessões · conversões</div><div style="margin-top:8px">'+
+        ((GA4.canais||[]).slice(0,8).map(c=>'<div class="plat-row"><span>'+c.canal+'</span><span>'+NUM(c.sessoes)+' · '+NUM(c.conv)+' conv</span></div>').join('')||'<div class="empty">Sem canais.</div>')+'</div></div></div>';
+    document.getElementById('view').innerHTML=html;
+    const ds=GA4.dias||[];
+    Object.values(charts).forEach(c=>c&&c.destroy()); charts={};
+    charts.g=new Chart(document.getElementById('chGa4'),{type:'line',data:{labels:ds.map(x=>brDate(x.data)),datasets:[{data:ds.map(x=>x.sessoes),borderColor:'#0E5C8E',backgroundColor:'rgba(14,92,142,.12)',fill:true,tension:.3,pointRadius:0,borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{grid:{color:'#eef2f7'},ticks:{font:{size:10}}},x:{grid:{display:false},ticks:{font:{size:9},maxTicksLimit:10}}}}});
+  });
+}
+
+/* ---- eventos ---- */
+document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.nav').forEach(x=>{x.classList.remove('active');const a=x.querySelector('.arw');if(a)a.remove();});
+  b.classList.add('active'); if(!b.querySelector('.arw')) b.insertAdjacentHTML('beforeend','<span class="arw">›</span>');
+  activeView=b.dataset.view;
+  if(activeView==='criativos'){ render(); loadCrtForPeriod().then(render); return; }
+  render();
+});
+const pbtn=document.getElementById('pbtn'), pmenu=document.getElementById('pmenu'), pCar=document.getElementById('pCar');
+pbtn.onclick=e=>{ e.stopPropagation(); pmenu.hidden=!pmenu.hidden; pCar.classList.toggle('up',!pmenu.hidden); };
+document.addEventListener('click',()=>{ pmenu.hidden=true; pCar.classList.remove('up'); });
+pmenu.onclick=e=>{
+  const o=e.target.closest('.popt'); if(!o) return;
+  pmenu.querySelectorAll('.popt').forEach(x=>x.classList.remove('active')); o.classList.add('active');
+  period=o.dataset.p; document.getElementById('pTxt').textContent=o.textContent;
+  pmenu.hidden=true; pCar.classList.remove('up');
+  metaCrt=null; googleCrt=null; GA4=null;
+  renderIntg();
+  if(activeView==='criativos'){ loadCrtForPeriod().then(render); } else render();
+};
+document.getElementById('view').addEventListener('click',ev=>{
+  const b=ev.target.closest('.crt-sbtn'); if(!b)return;
+  crtSrc=b.dataset.src; render(); loadCrtForPeriod().then(render);
+});
+
+if(!HAS_META){ document.getElementById('sbStatus').textContent='Cliente ativo · só Google'; }
+else if(!HAS_GOOGLE){ document.getElementById('sbStatus').textContent='Cliente ativo · só Meta'; }
+loadAll();
+</script>
 </body>
 </html>

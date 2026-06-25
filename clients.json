@@ -39,16 +39,18 @@
   },
   "centro-oft": {
     "nome": "Centro Oftalmológico",
-    "sub": "Saúde · BRL",
+    "sub": "Hospital de Olhos · MG · BRL",
+    "template": "centro-oft",
     "logo": "/assets/logo.svg",
+    "googleCustomerId": "5770191982",
     "ga4Property": "373589324",
     "metaAccount": "act_174947285286938",
     "sheets": { "id": "", "aba": "Diário + Performance", "range": "A1:Z200" },
     "expad": { "accountId": "", "clientId": "" },
     "meta": { "account": "" },
     "metas": {
-      "google": { "orcamentoMensal": 0, "metaLeadsMensal": 0 },
-      "meta":   { "orcamento": 0, "metaLeads": 0 }
+      "google": { "orcamentoMensal": 3000, "metaLeadsMensal": 450 },
+      "meta":   { "orcamento": 1000, "metaLeads": 150 }
     },
     "senha": "centrooft123"
   },
