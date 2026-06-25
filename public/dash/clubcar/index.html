@@ -148,12 +148,16 @@ tbody td:first-child{text-align:left;font-weight:500}tbody tr:last-child td{bord
     <div class="sb-sec">Visão geral</div>
     <div class="nav active" data-view="dashboard"><span class="ic">▦</span> Dashboard <span class="arw">›</span></div>
     <div class="nav" data-view="ga4"><span class="ic">📈</span> Analytics</div>
+    <div class="nav" data-view="gsc"><span class="ic">🔎</span> Busca · SEO</div>
+    <div class="nav" data-view="instagram"><span class="ic">📷</span> Instagram</div>
     <div class="sb-sec">Mídia · Ads</div>
     <div class="nav" data-view="plataformas"><span class="ic">⊞</span> Plataformas</div>
     <div class="nav" data-view="criativos"><span class="ic">🖼</span> Criativos</div>
     <div class="nav" data-view="diario"><span class="ic">📅</span> Diário</div>
     <div class="sb-sec">CRM · Expad</div>
     <div class="nav" data-view="funil"><span class="ic">⚲</span> Funil de leads</div>
+    <div class="sb-sec">Inteligência</div>
+    <div class="nav" data-view="news"><span class="ic">📰</span> News do segmento</div>
     <div class="sb-foot" id="footer">Proteção veicular de confiança.<br>Powered by Acesso Marketing</div>
   </aside>
 
@@ -191,7 +195,7 @@ tbody td:first-child{text-align:left;font-weight:500}tbody tr:last-child td{bord
 const CLI = window.CLIENTE || {id:'clubcar',nome:'ClubCar',metas:{}};
 let period = 'mes';   // 'hoje' | '7' | '30' | '90' | 'mes' | 'mes-ant'
 let activeView = 'dashboard';
-let GOOGLE=null, META=null, EXPAD=null, GA4=null, NEWS=null, newsLoading=false, charts={};
+let GOOGLE=null, META=null, EXPAD=null, GA4=null, GSC=null, NEWS=null, newsLoading=false, charts={};
 let metaCrt=null, metaCrtLoading=false, googleCrt=null, googleCrtLoading=false;
 let crtSrc = (CLI.hasMeta===false) ? 'google' : 'meta';
 
@@ -262,6 +266,12 @@ async function loadGA4(){
     GA4=(r.ok&&j&&j.totais)?j:null;
   }catch(e){ GA4=null; }
 }
+async function loadGSC(){
+  const {from,to}=periodRange();
+  try{ const r=await fetch('/api/gsc?cli='+CLI.id+'&from='+from+'&to='+to,{cache:'no-store'}); const j=await r.json();
+    GSC=(r.ok&&j&&j.totais)?j:null;
+  }catch(e){ GSC=null; }
+}
 async function loadMetaCreatives(){ metaCrtLoading=true; try{const r=await fetch('/api/meta?cli='+CLI.id+'&days='+periodDaysNum(),{cache:'no-store'});const j=await r.json();metaCrt=(r.ok&&j&&Array.isArray(j.criativos))?j:null;}catch(e){metaCrt=null;} metaCrtLoading=false; }
 async function loadGoogleCreatives(){ googleCrtLoading=true; try{const r=await fetch('/api/google?cli='+CLI.id+'&days='+periodDaysNum(),{cache:'no-store'});const j=await r.json();googleCrt=(r.ok&&j&&Array.isArray(j.criativos))?j:null;}catch(e){googleCrt=null;} googleCrtLoading=false; }
 function effectiveCrtSrc(){ return (CLI.hasMeta===false)?'google':crtSrc; }
@@ -288,6 +298,8 @@ function render(){
   else if(activeView==='diario') renderDiario();
   else if(activeView==='funil') renderFunil();
   else if(activeView==='ga4') renderGA4();
+  else if(activeView==='gsc') renderGSC();
+  else if(activeView==='instagram') renderInstagram();
   else if(activeView==='news'){ renderNews(); if(!NEWS && !newsLoading) loadNews(false); }
 }
 
@@ -425,6 +437,31 @@ function renderGA4(){
   });
 }
 
+function renderGSC(){
+  document.getElementById('view').innerHTML='<div class="sec-lbl">Busca · SEO · Search Console</div><div class="panel"><div class="empty">Carregando Search Console…</div></div>';
+  loadGSC().then(()=>{
+    if(activeView!=='gsc') return;
+    if(!GSC){ document.getElementById('view').innerHTML='<div class="sec-lbl">Busca · SEO · Search Console</div><div class="panel"><div class="empty">Search Console indisponível (propriedade não encontrada ou credenciais sem o escopo webmasters.readonly).</div></div>'; return; }
+    const t=GSC.totais||{};
+    const prettyUrl=u=>{ try{ const x=new URL(u); return (x.pathname+x.search)||'/'; }catch(_){ return u; } };
+    const queries=(GSC.consultas||[]).slice(0,10).map(c=>'<div class="plat-row"><span>'+c.termo+'</span><span>'+NUM(c.cliques)+' cliques · '+NUM(c.impressoes)+' impr</span></div>').join('')||'<div class="empty">Sem consultas no período.</div>';
+    const pages=(GSC.paginas||[]).slice(0,10).map(p=>'<div class="plat-row"><span>'+prettyUrl(p.pagina)+'</span><span>'+NUM(p.cliques)+' cliques</span></div>').join('')||'<div class="empty">Sem páginas no período.</div>';
+    document.getElementById('view').innerHTML=
+      '<div class="sec-lbl">Busca · SEO · Search Console · '+(GSC.periodo||periodLabel())+'</div>'+
+      '<div class="kpis"><div class="kpi k1"><div class="kl">Cliques</div><div class="kv">'+NUM(t.cliques)+'</div><div class="ks">na busca orgânica</div></div>'+
+      '<div class="kpi k2"><div class="kl">Impressões</div><div class="kv">'+NUM(t.impressoes)+'</div><div class="ks">no período</div></div>'+
+      '<div class="kpi k3"><div class="kl">CTR médio</div><div class="kv">'+NUM(t.ctr)+'<small style="font-size:18px"> %</small></div><div class="ks">cliques ÷ impressões</div></div>'+
+      '<div class="kpi k4"><div class="kl">Posição média</div><div class="kv">'+NUM(t.posicao)+'</div><div class="ks">ranking médio</div></div></div>'+
+      '<div class="row2"><div class="panel"><div class="panel-t">Principais consultas</div><div class="panel-s">o que buscam até chegar no site</div><div style="margin-top:8px">'+queries+'</div></div>'+
+      '<div class="panel"><div class="panel-t">Principais páginas</div><div class="panel-s">páginas que mais recebem cliques</div><div style="margin-top:8px">'+pages+'</div></div></div>'+
+      '<div style="font-size:11px;color:var(--mute-2);margin-top:10px">Dados com ~3 dias de atraso (padrão do Search Console).</div>';
+  });
+}
+function renderInstagram(){
+  document.getElementById('view').innerHTML=
+    '<div class="sec-lbl">Instagram</div>'+
+    '<div class="panel"><div class="empty">Integração com o Instagram ainda não conectada para este cliente.<br>Assim que a conta for vinculada, os dados de perfil e publicações aparecem aqui.</div></div>';
+}
 function renderNews(){
   const head='<div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px"><div class="sec-lbl" style="margin:0">📰 News do segmento · Inteligência</div><button class="btn ghost" id="newsRefresh">↻ Atualizar notícias</button></div>';
   const view=document.getElementById('view');
@@ -466,7 +503,7 @@ pmenu.onclick=e=>{
   pmenu.querySelectorAll('.popt').forEach(x=>x.classList.remove('active')); o.classList.add('active');
   period=o.dataset.p; document.getElementById('pTxt').textContent=o.textContent;
   pmenu.hidden=true; pCar.classList.remove('up');
-  metaCrt=null; googleCrt=null; GA4=null;
+  metaCrt=null; googleCrt=null; GA4=null; GSC=null;
   loadExpad().then(()=>{ renderIntg(); if(activeView==='criativos'){ loadCrtForPeriod().then(render); } else render(); });
 };
 document.getElementById('view').addEventListener('click',ev=>{
