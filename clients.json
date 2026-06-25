@@ -371,6 +371,7 @@
     "nome": "ClubCar",
     "sub": "Automotivo · herdado · BRL",
     "logo": "/assets/logo.svg",
+    "template": "clubcar",
     "googleCustomerId": "1941169007",
     "metaAccount": "",
     "metas": { "google": { "orcamentoMensal": 50000, "metaLeadsMensal": 1500 }, "meta": { "orcamento": 3000, "metaLeads": 330 } },
